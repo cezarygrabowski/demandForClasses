@@ -1,0 +1,3 @@
+dsa:
+    path: /
+    controller: App\Controller\ArticleController::homepage
