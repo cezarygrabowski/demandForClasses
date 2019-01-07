@@ -1,10 +1,42 @@
-import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import { LoginComponent } from './login';
+import { AuthGuard } from './_guards';
+import {DemandListComponent} from './demand-list/demand-list.component';
+import {ScheduleImportComponent} from './schedule-import/schedule-import.component';
+import {TeacherImportComponent} from './teacher-import/teacher-import.component';
+import {UserProfileComponent} from './user-profile/user-profile.component';
+import {DemandFormComponent} from './demand-form/demand-form.component';
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
+const appRoutes: Routes = [
+  {
+    path: 'zapotrzebowania',
+    component: DemandListComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'edytuj-zapotrzebowanie/:id',
+    component: DemandFormComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'profil',
+    component: UserProfileComponent
+  },
+  {
+    path: 'importuj-plany-zajec',
+    component: ScheduleImportComponent
+  },
+  {
+    path: 'importuj-nauczycieli',
+    component: TeacherImportComponent
+  },
+  // otherwise redirect to home
+  { path: '**', redirectTo: 'zapotrzebowania' }
+];
+
+export const AppRoutingModule = RouterModule.forRoot(appRoutes);

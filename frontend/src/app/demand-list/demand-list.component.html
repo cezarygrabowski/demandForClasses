@@ -1,3 +1,4 @@
+<button class="export-button" mat-flat-button color="primary">Eksport</button>
 <mat-table #table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
     <mat-header-cell *matHeaderCellDef mat-sort-header> {{column.value}} </mat-header-cell>
@@ -5,5 +6,5 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <mat-row (click)="rowClicked(row.id)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>

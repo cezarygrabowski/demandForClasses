@@ -1,0 +1,16 @@
+nelmio_api_doc:
+    documentation:
+        host: 127.240.0.2
+        schemes: [http, https]
+        info:
+            title: Zarządzanie zapotrzebowaniami
+            description: Ta aplikacja umożliwi łatwe zarzadanie zapotrzebowaniami na zajęcia dydaktyczne
+            version: 1.0.0
+        securityDefinitions:
+            Bearer:
+                type: apiKey
+                description: 'Value: Bearer {jwt}'
+                name: Authorization
+                in: header
+        security:
+            - Bearer: []

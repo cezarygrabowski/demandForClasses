@@ -5,7 +5,7 @@ RUN yum -y install epel-release && \
     yum -y update && \
     yum -y install yum-utils && \
     yum-config-manager --enable remi-php71 && \
-    yum -y install php-mbstring php-common php-gmp php php-cli php-pdo php-pecl-mysql php-opcache php-xml php-pecl-zip php-gd php-mongodb && \
+    yum -y install php-mbstring php-common php-gmp php php-cli php-pdo php-pgsql php-opcache php-xml php-pecl-zip php-gd php-mongodb && \
     yum -y install nginx php-fpm && \
     yum -y install supervisor && \
     mkdir -p /var/www /etc/init-scripts
@@ -56,6 +56,8 @@ ADD init/init-app.sh /etc/init-scripts
 
 ### BASH AUTOCOMPLETE ####
 RUN yum install bash-completion -y
+
+RUN chown -R demand:demand /var/lib/php/session
 
 #### CHANGE WORKDIR
 WORKDIR /var/www/api

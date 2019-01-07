@@ -1,24 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {DemandFormService} from './demand-form.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-demand-form',
   templateUrl: './demand-form.component.html',
   styleUrls: ['./demand-form.component.css']
 })
-export class DemandFormComponent implements OnInit {
+export class DemandFormComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
   submitted = false;
-
-  constructor(private formBuilder: FormBuilder) { }
+  private demandElement: Object;
+  private subscriptions: Subscription;
+  private qualifiedLecturers: Object;
+  constructor(
+      private formBuilder: FormBuilder,
+      private route: ActivatedRoute,
+      private demandFormService: DemandFormService
+  ) { }
 
   ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.subscriptions = this.getQualifiedLecturers(id).subscribe(res => {
+      this.qualifiedLecturers = res;
+    });
+
+    const demandSubscription = this.getDemandDetails(id).subscribe(res => {
+      this.demandElement = res;
+    });
+    this.subscriptions.add(demandSubscription);
+
     this.registerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      lecturer: ['', Validators.required],
     });
   }
 
@@ -36,4 +51,16 @@ export class DemandFormComponent implements OnInit {
     alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value));
   }
 
+  private getDemandDetails(id: string) {
+    return this.demandFormService.getDemandDetails(id);
+  }
+
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private getQualifiedLecturers(id) {
+    return this.demandFormService.getLecturers(id);
+  }
 }

@@ -1,3 +1,3 @@
-dsa:
-    path: /
-    controller: App\Controller\ArticleController::homepage
+login_check:
+  path:     /login_check
+  methods:  [POST]

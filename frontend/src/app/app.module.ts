@@ -18,7 +18,8 @@ import {
   MatMenuModule,
   MatCardModule,
   MatProgressSpinnerModule,
-  MatFormFieldModule, MatNavList
+  MatFormFieldModule,
+  MatAutocomplete, MatAutocompleteModule
 } from '@angular/material';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { DemandListComponent } from './demand-list/demand-list.component';
@@ -26,7 +27,11 @@ import { DemandFormComponent } from './demand-form/demand-form.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {LoginComponent} from './login';
+import {ErrorInterceptor, JwtInterceptor} from './_helpers';
+import { TeacherImportComponent } from './teacher-import/teacher-import.component';
+import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +40,9 @@ import {HttpClientModule} from '@angular/common/http';
     DemandListComponent,
     DemandFormComponent,
     UserProfileComponent,
+    LoginComponent,
+    TeacherImportComponent,
+    ScheduleImportComponent
   ],
   imports: [
     BrowserModule,
@@ -47,25 +55,25 @@ import {HttpClientModule} from '@angular/common/http';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
     MatCardModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    MatButtonModule,
+    MatAutocompleteModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
