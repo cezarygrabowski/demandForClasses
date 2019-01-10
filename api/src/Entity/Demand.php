@@ -60,9 +60,25 @@ class Demand
     private $totalHours;
 
     /**
-     * @OneToMany(targetEntity="LectureType", mappedBy="demand", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @OneToMany(targetEntity="Lecture", mappedBy="demand", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
-    private $lectureTypes;
+    private $lectures;
+
+    /**
+     * @return mixed
+     */
+    public function getLectures()
+    {
+        return $this->lectures;
+    }
+
+    /**
+     * @param mixed $lectures
+     */
+    public function setLectures($lectures): void
+    {
+        $this->lectures = $lectures;
+    }
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -195,22 +211,6 @@ class Demand
     public function setTotalHours($totalHours): void
     {
         $this->totalHours = $totalHours;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLectureTypes()
-    {
-        return $this->lectureTypes;
-    }
-
-    /**
-     * @param mixed $lectureTypes
-     */
-    public function setLectureTypes($lectureTypes): void
-    {
-        $this->lectureTypes = $lectureTypes;
     }
 
     public function getSubject(): Subject

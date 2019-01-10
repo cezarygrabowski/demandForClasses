@@ -19,7 +19,7 @@ import {
   MatCardModule,
   MatProgressSpinnerModule,
   MatFormFieldModule,
-  MatAutocomplete, MatAutocompleteModule
+  MatAutocomplete, MatAutocompleteModule, MatButtonToggle, MatButtonToggleModule
 } from '@angular/material';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { DemandListComponent } from './demand-list/demand-list.component';
@@ -32,6 +32,9 @@ import {LoginComponent} from './login';
 import {ErrorInterceptor, JwtInterceptor} from './_helpers';
 import { TeacherImportComponent } from './teacher-import/teacher-import.component';
 import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
+import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.component';
+import { LectureTypeFormComponent } from './lecture-type-form/lecture-type-form.component';
+import { PlaceFormComponent } from './place-form/place-form.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import { ScheduleImportComponent } from './schedule-import/schedule-import.compo
     UserProfileComponent,
     LoginComponent,
     TeacherImportComponent,
-    ScheduleImportComponent
+    ScheduleImportComponent,
+    SemesterWeeksComponent,
+    LectureTypeFormComponent,
+    PlaceFormComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +73,8 @@ import { ScheduleImportComponent } from './schedule-import/schedule-import.compo
     MatSortModule,
     MatTableModule,
     MatButtonModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatButtonToggleModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

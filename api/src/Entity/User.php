@@ -38,9 +38,9 @@ class User implements UserInterface
     private $isActive;
 
     /**
-     * @OneToMany(targetEntity="LectureType", mappedBy="lecturer", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @OneToMany(targetEntity="Lecture", mappedBy="lecturer", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
      */
-    private $lectureTypes;
+    private $lectures;
 
     /**
      * Many User have Many qualifications.
@@ -57,29 +57,35 @@ class User implements UserInterface
         $this->isActive = true;
         $this->username = $username;
         $this->qualifications = new ArrayCollection();
-        $this->lectureTypes = new ArrayCollection();
+        $this->lectures = new ArrayCollection();
 
     }
+
     public function getUsername()
     {
         return $this->username;
     }
+
     public function getSalt()
     {
         return null;
     }
+
     public function getPassword()
     {
         return $this->password;
     }
+
     public function setPassword($password)
     {
         $this->password = $password;
     }
+
     public function getRoles()
     {
         return array('ROLE_USER');
     }
+
     public function eraseCredentials()
     {
 
@@ -104,22 +110,6 @@ class User implements UserInterface
     /**
      * @return mixed
      */
-    public function getLectureTypes()
-    {
-        return $this->lectureTypes;
-    }
-
-    /**
-     * @param mixed $lectureTypes
-     */
-    public function setLectureTypes($lectureTypes): void
-    {
-        $this->lectureTypes = $lectureTypes;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getQualifications()
     {
         return $this->qualifications;
@@ -139,5 +129,21 @@ class User implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLectures()
+    {
+        return $this->lectures;
+    }
+
+    /**
+     * @param mixed $lectures
+     */
+    public function setLectures($lectures): void
+    {
+        $this->lectures = $lectures;
     }
 }

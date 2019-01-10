@@ -1,0 +1,37 @@
+<div [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content>
+        <h2>{{lecture.lectureType.name}}</h2>
+
+        <mat-toolbar-row>
+            {{ lecture.hours }} godzin
+        </mat-toolbar-row>
+        <mat-form-field>
+            <mat-label>Wpisz swoje uwagi</mat-label>
+            <textarea matInput formControlName="lectureComments"></textarea>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Wybierz prowadzącego</mat-label>
+            <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
+        </mat-form-field>
+        <app-semester-weeks
+                [totalHours]="lecture.hours"
+                (hoursProperlyDistributed)="onHoursDistribution($event)"
+                (allocatedWeeksOutput)="onWeeksAllocation($event)"
+        ></app-semester-weeks>
+        <ng-container *ngIf="hoursProperlyDistributed">
+            <li *ngFor="let week of allocatedWeeks">
+                <app-place-form
+                        [week]="week"
+                        [buildings]="buildings"
+                        (scheduleEmitter)="schedule"
+                ></app-place-form>
+            </li>
+        </ng-container>
+    </div>
+</div>
+
+<mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let lecturer of qualifiedLecturers"
+                [value]="lecturer.username">{{lecturer.username}}</mat-option>
+</mat-autocomplete>

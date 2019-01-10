@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToOne;
 
 /**
  * @ORM\Table(name="schedules")
@@ -17,28 +17,26 @@ class Schedule
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $weekNumber;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $suggestedHours;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $building;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $room;
 
     /**
-     * @ManyToOne(targetEntity="LectureType", cascade={"all"}, fetch="EAGER", inversedBy="id")
-     * @ORM\Column(type="string")
+     * @OneToOne(targetEntity="Building")
      */
-    private $lectureType;
+    private $building;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Lecture", fetch="EAGER", inversedBy="schedules")
+     */
+    private $lecture;
 
     /**
      * @return mixed
@@ -103,38 +101,4 @@ class Schedule
     {
         $this->building = $building;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getRoom()
-    {
-        return $this->room;
-    }
-
-    /**
-     * @param mixed $room
-     */
-    public function setRoom($room): void
-    {
-        $this->room = $room;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLectureType()
-    {
-        return $this->lectureType;
-    }
-
-    /**
-     * @param mixed $lectureType
-     */
-    public function setLectureType($lectureType): void
-    {
-        $this->lectureType = $lectureType;
-    }
-
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Building;
 use App\Entity\Demand;
 use App\Entity\Schedule;
 use App\Entity\User;
@@ -74,6 +75,13 @@ class DemandService
     public function findAll()
     {
         $demands = $this->em->getRepository(Demand::class)->findAll();
+
+        return $demands;
+    }
+
+    public function findAllBuildings()
+    {
+        $demands = $this->em->getRepository(Building::class)->findAll();
 
         return $demands;
     }

@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
 
 /**
- * @ORM\Table(name="lecture_types")
  * @ORM\Entity
+ * @ORM\Table(name="buildings")
  */
-class LectureType
+class Building
 {
     /**
      * @ORM\Id
@@ -17,10 +18,23 @@ class LectureType
      */
     private $id;
 
-     /**
+    /**
      * @ORM\Column(type="string")
      */
     private $name;
+
+    /**
+     * @OneToMany(targetEntity="Room", cascade={"persist", "remove", "merge"}, orphanRemoval=true, mappedBy="building")
+     */
+    private $rooms;
+
+    /**
+     * @return mixed
+     */
+    public function getRooms()
+    {
+        return $this->rooms;
+    }
 
     /**
      * @return mixed
@@ -53,6 +67,4 @@ class LectureType
     {
         $this->name = $name;
     }
-
-
 }

@@ -1,0 +1,57 @@
+<p>
+  Rozkład godzin w poszczególnych tygodniach
+</p>
+<div [formGroup]="weeksFormGroup">
+  <mat-form-field class="week-input">
+    <mat-label>1</mat-label> <input type="number" matInput formControlName="week1">
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>2</mat-label><input type="number" matInput formControlName="week2"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>3</mat-label><input type="number" matInput formControlName="week3"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>4</mat-label><input type="number" matInput formControlName="week4"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>5</mat-label><input type="number" matInput formControlName="week5"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>6</mat-label><input type="number" matInput formControlName="week6"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>7</mat-label><input type="number" matInput formControlName="week7"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>8</mat-label><input type="number" matInput formControlName="week8"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>9</mat-label><input type="number" matInput formControlName="week9"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>10</mat-label><input type="number" matInput formControlName="week10"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>11</mat-label><input type="number" matInput formControlName="week11"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>12</mat-label><input type="number" matInput formControlName="week12"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>13</mat-label><input type="number" matInput formControlName="week13"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>14</mat-label><input type="number" matInput formControlName="week14"/>
+  </mat-form-field>
+  <mat-form-field class="week-input">
+    <mat-label>15</mat-label><input type="number" matInput formControlName="week15"/>
+  </mat-form-field>
+</div>
+<mat-error *ngIf="totalHours < distributedHours">
+  Zalokowano za dużo godzin!
+</mat-error>
+
+<p *ngIf="totalHours >= distributedHours">
+  Pozostało godzin do rozdysponowania: {{ totalHours - distributedHours }}
+</p>

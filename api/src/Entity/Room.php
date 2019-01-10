@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
- * @ORM\Table(name="lecture_types")
  * @ORM\Entity
+ * @ORM\Table(name="rooms")
  */
-class LectureType
+class Room
 {
     /**
      * @ORM\Id
@@ -17,10 +18,15 @@ class LectureType
      */
     private $id;
 
-     /**
+    /**
      * @ORM\Column(type="string")
      */
     private $name;
+
+    /**
+     * @ManyToOne(targetEntity="Building", cascade={"all"}, fetch="EAGER", inversedBy="rooms")
+     */
+    private $building;
 
     /**
      * @return mixed
@@ -28,14 +34,6 @@ class LectureType
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -53,6 +51,4 @@ class LectureType
     {
         $this->name = $name;
     }
-
-
 }

@@ -1,0 +1,27 @@
+
+<div [formGroup]="placeForm">
+  <p>
+    {{ weekLabel }}
+  </p>
+
+  <mat-form-field>
+    <mat-label>Wybierz budynek</mat-label>
+    <input type="text" matInput formControlName="building" [matAutocomplete]="buildingAutoComplete">
+  </mat-form-field>
+
+  <mat-form-field >
+    <mat-label>Wybierz salę</mat-label>
+    <input type="text" matInput formControlName="room" [matAutocomplete]="roomAutoComplete">
+  </mat-form-field>
+</div>
+
+<mat-autocomplete #buildingAutoComplete="matAutocomplete">
+  <mat-option *ngFor="let building of buildings"
+              [value]="building.name">{{building.name}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete  #roomAutoComplete="matAutocomplete">
+  <mat-option *ngFor="let room of building?.rooms"
+              [value]="room.name">{{room.name}}</mat-option>
+</mat-autocomplete>

@@ -1,9 +1,17 @@
+import {Subject} from '../_interfaces/subject';
+import {Lecture} from '../_interfaces/lecture';
+
 export interface DemandElement {
-    subject: string;
-    hours: number;
-    blocks: string;
-    comments: string;
+    subject: Subject;
+    department: string;
+    group: string;
+    groupTyoe: string;
+    id: number;
+    institute: string;
+    lectures: Lecture[];
+    semester: string;
     status: string;
-    building: number;
-    room: number;
+    totalHours: number;
+    yearNumber: string;
 }
+

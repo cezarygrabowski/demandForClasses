@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DemandController extends AbstractController
 {
     private $demandService;
+
     /**
      * @var HttpService
      */
@@ -42,6 +43,15 @@ class DemandController extends AbstractController
         $demands = $this->demandService->findAll();
 
         return $this->httpService->createCollectionResponse($demands);
+    }
+
+    /**
+     * @Route("/buildings", name="list_demands", methods={"GET"})
+     */
+    public function listBuildings(){
+        $buildings = $this->demandService->findAllBuildings();
+
+        return $this->httpService->createCollectionResponse($buildings);
     }
 
     /**

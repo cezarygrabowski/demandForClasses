@@ -1,54 +1,47 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
-    <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
-  </mat-form-field>
+<div class="col-xs-12 col-sm-6 info-block">
+  <table>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Nr zapotrzebowania:</td>
+      <td>{{ demandElement?.id }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
+      <td>{{ demandElement?.yearNumber }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Wydział:</td>
+      <td>{{ demandElement?.department }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Grupa:</td>
+      <td>{{ demandElement?.group }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Rodzaj grupy:</td>
+      <td>{{ demandElement?.groupType}}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Semestr:</td>
+      <td>{{ demandElement?.semester }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Przedmiot:</td>
+      <td>{{ demandElement?.subject.name }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Instytut:</td>
+      <td>{{ demandElement?.institute }}</td>
+    </tr>
+    <tr>
+      <td class="item"><i class="icon s7-id"></i> Sumaryczna liczba godzin:</td>
+      <td>{{ demandElement?.totalHours }}</td>
+    </tr>
+  </table>
+</div>
 
-  <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let lecturer of qualifiedLecturers" [value]="lecturer.username">{{lecturer.username}}</mat-option>
-  </mat-autocomplete>
-
-  <button class="btn btn-primary">Akceptuj</button>
-</form>
-
-
-
-
-
-
-
-<!--<div class="jumbotron">-->
-  <!--<div class="container">-->
-    <!--<div class="row">-->
-      <!--<div class="col-md-6 offset-md-3">-->
-        <!--<h3>Wypełnianie zapotrzebowania</h3>-->
-        <!--<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">-->
-          <!--<div class="form-group">-->
-            <!--<label>First Name</label>-->
-            <!--<input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />-->
-            <!--<div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">-->
-              <!--<div *ngIf="f.firstName.errors.required">First Name is required</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<label>Last Name</label>-->
-            <!--<input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />-->
-            <!--<div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">-->
-              <!--<div *ngIf="f.lastName.errors.required">Last Name is required</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<label>Email</label>-->
-            <!--<input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />-->
-            <!--<div *ngIf="submitted && f.email.errors" class="invalid-feedback">-->
-              <!--<div *ngIf="f.email.errors.required">Email is required</div>-->
-              <!--<div *ngIf="f.email.errors.email">Email must be a valid email address</div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="form-group">-->
-            <!--<button class="btn btn-primary">Akceptuj</button>-->
-          <!--</div>-->
-        <!--</form>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
+<li *ngFor="let lecture of demandElement?.lectures">
+  <app-lecture-type-form
+          [lecture]="lecture"
+          [qualifiedLecturers]="qualifiedLecturers"
+  ></app-lecture-type-form>
+</li>
