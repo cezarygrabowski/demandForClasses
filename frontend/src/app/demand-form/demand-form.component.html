@@ -40,8 +40,11 @@
 </div>
 
 <li *ngFor="let lecture of demandElement?.lectures">
-  <app-lecture-type-form
+  <app-lecture-form
           [lecture]="lecture"
           [qualifiedLecturers]="qualifiedLecturers"
-  ></app-lecture-type-form>
+          (lectureEmitter)="onEmittedLecture($event)"
+  ></app-lecture-form>
 </li>
+
+<button mat-button (click)="onSubmit()">Zaktualizuj zapotrzebowanie</button>

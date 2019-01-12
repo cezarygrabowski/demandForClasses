@@ -25,4 +25,5 @@ export class Week {
         this.week = week;
         this.hours = hours;
     }
+
 }

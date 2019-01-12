@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {stringify} from "querystring";
 import {Week} from '../_models/week';
-import {Schedule} from "../_models/schedule";
+import {Lecture} from "../_models/lecture";
 
 @Component({
     selector: 'app-semester-weeks',
@@ -13,10 +13,10 @@ export class SemesterWeeksComponent implements OnInit {
     private distributedHours: number;
     allocatedWeeks: Array<Week>;
 
-    @Input('totalHours') totalHours: number;
+    @Input('lecture') lecture: Lecture;
     @Output() allocatedWeeksOutput = new EventEmitter<Array<Week>>();
     @Output() hoursProperlyDistributed = new EventEmitter<boolean>();
-
+    private totalHours: number;
     constructor(
         private formBuilder: FormBuilder,
     ) {
@@ -25,6 +25,7 @@ export class SemesterWeeksComponent implements OnInit {
     weeksFormGroup: FormGroup;
 
     ngOnInit() {
+        this.totalHours = this.lecture.hours;
         this.distributedHours = 0;
         this.initForm();
     }
@@ -71,8 +72,6 @@ export class SemesterWeeksComponent implements OnInit {
     }
 
     private checkIfDistributedHoursExceededTotalHours(): boolean {
-        console.log(this.totalHours);
-        console.log(this.distributedHours);
         if (this.totalHours >= this.distributedHours) {
             return true;
         }
@@ -86,6 +85,16 @@ export class SemesterWeeksComponent implements OnInit {
         } else {
             this.allocatedWeeks.slice(this.allocatedWeeks.indexOf(stringify(field), 1));
         }
+    }
+
+    private allocateWeeks() {
+        this.allocatedWeeks = [];
+        Object.keys(this.weeksFormGroup.controls).forEach(function (control) {
+            let field = this.weeksFormGroup.get(control);
+            this.allocateWeek(field);
+        }.bind(this));
+        this.allocatedWeeksOutput.emit(this.allocatedWeeks);
+        this.hoursProperlyDistributed.emit(this.checkIfDistributedHoursExceededTotalHours());
     }
 
     private getFormControlName(control: AbstractControl): string | null {
@@ -108,15 +117,5 @@ export class SemesterWeeksComponent implements OnInit {
         });
 
         return name;
-    }
-
-    private allocateWeeks() {
-        this.allocatedWeeks = [];
-        Object.keys(this.weeksFormGroup.controls).forEach(function (control) {
-            let field = this.weeksFormGroup.get(control);
-            this.allocateWeek(field);
-        }.bind(this));
-        this.allocatedWeeksOutput.emit(this.allocatedWeeks);
-        this.hoursProperlyDistributed.emit(this.checkIfDistributedHoursExceededTotalHours());
     }
 }

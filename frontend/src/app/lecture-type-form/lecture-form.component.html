@@ -1,4 +1,4 @@
-<div [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<div [formGroup]="lectureForm">
     <div mat-dialog-content>
         <h2>{{lecture.lectureType.name}}</h2>
 
@@ -14,20 +14,12 @@
             <mat-label>Wybierz prowadzącego</mat-label>
             <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
         </mat-form-field>
-        <app-semester-weeks
-                [totalHours]="lecture.hours"
-                (hoursProperlyDistributed)="onHoursDistribution($event)"
-                (allocatedWeeksOutput)="onWeeksAllocation($event)"
-        ></app-semester-weeks>
-        <ng-container *ngIf="hoursProperlyDistributed">
-            <li *ngFor="let week of allocatedWeeks">
-                <app-place-form
-                        [week]="week"
-                        [buildings]="buildings"
-                        (scheduleEmitter)="schedule"
-                ></app-place-form>
-            </li>
-        </ng-container>
+        <app-schedule-form
+            [lecture]="lecture"
+            (schedulesEmitter)="onSchedulesChange($event)"
+            (semesterWeeksChangedEmitter)="onSemesterWeeksChanged()">
+        </app-schedule-form>
+        <button mat-button [disabled]="this.lectureSaved===true" (click)="saveLecture()">Zapisz zmiany</button>
     </div>
 </div>
 

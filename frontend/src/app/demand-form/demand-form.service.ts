@@ -3,7 +3,6 @@ import {environment} from "../../environments/environment.local";
 import {HttpClient} from "@angular/common/http";
 import {DemandElement} from "../demand-list/demand-element";
 import {Observable} from "rxjs";
-import {Building} from "../_interfaces/building";
 
 @Injectable({
   providedIn: 'root'

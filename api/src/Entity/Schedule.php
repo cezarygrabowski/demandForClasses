@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
 
 /**
@@ -29,9 +30,14 @@ class Schedule
     private $suggestedHours;
 
     /**
-     * @OneToOne(targetEntity="Building")
+     * @ManyToOne(targetEntity="Building")
      */
     private $building;
+
+    /**
+     * @ManyToOne(targetEntity="Room")
+     */
+    private $room;
 
     /**
      * @ORM\ManyToOne(targetEntity="Lecture", fetch="EAGER", inversedBy="schedules")
@@ -101,4 +107,37 @@ class Schedule
     {
         $this->building = $building;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLecture()
+    {
+        return $this->lecture;
+    }
+
+    /**
+     * @param mixed $lecture
+     */
+    public function setLecture($lecture): void
+    {
+        $this->lecture = $lecture;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoom()
+    {
+        return $this->room;
+    }
+
+    /**
+     * @param mixed $room
+     */
+    public function setRoom($room): void
+    {
+        $this->room = $room;
+    }
+
 }

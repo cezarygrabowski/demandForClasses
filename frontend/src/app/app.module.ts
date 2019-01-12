@@ -33,8 +33,9 @@ import {ErrorInterceptor, JwtInterceptor} from './_helpers';
 import { TeacherImportComponent } from './teacher-import/teacher-import.component';
 import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
 import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.component';
-import { LectureTypeFormComponent } from './lecture-type-form/lecture-type-form.component';
+import { LectureFormComponent } from './lecture-type-form/lecture-form.component';
 import { PlaceFormComponent } from './place-form/place-form.component';
+import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +48,9 @@ import { PlaceFormComponent } from './place-form/place-form.component';
     TeacherImportComponent,
     ScheduleImportComponent,
     SemesterWeeksComponent,
-    LectureTypeFormComponent,
-    PlaceFormComponent
+    LectureFormComponent,
+    PlaceFormComponent,
+    ScheduleFormComponent
   ],
   imports: [
     BrowserModule,

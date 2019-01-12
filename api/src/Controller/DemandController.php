@@ -37,21 +37,22 @@ class DemandController extends AbstractController
     }
 
     /**
-     * @Route("", name="list_demands", methods={"GET"})
-     */
-    public function list(){
-        $demands = $this->demandService->findAll();
-
-        return $this->httpService->createCollectionResponse($demands);
-    }
-
-    /**
-     * @Route("/buildings", name="list_demands", methods={"GET"})
+     * @Route("/buildings", name="list_buildings", methods={"GET"})
      */
     public function listBuildings(){
         $buildings = $this->demandService->findAllBuildings();
 
         return $this->httpService->createCollectionResponse($buildings);
+    }
+
+
+    /**
+     * @Route("/", name="list_demands", methods={"GET"})
+     */
+    public function list(){
+        $demands = $this->demandService->findAll();
+
+        return $this->httpService->createCollectionResponse($demands);
     }
 
     /**

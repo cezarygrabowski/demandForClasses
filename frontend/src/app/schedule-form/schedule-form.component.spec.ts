@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LectureTypeFormComponent } from './lecture-type-form.component';
+import { ScheduleFormComponent } from './schedule-form.component';
 
-describe('LectureTypeFormComponent', () => {
-  let component: LectureTypeFormComponent;
-  let fixture: ComponentFixture<LectureTypeFormComponent>;
+describe('ScheduleFormComponent', () => {
+  let component: ScheduleFormComponent;
+  let fixture: ComponentFixture<ScheduleFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LectureTypeFormComponent ]
+      declarations: [ ScheduleFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LectureTypeFormComponent);
+    fixture = TestBed.createComponent(ScheduleFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
