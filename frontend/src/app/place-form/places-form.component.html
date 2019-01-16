@@ -1,0 +1,29 @@
+<div class="place-input-wrapper">
+  <div class="place-input" *ngFor="let schedule of lecture.schedules">
+    <p>{{ weekTranslations[schedule.weekNumber] }}</p>
+    <mat-form-field class="place-input">
+      <mat-label>Budynek </mat-label>
+      <input type="text" matInput (click)="onScheduleEditing(schedule)" (change)="onScheduleEditing(schedule)" [matAutocomplete]="buildingAutoComplete">
+    </mat-form-field>
+
+    <mat-form-field class="place-input">
+      <mat-label>Sala</mat-label>
+      <input type="text" matInput
+             (click)="onScheduleEditing(schedule)"
+             (change)="onScheduleEditing(schedule)"
+             (select)="onScheduleEditing(schedule)"
+             (keypress)="onScheduleEditing(schedule)"
+             [matAutocomplete]="roomAutoComplete">
+    </mat-form-field>
+  </div>
+</div>
+<mat-autocomplete (optionSelected)="onBuildingChange($event)"  #buildingAutoComplete="matAutocomplete">
+  <mat-option class="place-input" *ngFor="let building of buildings"
+              [value]="building.name">{{building.name}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete (optionSelected)="onRoomChange($event)"  #roomAutoComplete="matAutocomplete">
+  <mat-option class="place-input" *ngFor="let room of this.rooms"
+              [value]="room.name">{{room.name}}</mat-option>
+</mat-autocomplete>

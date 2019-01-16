@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {stringify} from "querystring";
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Week} from '../_models/week';
-import {Lecture} from "../_models/lecture";
+import {Lecture} from '../_models/lecture';
+import {Schedule} from '../_models/schedule';
 
 @Component({
     selector: 'app-semester-weeks',
@@ -11,21 +11,35 @@ import {Lecture} from "../_models/lecture";
 })
 export class SemesterWeeksComponent implements OnInit {
     private distributedHours: number;
-    allocatedWeeks: Array<Week>;
+    weeksFormGroup: FormGroup;
+    weeks: Array<Week> = [
+        new Week('1', 0),
+        new Week('2', 0),
+        new Week('3', 0),
+        new Week('4', 0),
+        new Week('5', 0),
+        new Week('6', 0),
+        new Week('7', 0),
+        new Week('8', 0),
+        new Week('9', 0),
+        new Week('10', 0),
+        new Week('11', 0),
+        new Week('12', 0),
+        new Week('13', 0),
+        new Week('14', 0),
+        new Week('15', 0),
+    ];
+    formControlNames: string[];
 
     @Input('lecture') lecture: Lecture;
-    @Output() allocatedWeeksOutput = new EventEmitter<Array<Week>>();
-    @Output() hoursProperlyDistributed = new EventEmitter<boolean>();
-    private totalHours: number;
+    @Output() lectureEmitter: EventEmitter<Lecture> = new EventEmitter();
+
     constructor(
         private formBuilder: FormBuilder,
     ) {
     }
 
-    weeksFormGroup: FormGroup;
-
     ngOnInit() {
-        this.totalHours = this.lecture.hours;
         this.distributedHours = 0;
         this.initForm();
     }
@@ -33,89 +47,76 @@ export class SemesterWeeksComponent implements OnInit {
     getDistributedHours() {
         this.distributedHours = 0;
         Object.keys(this.weeksFormGroup.controls).forEach(function (control) {
-            let field = this.weeksFormGroup.get(control);
-            this.distributedHours += field.value;
+            const field = this.weeksFormGroup.get(control);
+            this.distributedHours += parseInt(field.value, 10);
         }.bind(this));
     }
 
     private initForm() {
-        this.weeksFormGroup = this.formBuilder.group({
-            week1: [0, [Validators.pattern("^[0-9]*$")]],
-            week2: [0, [Validators.pattern("^[0-9]*$")]],
-            week3: [0, [Validators.pattern("^[0-9]*$")]],
-            week4: [0, [Validators.pattern("^[0-9]*$")]],
-            week5: [0, [Validators.pattern("^[0-9]*$")]],
-            week6: [0, [Validators.pattern("^[0-9]*$")]],
-            week7: [0, [Validators.pattern("^[0-9]*$")]],
-            week8: [0, [Validators.pattern("^[0-9]*$")]],
-            week9: [0, [Validators.pattern("^[0-9]*$")]],
-            week10: [0, [Validators.pattern("^[0-9]*$")]],
-            week11: [0, [Validators.pattern("^[0-9]*$")]],
-            week12: [0, [Validators.pattern("^[0-9]*$")]],
-            week13: [0, [Validators.pattern("^[0-9]*$")]],
-            week14: [0, [Validators.pattern("^[0-9]*$")]],
-            week15: [0, [Validators.pattern("^[0-9]*$")]]
-        });
+        this.weeksFormGroup = this.formBuilder.group({});
+        this.weeks.forEach(week =>
+            this.weeksFormGroup.addControl(week.week, new FormControl(week.hours, [Validators.pattern('^[0-9]*$')]))
+        );
 
+        this.initFormControlNames();
+        this.initFormValues();
         this.onChanges();
     }
 
     private onChanges() {
-        this.weeksFormGroup.valueChanges.subscribe(val => {
-            this.updateDistributedHoursAndCheckFormValidity();
+        this.formControlNames.forEach(name => {
+            this.weeksFormGroup.get(name).valueChanges.subscribe(value => {
+                this.getDistributedHours();
+                this.updateSchedules(name, value);
+            });
         });
     }
 
-    private updateDistributedHoursAndCheckFormValidity() {
-        this.getDistributedHours();
-        this.allocateWeeks();
+    private initFormControlNames() {
+        this.formControlNames = [];
+        Object.keys(this.weeksFormGroup.controls).forEach((control: string) => {
+            this.formControlNames.push(control);
+        });
     }
 
-    private checkIfDistributedHoursExceededTotalHours(): boolean {
-        if (this.totalHours >= this.distributedHours) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private allocateWeek(field: AbstractControl) {
-        if (field.value > 0) {
-            this.allocatedWeeks.push(new Week(this.getFormControlName(field), field.value));
-        } else {
-            this.allocatedWeeks.slice(this.allocatedWeeks.indexOf(stringify(field), 1));
-        }
-    }
-
-    private allocateWeeks() {
-        this.allocatedWeeks = [];
-        Object.keys(this.weeksFormGroup.controls).forEach(function (control) {
-            let field = this.weeksFormGroup.get(control);
-            this.allocateWeek(field);
-        }.bind(this));
-        this.allocatedWeeksOutput.emit(this.allocatedWeeks);
-        this.hoursProperlyDistributed.emit(this.checkIfDistributedHoursExceededTotalHours());
-    }
-
-    private getFormControlName(control: AbstractControl): string | null {
-        let group = <FormGroup>control.parent;
-
-        if (!group) {
-            return null;
-        }
-
-        let name: string;
-
-        Object.keys(group.controls).forEach(key => {
-            let childControl = group.get(key);
-
-            if (childControl !== control) {
-                return;
+    private initFormValues() {
+        this.lecture.schedules.forEach((schedule: Schedule) => {
+            const control = this.weeksFormGroup.get(schedule.weekNumber);
+            if (control) {
+                control.setValue(schedule.suggestedHours);
+                this.distributedHours += schedule.suggestedHours;
             }
-
-            name = key;
         });
+    }
 
-        return name;
+    private updateSchedules(name: string, value: number) {
+        if (value === 0) {
+            this.removeSchedule(name);
+        } else {
+            this.addOrModifySchedule(name, value);
+        }
+
+        this.lectureEmitter.emit(this.lecture);
+    }
+
+    private removeSchedule(weekNumber: string) {
+        this.lecture.schedules = this.lecture.schedules.filter((schedule: Schedule, index) => {
+            return schedule.weekNumber !== weekNumber;
+        });
+    }
+
+    private addOrModifySchedule(name: string, value: number) {
+        const schedule = this.lecture.schedules.filter((schedule: Schedule) => {
+            if (schedule.weekNumber === name) {
+                schedule.suggestedHours = value;
+                return schedule;
+            }
+        })[0];
+
+        // console.log(schedule);
+        if (schedule == null) {
+            let schedule = new Schedule(null, name, value, null, null, this.lecture);
+            this.lecture.schedules.push(schedule);
+        }
     }
 }

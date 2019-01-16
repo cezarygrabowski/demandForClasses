@@ -6,6 +6,7 @@ use App\Entity\Demand;
 use App\Service\DemandService;
 use App\Service\HttpService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,16 +38,6 @@ class DemandController extends AbstractController
     }
 
     /**
-     * @Route("/buildings", name="list_buildings", methods={"GET"})
-     */
-    public function listBuildings(){
-        $buildings = $this->demandService->findAllBuildings();
-
-        return $this->httpService->createCollectionResponse($buildings);
-    }
-
-
-    /**
      * @Route("/", name="list_demands", methods={"GET"})
      */
     public function list(){
@@ -56,14 +47,26 @@ class DemandController extends AbstractController
     }
 
     /**
-     * @Route("/update/{id}", name="update_demand", methods={"POST"})
+     * @Route("/buildings", name="list_buildings", methods={"GET"})
      */
-    public function update(Request $request, Demand $demand){
-        $this->demandService->updateDemand($demand, $this->getUser(), $data);
+    public function listBuildings(){
+        $buildings = $this->demandService->findAllBuildings();
+
+        return $this->httpService->createCollectionResponse($buildings);
     }
 
     /**
-     * @Route("/details/{id}", name="update_demand", methods={"GET"})
+     * @Route("/update/{id}", name="update_demand", methods={"POST"})
+     */
+    public function update(Request $request, Demand $demand){
+        $data = json_decode($request->getContent(), true);
+        $this->demandService->updateDemand($demand, $this->getUser(), $data);
+
+        return new JsonResponse("success");
+    }
+
+    /**
+     * @Route("/details/{id}", name="get_details", methods={"GET"})
      */
     public function getDetails(Demand $demand){
         return $this->httpService->createItemResponse($demand);

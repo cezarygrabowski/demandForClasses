@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Table(name="lectures")
@@ -42,6 +44,7 @@ class Lecture
 
     /**
      * @OneToMany(targetEntity="Schedule", mappedBy="lecture", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * PersistentCollection
      */
     private $schedules;
 
@@ -117,7 +120,7 @@ class Lecture
     /**
      * @return mixed
      */
-    public function getLecturer()
+    public function getLecturer(): ?User
     {
         return $this->lecturer;
     }
@@ -149,9 +152,20 @@ class Lecture
     /**
      * @return mixed
      */
-    public function getSchedules()
+    public function getSchedules(): PersistentCollection
     {
         return $this->schedules;
+    }
+
+    public function getSchedule(?int $id): Schedule
+    {
+        foreach ($this->schedules as $schedule) {
+            if ($schedule->getId() === $id) {
+                return $schedule;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -160,6 +174,13 @@ class Lecture
     public function setSchedules($schedules): void
     {
         $this->schedules = $schedules;
+    }
+
+    public function addSchedule(Schedule $schedule)
+    {
+        if (!$this->getSchedules()->contains($schedule)) {
+            $this->getSchedules()->add($schedule);
+        }
     }
 
 }

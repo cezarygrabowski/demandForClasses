@@ -5,28 +5,24 @@ namespace App\Service;
 use App\Entity\Building;
 use App\Entity\Demand;
 use App\Entity\Schedule;
-use App\Entity\User;
-use Doctrine\ORM\EntityManager;
+use App\Repository\BuildingRepository;
+use App\Repository\DemandRepository;
+use Symfony\Component\Security\Core\User\User;
 
 class DemandService
 {
-//    const GROUP = 0;
-//    const GROUP = 1;
-//    const GROUP = 2;
-//    const GROUP = 3;
-//    const GROUP = 4;
-//    const GROUP = 5;
-//    const GROUP = 6;
-//    const GROUP = 7;
-//    const GROUP = 8;
-//    const GROUP = 9;
-//    const GROUP = 10;
+    private $demandRepository;
+    private $lectureService;
+    private $buildingRepository;
 
-    private $em;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->em = $entityManager;
+    public function __construct(
+        DemandRepository $demandRepository,
+        LectureService $lectureService,
+        BuildingRepository $buildingRepository
+    ) {
+        $this->demandRepository = $demandRepository;
+        $this->lectureService = $lectureService;
+        $this->buildingRepository = $buildingRepository;
     }
 
     /**
@@ -63,6 +59,8 @@ class DemandService
 
     public function updateDemand(Demand $demand, User $user, array $data)
     {
+        //comments and lecturer
+        $this->lectureService->updateLectures($demand, $data['lectures']);
         //check who updates demand(based on role)
         //if it is a teacher then update it accordingly to what was passed in the request
     }
@@ -74,14 +72,14 @@ class DemandService
 
     public function findAll()
     {
-        $demands = $this->em->getRepository(Demand::class)->findAll();
+        $demands = $this->demandRepository->findAll();
 
         return $demands;
     }
 
     public function findAllBuildings()
     {
-        $demands = $this->em->getRepository(Building::class)->findAll();
+        $demands = $this->buildingRepository->findAll();
 
         return $demands;
     }

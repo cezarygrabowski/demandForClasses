@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {DemandFormService} from './demand-form.service';
 import {Observable, Subscription} from 'rxjs';
 import {DemandElement} from '../demand-list/demand-element';
 import {Lecture} from '../_models/lecture';
+import {Building} from "../_interfaces/building";
 
 @Component({
     selector: 'app-demand-form',
@@ -15,30 +16,42 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     demandElement: DemandElement;
     private subscriptions: Subscription;
     private qualifiedLecturers: Object;
-
+    private buildings: Building[];
     private lectures: Lecture[];
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private demandFormService: DemandFormService
     ) {
     }
 
     ngOnInit() {
-        this.lectures = [];
         const id = this.route.snapshot.paramMap.get('id');
-        const demandSubscription = this.getDemandDetails(id).subscribe(res => {
-            this.demandElement = res;
-        });
-        this.subscriptions = this.getQualifiedLecturers(id).subscribe(res => {
-            this.qualifiedLecturers = res;
-        });
+        this.lectures = [];
 
-        this.subscriptions.add(demandSubscription);
+        this.subscriptions = new Subscription();
+        this.subscriptions.add(this.getDemandDetails(id).subscribe(res => {
+            this.demandElement = res;
+        }));
+
+        this.subscriptions.add(this.getQualifiedLecturers(id).subscribe(res => {
+            this.qualifiedLecturers = res;
+        }));
+
+        this.subscriptions.add(this.demandFormService.getBuildings().subscribe(res => {
+            this.buildings = res;
+        }));
     }
 
     onSubmit() {
-        this.submitted = true;
+        if (this.lectures.length > 0) {
+            this.demandElement.lectures = this.lectures;
+            console.log(this.lectures);
+        }
+        this.demandFormService.updateDemand(this.demandElement)
+            .subscribe(response => this.router.navigateByUrl('/demands'));
+        // this.demandFormService.apiRequest(this.demandElement);
     }
 
     private getDemandDetails(id: string): Observable<DemandElement> {
@@ -60,7 +73,6 @@ export class DemandFormComponent implements OnInit, OnDestroy {
 
         this.lectures.push(lecture);
     }
-
 
     lectureExists(id: number): boolean {
         return this.lectures.some((lecture: Lecture) => lecture.lectureType.id === id);

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlaceFormComponent } from './place-form.component';
+import { PlaceFormComponent } from './places-form.component';
 
 describe('PlaceFormComponent', () => {
   let component: PlaceFormComponent;

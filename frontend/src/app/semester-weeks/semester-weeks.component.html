@@ -1,58 +1,19 @@
-<p>
-  Rozkład godzin w poszczególnych tygodniach
-</p>
-<p *ngIf="totalHours >= distributedHours">
-  Pozostało godzin do rozdysponowania: {{ totalHours - distributedHours }}
-</p>
-<mat-error *ngIf="totalHours < distributedHours">
-  Zalokowano za dużo godzin!
-</mat-error>
-<div [formGroup]="weeksFormGroup">
-  <mat-form-field class="week-input">
-    <mat-label>1</mat-label> <input type="number" min="0" matInput formControlName="week1">
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>2</mat-label><input type="number" min="0" matInput formControlName="week2"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>3</mat-label><input type="number" min="0" matInput formControlName="week3"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>4</mat-label><input type="number" min="0"matInput formControlName="week4"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>5</mat-label><input type="number" min="0" matInput formControlName="week5"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>6</mat-label><input type="number" min="0" matInput formControlName="week6"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>7</mat-label><input type="number" min="0" matInput formControlName="week7"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>8</mat-label><input type="number" min="0" matInput formControlName="week8"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>9</mat-label><input type="number" min="0" matInput formControlName="week9"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>10</mat-label><input type="number" min="0" matInput formControlName="week10"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>11</mat-label><input type="number" min="0" matInput formControlName="week11"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>12</mat-label><input type="number" min="0" matInput formControlName="week12"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>13</mat-label><input type="number" min="0" matInput formControlName="week13"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>14</mat-label><input type="number" min="0" matInput formControlName="week14"/>
-  </mat-form-field>
-  <mat-form-field class="week-input">
-    <mat-label>15</mat-label><input type="number" min="0" matInput formControlName="week15"/>
-  </mat-form-field>
+<div class="semester-weeks-wrapper">
+  <p>
+    Rozkład godzin w poszczególnych tygodniach
+  </p>
+  <p *ngIf="lecture.hours >= distributedHours">
+    Pozostało godzin do rozdysponowania: {{ lecture.hours - distributedHours }}
+  </p>
+  <mat-error *ngIf="lecture.hours < distributedHours">
+    Zalokowano za dużo godzin! ({{distributedHours}})
+  </mat-error>
+  <div [formGroup]="weeksFormGroup">
+    <div *ngFor="let item of formControlNames;">
+      <mat-form-field  class="week-input">
+        <mat-label>{{ item }}</mat-label> <input type="number" min="0" matInput [formControlName]="item">
+      </mat-form-field>
+    </div>
+    <div style="float:none; clear: both"></div>
+  </div>
 </div>
-
-

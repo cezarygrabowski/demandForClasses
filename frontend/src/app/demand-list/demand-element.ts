@@ -1,5 +1,5 @@
 import {Subject} from '../_interfaces/subject';
-import {Lecture} from '../_interfaces/lecture';
+import {Lecture} from '../_models/lecture';
 
 export interface DemandElement {
     subject: Subject;

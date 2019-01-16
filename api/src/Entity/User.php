@@ -23,15 +23,18 @@ class User implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      */
     private $username;
+
     /**
      * @ORM\Column(type="string", length=500)
      * @Exclude
      */
     private $password;
+
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
@@ -52,13 +55,19 @@ class User implements UserInterface
      */
     private $qualifications;
 
+    /**
+     * @OneToMany(targetEntity="Role", mappedBy="user", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @var array
+     */
+    private $roles;
+
     public function __construct($username)
     {
         $this->isActive = true;
         $this->username = $username;
         $this->qualifications = new ArrayCollection();
         $this->lectures = new ArrayCollection();
-
+        $this->roles = new ArrayCollection();
     }
 
     public function getUsername()
@@ -81,9 +90,9 @@ class User implements UserInterface
         $this->password = $password;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
-        return array('ROLE_USER');
+        return $this->roles->toArray();
     }
 
     public function eraseCredentials()

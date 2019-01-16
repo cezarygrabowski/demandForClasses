@@ -66,6 +66,7 @@ class Demand
 
     /**
      * @return mixed
+     * Lecture[]
      */
     public function getLectures()
     {
@@ -224,6 +225,18 @@ class Demand
     public function setSubject($subject): void
     {
         $this->subject = $subject;
+    }
+
+    public function getLecture(int $id): ?Lecture
+    {
+        /** @var Lecture $lecture */
+        foreach ($this->getLectures() as $lecture) {
+            if($lecture->getId() === $id) {
+                return $lecture;
+            }
+        }
+
+        return null;
     }
 
     /**

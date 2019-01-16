@@ -1,15 +1,9 @@
 <app-semester-weeks
         [lecture]="lecture"
-        (hoursProperlyDistributed)="onHoursDistribution($event)"
-        (allocatedWeeksOutput)="onWeeksAllocation($event)"
+        (lectureEmitter)="onLectureUpdate($event)"
 ></app-semester-weeks>
-<ng-container *ngIf="hoursProperlyDistributed">
-  <li *ngFor="let week of allocatedWeeks">
-    <app-place-form
-            [lecture]="lecture"
-            [week]="week"
-            [buildings]="buildings"
-            (scheduleEmitter)="onScheduleChanged($event)"
-    ></app-place-form>
-  </li>
-</ng-container>
+<app-places-form
+        [lecture]="lecture"
+        [buildings]="buildings"
+        (lectureEmitter)="onLectureUpdate($event)"
+></app-places-form>

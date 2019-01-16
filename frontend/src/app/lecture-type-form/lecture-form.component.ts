@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Lecturer} from '../_interfaces/lecturer';
-import {Schedule} from '../_models/schedule';
 import {Lecture} from '../_models/lecture';
+import {Building} from '../_interfaces/building';
 
 @Component({
     selector: 'app-lecture-form',
@@ -11,28 +11,21 @@ import {Lecture} from '../_models/lecture';
     styleUrls: ['./lecture-form.component.css']
 })
 export class LectureFormComponent implements OnInit, OnDestroy {
-    submitted = false;
-    fields: Array<string> = [];
 
-    private subscriptions: Subscription;
+    lectureForm: FormGroup;
 
-    private schedules: Array<Schedule>;
-    private lectureSaved = false;
     @Input('lecture') lecture: Lecture;
+    @Input('buildings') buildings: Building[];
     @Input('qualifiedLecturers') qualifiedLecturers: Lecturer[];
 
     @Output() lectureEmitter: EventEmitter<Lecture> = new EventEmitter();
-    lectureForm: FormGroup;
 
     constructor(
         private formBuilder: FormBuilder,
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.initForm();
-        this.schedules = this.lecture.schedules;
-        this.saveLecture();
     }
 
     initForm() {
@@ -45,19 +38,12 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
-
-    saveLecture() {
-        this.lectureSaved = true;
-        this.lecture.lecturer = this.lectureForm.get('lecturer').value;
-        this.lecture.comments = this.lectureForm.get('lectureComments').value;
-        this.lecture.schedules = this.schedules;
-        this.lectureEmitter.emit(this.lecture);
     }
 
     private onLectureChange() {
-        this.lectureSaved = false;
+        this.lecture.lecturer = this.lectureForm.get('lecturer').value;
+        this.lecture.comments = this.lectureForm.get('lectureComments').value;
+        this.lectureEmitter.emit(this.lecture);
     }
 
     private onChanges() {
@@ -66,12 +52,9 @@ export class LectureFormComponent implements OnInit, OnDestroy {
         );
     }
 
-    onSchedulesChange(schedules: Schedule[]) {
-        this.schedules = schedules;
-        this.onLectureChange();
-    }
-
-    onSemesterWeeksChanged() {
-        this.onLectureChange();
+    onLectureEmitted(lecture: Lecture) {
+        this.lecture = lecture;
+        console.log('lectureForm');
+        this.lectureEmitter.emit(lecture);
     }
 }

@@ -1,50 +1,53 @@
-<div class="col-xs-12 col-sm-6 info-block">
-  <table>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Nr zapotrzebowania:</td>
-      <td>{{ demandElement?.id }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
-      <td>{{ demandElement?.yearNumber }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Wydział:</td>
-      <td>{{ demandElement?.department }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Grupa:</td>
-      <td>{{ demandElement?.group }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Rodzaj grupy:</td>
-      <td>{{ demandElement?.groupType}}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Semestr:</td>
-      <td>{{ demandElement?.semester }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Przedmiot:</td>
-      <td>{{ demandElement?.subject.name }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Instytut:</td>
-      <td>{{ demandElement?.institute }}</td>
-    </tr>
-    <tr>
-      <td class="item"><i class="icon s7-id"></i> Sumaryczna liczba godzin:</td>
-      <td>{{ demandElement?.totalHours }}</td>
-    </tr>
-  </table>
-</div>
+<ng-container *ngIf="this.demandElement">
+  <div class="col-xs-12 col-sm-6 info-block">
+    <table>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Nr zapotrzebowania:</td>
+        <td>{{ demandElement?.id }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
+        <td>{{ demandElement?.yearNumber }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Wydział:</td>
+        <td>{{ demandElement?.department }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Grupa:</td>
+        <td>{{ demandElement?.group }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Rodzaj grupy:</td>
+        <td>{{ demandElement?.groupType}}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Semestr:</td>
+        <td>{{ demandElement?.semester }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Przedmiot:</td>
+        <td>{{ demandElement?.subject.name }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Instytut:</td>
+        <td>{{ demandElement?.institute }}</td>
+      </tr>
+      <tr>
+        <td class="item"><i class="icon s7-id"></i> Sumaryczna liczba godzin:</td>
+        <td>{{ demandElement?.totalHours }}</td>
+      </tr>
+    </table>
+  </div>
 
-<li *ngFor="let lecture of demandElement?.lectures">
-  <app-lecture-form
-          [lecture]="lecture"
-          [qualifiedLecturers]="qualifiedLecturers"
-          (lectureEmitter)="onEmittedLecture($event)"
-  ></app-lecture-form>
-</li>
+  <li *ngFor="let lecture of demandElement?.lectures">
+    <app-lecture-form
+            [lecture]="lecture"
+            [buildings]="buildings"
+            [qualifiedLecturers]="qualifiedLecturers"
+            (lectureEmitter)="onEmittedLecture($event)"
+    ></app-lecture-form>
+  </li>
 
-<button mat-button (click)="onSubmit()">Zaktualizuj zapotrzebowanie</button>
+  <button mat-button (click)="onSubmit()">Zaktualizuj zapotrzebowanie</button>
+</ng-container>

@@ -3,12 +3,27 @@ security:
         App\Entity\User:
             algorithm: bcrypt
 
+        Symfony\Component\Security\Core\User\User: plaintext
     providers:
         entity_provider:
             entity:
                 class: App\Entity\User
                 property: username
-
+        in_memory:
+            memory:
+                users:
+                    admin:
+                        password: admin
+                        roles: 'ROLE_ADMIN'
+                    dziekan:
+                        password: dziekan
+                        roles: 'ROLE_DZIEKAN'
+                    kierownikZakladu:
+                        password: kierownikZakladu
+                        roles: 'ROLE_KIEROWNIK_ZAKLADU'
+                    nauczyciel:
+                        password: nauczyciel
+                        roles: 'ROLE_NAUCZYCIEL'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -17,6 +32,7 @@ security:
             pattern:  ^/login
             stateless: true
             anonymous: true
+            provider: in_memory
             json_login:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -28,10 +44,10 @@ security:
             anonymous: true
 
         api:
-            pattern:  ^/api
+            pattern:  ^/
             stateless: true
             anonymous: false
-            provider: entity_provider
+            provider: in_memory
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
@@ -39,4 +55,4 @@ security:
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/*, roles: IS_AUTHENTICATED_FULLY }

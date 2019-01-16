@@ -1,25 +1,20 @@
 <div [formGroup]="lectureForm">
     <div mat-dialog-content>
-        <h2>{{lecture.lectureType.name}}</h2>
-
-        <mat-toolbar-row>
-            {{ lecture.hours }} godzin
-        </mat-toolbar-row>
-        <mat-form-field>
-            <mat-label>Wpisz swoje uwagi</mat-label>
-            <textarea matInput formControlName="lectureComments"></textarea>
-        </mat-form-field>
-
+        <h2>{{lecture.lectureType.name}} - {{ lecture.hours }} godzin </h2>
         <mat-form-field>
             <mat-label>Wybierz prowadzącego</mat-label>
             <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
         </mat-form-field>
         <app-schedule-form
             [lecture]="lecture"
-            (schedulesEmitter)="onSchedulesChange($event)"
-            (semesterWeeksChangedEmitter)="onSemesterWeeksChanged()">
+            [buildings]="buildings"
+            (lectureEmitter)="onLectureEmitted($event)">
         </app-schedule-form>
-        <button mat-button [disabled]="this.lectureSaved===true" (click)="saveLecture()">Zapisz zmiany</button>
+        <div class="style-cleaner"></div>
+        <mat-form-field>
+            <mat-label>Wpisz swoje uwagi</mat-label>
+            <textarea class="input-comments" matInput formControlName="lectureComments"></textarea>
+        </mat-form-field>
     </div>
 </div>
 

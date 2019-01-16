@@ -1,0 +1,13 @@
+h2 {
+    text-align: center;
+    clear:both;
+}
+
+.input-comments {
+    min-width:8em;
+    min-height:8em;
+}
+
+.style-cleaner {
+    clear:both;
+}

@@ -34,7 +34,7 @@ import { TeacherImportComponent } from './teacher-import/teacher-import.componen
 import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
 import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.component';
 import { LectureFormComponent } from './lecture-type-form/lecture-form.component';
-import { PlaceFormComponent } from './place-form/place-form.component';
+import { PlacesFormComponent } from './place-form/places-form.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 
 @NgModule({
@@ -49,7 +49,7 @@ import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
     ScheduleImportComponent,
     SemesterWeeksComponent,
     LectureFormComponent,
-    PlaceFormComponent,
+    PlacesFormComponent,
     ScheduleFormComponent
   ],
   imports: [
