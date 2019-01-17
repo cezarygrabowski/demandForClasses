@@ -18,8 +18,6 @@ export class DemandListComponent implements OnInit {
         {id: 'id', value: 'Numer zapotrzebowania'},
         {id: 'subject', value: 'Przedmiot'},
         {id: 'hours', value: 'Godzin razem'},
-        {id: 'blocks', value: 'Bloki'},
-        {id: 'comments', value: 'Uwagi'},
         {id: 'group', value: 'Grupa'},
         {id: 'groupType', value: 'Rodzaj grupy'},
         {id: 'status', value: 'Status'}

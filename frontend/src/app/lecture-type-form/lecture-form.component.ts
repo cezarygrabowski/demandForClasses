@@ -4,6 +4,7 @@ import {Subscription} from 'rxjs';
 import {Lecturer} from '../_interfaces/lecturer';
 import {Lecture} from '../_models/lecture';
 import {Building} from '../_interfaces/building';
+import {DemandFormService} from "../demand-form/demand-form.service";
 
 @Component({
     selector: 'app-lecture-form',
@@ -15,6 +16,7 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     lectureForm: FormGroup;
 
     @Input('lecture') lecture: Lecture;
+    @Input('userRoles') userRoles: [];
     @Input('buildings') buildings: Building[];
     @Input('qualifiedLecturers') qualifiedLecturers: Lecturer[];
 
@@ -22,6 +24,7 @@ export class LectureFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private formBuilder: FormBuilder,
+        private demandFormService: DemandFormService
     ) {}
 
     ngOnInit() {

@@ -36,7 +36,11 @@ class ScheduleService
     private function updateSchedule(Lecture $lecture, $scheduleArray)
     {
         $schedule = $lecture->getSchedule($scheduleArray['id']);
-        $building = $this->buildingRepository->findOneBy(['name' => $scheduleArray['building']]);
+        if(isset($scheduleArray['building']['id'])) {
+            $building = $this->buildingRepository->find($scheduleArray['building']['id']);
+        } else {
+            $building = $this->buildingRepository->findOneBy(['name' => $scheduleArray['building']]);
+        }
         $room = $this->roomRepository->findOneBy(['name' => $scheduleArray['room']]);
 
         if ($schedule) {

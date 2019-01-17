@@ -63,6 +63,7 @@ class DemandService
         $this->lectureService->updateLectures($demand, $data['lectures']);
         //check who updates demand(based on role)
         //if it is a teacher then update it accordingly to what was passed in the request
+        $this->updateStatus($user, $demand);
     }
 
     private function findLectureTypesForDemand(array $row, array &$data)
@@ -70,11 +71,15 @@ class DemandService
 
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         $demands = $this->demandRepository->findAll();
 
-        return $demands;
+        $dtos = [];
+        foreach ($demands as $demand) {
+            $dtos[] = \App\DTO\Demand::fromDemand($demand);
+        }
+        return $dtos;
     }
 
     public function findAllBuildings()
@@ -82,5 +87,10 @@ class DemandService
         $demands = $this->buildingRepository->findAll();
 
         return $demands;
+    }
+
+    private function updateStatus(User $user, Demand $demand)
+    {
+//        if($user)
     }
 }

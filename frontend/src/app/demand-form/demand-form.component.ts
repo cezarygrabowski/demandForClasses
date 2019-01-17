@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DemandFormService} from './demand-form.service';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {DemandElement} from '../demand-list/demand-element';
 import {Lecture} from '../_models/lecture';
-import {Building} from "../_interfaces/building";
-import {User} from "../_models";
+import {Building} from '../_interfaces/building';
 
 @Component({
     selector: 'app-demand-form',
@@ -46,8 +45,8 @@ export class DemandFormComponent implements OnInit, OnDestroy {
         }));
 
         this.subscriptions.add(this.demandFormService.getRoles().subscribe(roles => {
-            this.currentlyLoggedUserRoles = roles;
-            console.log(this.currentlyLoggedUserRoles);
+            this.demandFormService.roles = roles;
+            console.log(this.demandFormService.roles);
         }));
     }
 

@@ -42,6 +42,7 @@
 
   <li *ngFor="let lecture of demandElement?.lectures">
     <app-lecture-form
+            [userRoles]="currentlyLoggedUserRoles"
             [lecture]="lecture"
             [buildings]="buildings"
             [qualifiedLecturers]="qualifiedLecturers"
@@ -49,5 +50,5 @@
     ></app-lecture-form>
   </li>
 
-  <button mat-button (click)="onSubmit()">Zaktualizuj zapotrzebowanie</button>
+  <button mat-button (click)="onSubmit()">Zaakceptuj zapotrzebowanie</button>
 </ng-container>

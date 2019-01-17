@@ -1,45 +1,56 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment.local";
 import {HttpClient} from "@angular/common/http";
 import {DemandElement} from "../demand-list/demand-element";
 import {Observable, Subscription} from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class DemandFormService {
+    public roles;
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
 
-  getDemandDetails(id: string): Observable<DemandElement>
-  {
-      return this.http.get<DemandElement>(`${environment.apiUrl}/demands/details/${id}`);
-  }
+    }
 
-  getLecturers(demandId: string) {
-    return this.http.get(`${environment.apiUrl}/lecturers/${demandId}`);
-  }
+    getDemandDetails(id: string): Observable<DemandElement> {
+        return this.http.get<DemandElement>(`${environment.apiUrl}/demands/details/${id}`);
+    }
 
-  getBuildings(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/demands/buildings`);
-  }
+    getLecturers(demandId: string) {
+        return this.http.get(`${environment.apiUrl}/lecturers/${demandId}`);
+    }
 
-  getRoles(){
-    return this.http.get(`${environment.apiUrl}/lecturer-roles`);
-  }
+    getBuildings(): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/demands/buildings`);
+    }
 
-  updateDemand(demand: DemandElement): Subscription {
-    return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
-      response => console.log(response),
-      err => console.log(err)
-    );
-  }
+    getRoles() {
+        return this.http.get(`${environment.apiUrl}/lecturer-roles`);
+    }
 
-  apiRequest(demand: DemandElement): Promise<any> {
-    // this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand).subscribe(response => console.log(response.json()));
-    return this.http.post<any>(`${environment.apiUrl}/api`, demand).toPromise()
-        .then(value => console.log(value))
-        .catch(error => console.log(error));
-  }
+    updateDemand(demand: DemandElement): Subscription {
+        return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
+            response => console.log(response),
+            err => console.log(err)
+        );
+    }
+
+    doesUserHaveRoles(roles: Array): boolean {
+        let found = false;
+        if (this.roles) {
+            let found = this.roles.some(r => roles.indexOf(r) >= 0);
+        }
+
+        return found;
+    }
+
+    apiRequest(demand: DemandElement): Promise<any> {
+        // this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand).subscribe(response => console.log(response.json()));
+        return this.http.post<any>(`${environment.apiUrl}/api`, demand).toPromise()
+            .then(value => console.log(value))
+            .catch(error => console.log(error));
+    }
 
 }

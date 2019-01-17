@@ -61,6 +61,14 @@ class User implements UserInterface
      */
     private $roles;
 
+
+    public function isAdmin() {}
+    public function isNauczyciel() {}
+    public function isKierownikZakladu(){}
+    public function isDziekan(){}
+    public function isDyrektorInstytutu(){}
+
+
     public function __construct($username)
     {
         $this->isActive = true;
