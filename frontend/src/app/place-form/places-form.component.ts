@@ -31,7 +31,7 @@ export class PlacesFormComponent implements OnInit {
     onBuildingChange(event: MatAutocompleteSelectedEvent) {
         this.setCurrentBuilding(event.option.value);
         this.lecture.schedules.forEach((schedule: Schedule) => {
-           if (schedule.weekNumber === this.currentlyEditingSchedule.weekNumber) {
+           if (this.currentlyEditingSchedule && schedule.weekNumber === this.currentlyEditingSchedule.weekNumber) {
                schedule.building = event.option.value;
            }
         });

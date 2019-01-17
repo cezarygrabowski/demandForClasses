@@ -15,7 +15,7 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): User {
+    public get currentUserValue(): Usser {
         return this.currentUserSubject.value;
     }
 

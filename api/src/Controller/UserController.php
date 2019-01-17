@@ -70,4 +70,11 @@ class UserController extends AbstractController
 
         return $this->httpService->createCollectionResponse($users);
     }
+
+    /**
+     * @Route("/lecturer-roles")
+     */
+    public function roles() {
+        return $this->httpService->createCollectionResponse($this->getUser()->getRoles());
+    }
 }

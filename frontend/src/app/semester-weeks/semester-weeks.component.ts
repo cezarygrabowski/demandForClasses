@@ -115,7 +115,7 @@ export class SemesterWeeksComponent implements OnInit {
 
         // console.log(schedule);
         if (schedule == null) {
-            let schedule = new Schedule(null, name, value, null, null, this.lecture);
+            let schedule = new Schedule(null, name, value, null, null);
             this.lecture.schedules.push(schedule);
         }
     }

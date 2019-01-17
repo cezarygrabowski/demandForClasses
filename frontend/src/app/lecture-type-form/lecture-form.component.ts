@@ -54,7 +54,6 @@ export class LectureFormComponent implements OnInit, OnDestroy {
 
     onLectureEmitted(lecture: Lecture) {
         this.lecture = lecture;
-        console.log('lectureForm');
         this.lectureEmitter.emit(lecture);
     }
 }

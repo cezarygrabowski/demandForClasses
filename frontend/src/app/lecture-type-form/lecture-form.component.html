@@ -1,7 +1,7 @@
 <div [formGroup]="lectureForm">
     <div mat-dialog-content>
         <h2>{{lecture.lectureType.name}} - {{ lecture.hours }} godzin </h2>
-        <mat-form-field>
+        <mat-form-field >
             <mat-label>Wybierz prowadzącego</mat-label>
             <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
         </mat-form-field>

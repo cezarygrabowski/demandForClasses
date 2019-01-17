@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../environments/environment.local";
 import {HttpClient} from "@angular/common/http";
 import {DemandElement} from "../demand-list/demand-element";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,15 @@ export class DemandFormService {
     return this.http.get(`${environment.apiUrl}/demands/buildings`);
   }
 
-  updateDemand(demand: DemandElement): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand);
+  getRoles(){
+    return this.http.get(`${environment.apiUrl}/lecturer-roles`);
+  }
+
+  updateDemand(demand: DemandElement): Subscription {
+    return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
+      response => console.log(response),
+      err => console.log(err)
+    );
   }
 
   apiRequest(demand: DemandElement): Promise<any> {

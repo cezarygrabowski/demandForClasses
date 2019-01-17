@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DemandFormService} from './demand-form.service';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {DemandElement} from '../demand-list/demand-element';
 import {Lecture} from '../_models/lecture';
 import {Building} from "../_interfaces/building";
+import {User} from "../_models";
 
 @Component({
     selector: 'app-demand-form',
@@ -18,11 +19,12 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     private qualifiedLecturers: Object;
     private buildings: Building[];
     private lectures: Lecture[];
+    private currentlyLoggedUserRoles: Object;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private demandFormService: DemandFormService
+        private demandFormService: DemandFormService,
     ) {
     }
 
@@ -42,16 +44,19 @@ export class DemandFormComponent implements OnInit, OnDestroy {
         this.subscriptions.add(this.demandFormService.getBuildings().subscribe(res => {
             this.buildings = res;
         }));
+
+        this.subscriptions.add(this.demandFormService.getRoles().subscribe(roles => {
+            this.currentlyLoggedUserRoles = roles;
+            console.log(this.currentlyLoggedUserRoles);
+        }));
     }
 
     onSubmit() {
         if (this.lectures.length > 0) {
             this.demandElement.lectures = this.lectures;
-            console.log(this.lectures);
         }
-        this.demandFormService.updateDemand(this.demandElement)
-            .subscribe(response => this.router.navigateByUrl('/demands'));
-        // this.demandFormService.apiRequest(this.demandElement);
+
+        this.demandFormService.updateDemand(this.demandElement);
     }
 
     private getDemandDetails(id: string): Observable<DemandElement> {

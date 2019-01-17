@@ -5,7 +5,7 @@ export interface DemandElement {
     subject: Subject;
     department: string;
     group: string;
-    groupTyoe: string;
+    groupType: string;
     id: number;
     institute: string;
     lectures: Lecture[];

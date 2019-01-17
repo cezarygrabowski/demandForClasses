@@ -43,6 +43,7 @@ class ScheduleService
             $schedule->setSuggestedHours($scheduleArray['suggestedHours']);
             $schedule->setBuilding($building);
             $schedule->setRoom($room);
+            $this->scheduleRepository->em->persist($schedule);
         } else {
             if ($scheduleArray['id']) {
                 throw new RuntimeException("Something's horribly wrong");
@@ -50,6 +51,7 @@ class ScheduleService
 
             $schedule = new Schedule();
             $schedule->setRoom($room);
+            $schedule->setLecture($lecture);
             $schedule->setBuilding($building);
             $schedule->setSuggestedHours($scheduleArray['suggestedHours']);
             $schedule->setWeekNumber($scheduleArray['weekNumber']);

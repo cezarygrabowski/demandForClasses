@@ -29,7 +29,7 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {LoginComponent} from './login';
-import {ErrorInterceptor, JwtInterceptor} from './_helpers';
+import {JwtInterceptor} from './_helpers';
 import { TeacherImportComponent } from './teacher-import/teacher-import.component';
 import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
 import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.component';
@@ -80,7 +80,6 @@ import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
   ],
   bootstrap: [AppComponent]

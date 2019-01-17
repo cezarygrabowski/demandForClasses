@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use AppBundle\Entity\ValueObject\Contract\ScheduleData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -86,14 +87,6 @@ class Lecture
     }
 
     /**
-     * @return mixed
-     */
-    public function getDemand()
-    {
-        return $this->demand;
-    }
-
-    /**
      * @param mixed $demand
      */
     public function setDemand($demand): void
@@ -157,7 +150,7 @@ class Lecture
         return $this->schedules;
     }
 
-    public function getSchedule(?int $id): Schedule
+    public function getSchedule(?int $id): ?Schedule
     {
         foreach ($this->schedules as $schedule) {
             if ($schedule->getId() === $id) {
@@ -178,9 +171,20 @@ class Lecture
 
     public function addSchedule(Schedule $schedule)
     {
-        if (!$this->getSchedules()->contains($schedule)) {
+        if (!$this->doesScheduleExist($schedule)) {
             $this->getSchedules()->add($schedule);
         }
+    }
+
+    public function doesScheduleExist(Schedule $schedule): bool
+    {
+        foreach ($this->getSchedules() as $existingSchedule) {
+            if($existingSchedule->getWeekNumber() == $schedule->getWeekNumber()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

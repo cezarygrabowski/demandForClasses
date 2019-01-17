@@ -5,10 +5,10 @@ export class Lecturer {
     constructor(
         id: number,
         username: string,
-        qualifiactions: []
+        qualifications: []
     ) {
         this.id = id;
         this.username = username;
-        this.qualifications = qualifiactions;
+        this.qualifications = qualifications;
     }
 }
