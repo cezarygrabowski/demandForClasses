@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\PersistentCollection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="demands")
@@ -61,7 +64,7 @@ class Demand
     private $semester;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"})
      */
     private $subject;
 
@@ -71,15 +74,16 @@ class Demand
     private $groupType;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $totalHours;
-
-    /**
      * @OneToMany(targetEntity="Lecture", mappedBy="demand", cascade={"persist", "remove", "merge"}, orphanRemoval=true)
+     * @var ArrayCollection
      */
     private $lectures;
 
+    public function addLecture(Lecture $lecture) {
+        if($this->lectures->contains($lecture)) {
+            $this->lectures->add($lecture);
+        }
+    }
     /**
      * @return mixed
      * Lecture[]
@@ -215,11 +219,17 @@ class Demand
     }
 
     /**
-     * @return mixed
+     * @Serializer\VirtualProperty(name="totalHours")
      */
     public function getTotalHours()
     {
-        return $this->totalHours;
+        $totalHours = 0;
+        /** @var Lecture $lecture */
+        foreach ($this->lectures as $lecture) {
+            $totalHours += $lecture->getHours();
+        }
+
+        return $totalHours;
     }
 
     /**
@@ -273,6 +283,6 @@ class Demand
 
     public function __construct()
     {
-
+        $this->lectures = new ArrayCollection();
     }
 }

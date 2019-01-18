@@ -44,6 +44,7 @@ class ImportExportController extends AbstractController
      */
     public function importSchedules(Request $request): Response
     {
+
         $file = $request->files->get('file');
         $file = fopen($file, 'r');
         $data = [];
@@ -53,7 +54,7 @@ class ImportExportController extends AbstractController
         }
         fclose($file);
 
-        /** remove first element which are headers */
+        /** remove first element which is headers */
         array_shift($data);
 
         $this->importExportService->importSchedules($data);

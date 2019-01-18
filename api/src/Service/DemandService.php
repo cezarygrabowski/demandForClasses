@@ -2,11 +2,16 @@
 
 namespace App\Service;
 
-use App\Entity\Building;
 use App\Entity\Demand;
+use App\Entity\Lecture;
+use App\Entity\LectureType;
 use App\Entity\Schedule;
+use App\Entity\Subject;
 use App\Repository\BuildingRepository;
 use App\Repository\DemandRepository;
+use App\Repository\LectureTypeRepository;
+use App\Repository\SubjectRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\User;
 
 class DemandService
@@ -14,15 +19,31 @@ class DemandService
     private $demandRepository;
     private $lectureService;
     private $buildingRepository;
+    private $userRepository;
+    private $lectureTypeRepository;
+    private $subjectRepository;
 
+    /**
+     * DemandService constructor.
+     * @param DemandRepository $demandRepository
+     * @param LectureService $lectureService
+     * @param BuildingRepository $buildingRepository
+     * @param UserRepository $userRepository
+     */
     public function __construct(
         DemandRepository $demandRepository,
         LectureService $lectureService,
-        BuildingRepository $buildingRepository
+        BuildingRepository $buildingRepository,
+        UserRepository $userRepository,
+        LectureTypeRepository $lectureTypeRepository,
+        SubjectRepository $subjectRepository
     ) {
         $this->demandRepository = $demandRepository;
         $this->lectureService = $lectureService;
         $this->buildingRepository = $buildingRepository;
+        $this->userRepository = $userRepository;
+        $this->lectureTypeRepository = $lectureTypeRepository;
+        $this->subjectRepository = $subjectRepository;
     }
 
     /**
@@ -31,17 +52,32 @@ class DemandService
      */
     public function generateDemand(array $row): Demand
     {
-        $demand = new Demand();
-        $demand->setGroup($row[0]);
-        $demand->setSubject($row[1]);
-        $demand->setShortenedSubjectName($row[2]);
-        $demand->setYearNumber($row[6]);
-        $demand->setGroupType($row[7]);
-        $demand->setSemester($row[8]);
-        $demand->setDepartment($row[9]);
-        $demand->setInstitute($row[10]);
+        //findDemandBasedOn group, subjectName, yearNumber, groupType, semester, Department, Institute
+        // if demand found then create only lecture for this demand
+        // in another case
+        if ($demand = $this->demandRepository->findDemandByImportData($row)) {
+            $this->addLectureForDemand($demand, $row);
+        } else {
+            $demand = new Demand();
+            $demand->setGroup($row[0]);
+            $demand->setYearNumber($row[6]);
+            $demand->setGroupType($row[7]);
+            $demand->setSemester($row[8]);
+            $demand->setDepartment($row[9]);
+            $demand->setInstitute($row[10]);
 
-        $demand->setLectureTypes($this->findLectureTypesForDemand($row));
+            $subject = $this->subjectRepository->findOneBy(['name' => $row[1]]);
+            if (!$subject) {
+                $subject = new Subject();
+                $subject->setName($row[1]);
+                $subject->setShortenedName($row[2]);
+            }
+
+            $demand->setSubject($subject);
+
+            $this->addLectureForDemand($demand, $row);
+        }
+
         return $demand;
     }
 
@@ -49,12 +85,11 @@ class DemandService
     {
         /** @var Schedule $schedule */
         foreach ($data as $row) {
-            $lectureTypes = $this->findLectureTypesForGivenRow($row, $data);
-            $demand = $this->generateDemand($row, $lectureTypes);
-            $this->em->persist($demand);
+            $demand = $this->generateDemand($row);
+            $this->demandRepository->getEntityManager()->persist($demand);
         }
 
-        $this->em->flush();
+        $this->demandRepository->getEntityManager()->flush();
     }
 
     public function updateDemand(Demand $demand, User $user, array $data)
@@ -64,11 +99,6 @@ class DemandService
         //check who updates demand(based on role)
         //if it is a teacher then update it accordingly to what was passed in the request
         $this->updateStatus($user, $demand);
-    }
-
-    private function findLectureTypesForDemand(array $row, array &$data)
-    {
-
     }
 
     public function findAll(): array
@@ -92,5 +122,20 @@ class DemandService
     private function updateStatus(User $user, Demand $demand)
     {
 //        if($user)
+    }
+
+    private function addLectureForDemand(Demand $demand, array $row)
+    {
+        $lectureType = $this->lectureTypeRepository->findBy(['name' => $row[3]]);
+        $lecture = new Lecture();
+        $lecture->setHours($row[5]);
+        $lecture->setLecturer($this->userRepository->findBy(['username' => $row[4]]));
+        if (!$lectureType) {
+            $lectureType = new LectureType();
+            $lectureType->setName($row[3]);
+            $this->lectureTypeRepository->getEntityManager()->persist($lectureType);
+        }
+        $lecture->setLectureType($lectureType);
+        $demand->addLecture($lecture);
     }
 }
