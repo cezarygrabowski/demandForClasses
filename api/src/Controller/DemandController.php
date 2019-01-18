@@ -62,7 +62,8 @@ class DemandController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $this->demandService->updateDemand($demand, $this->getUser(), $data);
         $this->getDoctrine()->getEntityManager()->flush();
-        return new JsonResponse("success");
+
+        return $this->httpService->createSuccessResponse();
     }
 
     /**

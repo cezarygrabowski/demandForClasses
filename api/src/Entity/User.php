@@ -61,12 +61,25 @@ class User implements UserInterface
      */
     private $roles;
 
+    public function isAdmin()
+    {
+    }
 
-    public function isAdmin() {}
-    public function isNauczyciel() {}
-    public function isKierownikZakladu(){}
-    public function isDziekan(){}
-    public function isDyrektorInstytutu(){}
+    public function isNauczyciel()
+    {
+    }
+
+    public function isKierownikZakladu()
+    {
+    }
+
+    public function isDziekan()
+    {
+    }
+
+    public function isDyrektorInstytutu()
+    {
+    }
 
 
     public function __construct($username)
@@ -78,6 +91,20 @@ class User implements UserInterface
         $this->roles = new ArrayCollection();
     }
 
+    public function addQualification(Subject $subject)
+    {
+        if (!$this->qualifications->contains($subject)) {
+            $this->qualifications->add($subject);
+        }
+    }
+
+    public function addRole(Role $role): void
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
     public function getUsername()
     {
         return $this->username;
@@ -85,7 +112,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        return null;
+        return null; 
     }
 
     public function getPassword()

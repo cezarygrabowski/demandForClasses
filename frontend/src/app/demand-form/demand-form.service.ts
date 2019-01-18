@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {environment} from "../../environments/environment.local";
-import {HttpClient} from "@angular/common/http";
-import {DemandElement} from "../demand-list/demand-element";
-import {Observable, Subscription} from "rxjs";
+import {environment} from '../../environments/environment.local';
+import {HttpClient} from '@angular/common/http';
+import {DemandElement} from '../demand-list/demand-element';
+import {Observable, Subscription} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -37,12 +37,11 @@ export class DemandFormService {
         );
     }
 
-    doesUserHaveRoles(roles: Array): boolean {
+    doesUserHaveRoles(roles: Array<string>): boolean {
         let found = false;
         if (this.roles) {
-            let found = this.roles.some(r => roles.indexOf(r) >= 0);
+            found = this.roles.some(r => roles.indexOf(r) >= 0);
         }
-
         return found;
     }
 

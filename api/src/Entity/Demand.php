@@ -54,7 +54,7 @@ class Demand
     private $department;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="group_name", type="string", nullable=true)
      */
     private $group;
 
@@ -80,7 +80,7 @@ class Demand
     private $lectures;
 
     public function addLecture(Lecture $lecture) {
-        if($this->lectures->contains($lecture)) {
+        if(!$this->lectures->contains($lecture)) {
             $this->lectures->add($lecture);
         }
     }

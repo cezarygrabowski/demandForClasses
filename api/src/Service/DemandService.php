@@ -52,9 +52,6 @@ class DemandService
      */
     public function generateDemand(array $row): Demand
     {
-        //findDemandBasedOn group, subjectName, yearNumber, groupType, semester, Department, Institute
-        // if demand found then create only lecture for this demand
-        // in another case
         if ($demand = $this->demandRepository->findDemandByImportData($row)) {
             $this->addLectureForDemand($demand, $row);
         } else {
@@ -67,12 +64,7 @@ class DemandService
             $demand->setInstitute($row[10]);
 
             $subject = $this->subjectRepository->findOneBy(['name' => $row[1]]);
-            if (!$subject) {
-                $subject = new Subject();
-                $subject->setName($row[1]);
-                $subject->setShortenedName($row[2]);
-            }
-
+            $demand->setStatus(Demand::STATUS_UNTOUCHED);
             $demand->setSubject($subject);
 
             $this->addLectureForDemand($demand, $row);
@@ -87,9 +79,8 @@ class DemandService
         foreach ($data as $row) {
             $demand = $this->generateDemand($row);
             $this->demandRepository->getEntityManager()->persist($demand);
+            $this->demandRepository->getEntityManager()->flush();
         }
-
-        $this->demandRepository->getEntityManager()->flush();
     }
 
     public function updateDemand(Demand $demand, User $user, array $data)
@@ -126,16 +117,11 @@ class DemandService
 
     private function addLectureForDemand(Demand $demand, array $row)
     {
-        $lectureType = $this->lectureTypeRepository->findBy(['name' => $row[3]]);
+        $lectureType = $this->lectureTypeRepository->findOneBy(['name' => $row[3]]);
         $lecture = new Lecture();
         $lecture->setHours($row[5]);
-        $lecture->setLecturer($this->userRepository->findBy(['username' => $row[4]]));
-        if (!$lectureType) {
-            $lectureType = new LectureType();
-            $lectureType->setName($row[3]);
-            $this->lectureTypeRepository->getEntityManager()->persist($lectureType);
-        }
         $lecture->setLectureType($lectureType);
+        $lecture->setDemand($demand);
         $demand->addLecture($lecture);
     }
 }

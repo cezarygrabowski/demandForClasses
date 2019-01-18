@@ -25,15 +25,20 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     constructor(
         private formBuilder: FormBuilder,
         private demandFormService: DemandFormService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.initForm();
     }
 
     initForm() {
+        let lecturer = '';
+        if (this.lecture.lecturer) {
+            lecturer = this.lecture.lecturer.username;
+        }
         this.lectureForm = this.formBuilder.group({
-            lecturer: [this.lecture.lecturer.username, Validators.required],
+            lecturer: [lecturer, Validators.required],
             lectureComments: [this.lecture.comments, Validators.required],
         });
 

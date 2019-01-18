@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -37,5 +38,9 @@ class HttpService
         $demand = $this->serializer->serialize($demand, 'json');
 
         return new Response($demand);
+    }
+
+    public function createSuccessResponse() {
+        return new JsonResponse("success");
     }
 }

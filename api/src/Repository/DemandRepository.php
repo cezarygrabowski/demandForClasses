@@ -18,23 +18,23 @@ class DemandRepository extends ServiceEntityRepository
         return $this->getEntityManager()->createQueryBuilder('d')
             ->select('d')
             ->from(Demand::class,'d')
-//            ->leftJoin('d.subject', 's')
-//            ->where('d.group = :group')
-//            ->andWhere('s.name = :subjectName')
-//            ->andWhere('d.yearNumber = :yearNumber')
-//            ->andWhere('d.groupType = :groupType')
-//            ->andWhere('d.semester = :semester')
-//            ->andWhere('d.department = :department')
-//            ->andWhere('d.institute = :institute')
-//            ->setParameters([
-//                'group' => $data[0],
-//                'subjectName' => $data[1],
-//                'yearNumber' => $data[6],
-//                'groupType' => $data[7],
-//                'semester' => $data[8],
-//                'department' => $data[9],
-//                'institute' => $data[10]
-//            ])
+            ->leftJoin('d.subject', 's')
+            ->andWhere('d.group like :group')
+            ->andWhere('s.name like :subjectName')
+            ->andWhere('d.yearNumber like :yearNumber')
+            ->andWhere('d.groupType like :groupType')
+            ->andWhere('d.semester like :semester')
+            ->andWhere('d.department like :department')
+            ->andWhere('d.institute like :institute')
+            ->setParameters([
+                'group' => $data[0],
+                'subjectName' => $data[1],
+                'yearNumber' => $data[6],
+                'groupType' => $data[7],
+                'semester' => $data[8],
+                'department' => $data[9],
+                'institute' => $data[10]
+            ])
             ->getQuery()
             ->getOneOrNullResult();
     }
