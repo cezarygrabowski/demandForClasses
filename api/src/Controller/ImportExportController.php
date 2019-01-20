@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Repository\LectureRepository;
 use App\Service\DemandService;
 use App\Service\HttpService;
 use App\Service\ImportExportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,21 +20,41 @@ class ImportExportController extends AbstractController
 {
     private $importExportService;
     private $httpService;
+    private $lectureRepository;
 
     public function __construct(
         ImportExportService $importExportService,
-        HttpService $httpService
+        HttpService $httpService,
+        LectureRepository $lectureRepository
     ) {
         $this->importExportService = $importExportService;
         $this->httpService = $httpService;
+        $this->lectureRepository = $lectureRepository;
     }
 
     /**
-     * @Route("/", name="ex")
+     * @Route("/demands/export", name="export_demands", methods={"POST"})
      */
-    public function exportDemands(): Response
-    {
-//        $this->importExportService->exportDemands($data);
+    public function export(){
+
+        $container = $this->container;
+        $response = new StreamedResponse(function() use($container) {
+
+            $results = $this->lectureRepository->findAll();
+            $handle = fopen('php://output', 'r+');
+
+            foreach ($results as $result) {
+                fputcsv($handle, $result->toArray());
+//                fputcsv($handle, ['test1', 'test2']);
+            }
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition','attachment; filename="export.csv"');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response->sendHeaders()->sendContent();
     }
 
     /**
@@ -44,7 +66,6 @@ class ImportExportController extends AbstractController
         $file = fopen($file, 'r');
         $data = [];
         while (($line = fgetcsv($file)) !== FALSE) {
-            //$line is an array of the csv elements
             $data[] = $line;
         }
         fclose($file);
@@ -66,7 +87,6 @@ class ImportExportController extends AbstractController
         $file = fopen($file, 'r');
         $data = [];
         while (($line = fgetcsv($file)) !== FALSE) {
-            //$line is an array of the csv elements
             $data[] = $line;
         }
         fclose($file);

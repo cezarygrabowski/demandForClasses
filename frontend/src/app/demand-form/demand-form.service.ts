@@ -60,6 +60,6 @@ export class DemandFormService {
   }
 
   exportDemands() {
-    return this.http.post(`${environment.apiUrl}/demands/export`, {}, {responseType: 'Blob'});
+    return this.http.post(`${environment.apiUrl}/demands/export`, {}, {responseType: 'blob'});
   }
 }

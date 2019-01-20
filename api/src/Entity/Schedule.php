@@ -140,4 +140,14 @@ class Schedule
         $this->room = $room;
     }
 
+    public function toArray(): array
+    {
+        return [
+            $this->id,
+            $this->weekNumber,
+            $this->building ? $this->building->getName() : '',
+            $this->room ? $this->room->getName() : '',
+            $this->suggestedHours
+        ];
+    }
 }

@@ -1,4 +1,8 @@
 <button (click)="exportDemands()" class="export-button" mat-flat-button color="primary">Eksport</button>
+<div>
+  <input (change)="filterByGroup($event.target.value)" placeholder="Wyszukaj grupę"/>
+  <input (change)="filterBySubject($event.target.value)"placeholder="Wyszukaj przedmiot"/>
+</div>
 <mat-table #table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="{{column.id}}" *ngFor="let column of columnNames">
     <mat-header-cell *matHeaderCellDef mat-sort-header> {{column.value}} </mat-header-cell>

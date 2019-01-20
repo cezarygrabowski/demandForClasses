@@ -28,6 +28,14 @@ class Lecture
     private $demand;
 
     /**
+     * @return mixed
+     */
+    public function getDemand(): Demand
+    {
+        return $this->demand;
+    }
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $hours;
@@ -56,7 +64,7 @@ class Lecture
     /**
      * @return mixed
      */
-    public function getLectureType()
+    public function getLectureType(): LectureType
     {
         return $this->lectureType;
     }
@@ -186,8 +194,23 @@ class Lecture
         return false;
     }
 
-//    public function toArray()
-//    {
-//
-//    }
+    public function toArray()
+    {
+        return [
+            $this->getLecturer() ? $this->getLecturer()->getUsername() : '',
+            $this->getLectureType()->getName(),
+            implode(',', $this->getDemand()->toArray()),
+            $this->getSchedulesDataForExport()
+        ];
+    }
+
+    private function getSchedulesDataForExport()
+    {
+        $schedules = [];
+        foreach ($this->getSchedules() as $schedule) {
+            $schedules[] = implode(',', $schedule->toArray());
+        }
+
+        return implode(',', $schedules);
+    }
 }

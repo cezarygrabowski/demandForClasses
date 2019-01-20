@@ -288,23 +288,14 @@ class Demand
 
     public function toArray(): array {
         return [
-            $this->id,
+            'id' => $this->id,
             $this->yearNumber,
             $this->institute,
             $this->department,
             $this->group,
             $this->semester,
             $this->getSubject()->getId(),
-            $this->groupType,
-//            ['test', 'test2'],
+            $this->groupType
         ];
-    }
-
-    private function getLecturesForExport()
-    {
-        $lectures = [];
-        foreach ($this->lectures as $lecture){
-            $lectures[] = $lecture->toArray();
-        }
     }
 }

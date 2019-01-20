@@ -52,30 +52,6 @@ class DemandController extends AbstractController
 
         return $this->httpService->createCollectionResponse($demands);
     }
-    /**
-     * @Route("/export", name="export_demands", methods={"POST"})
-     */
-    public function export(){
-
-        $container = $this->container;
-        $response = new StreamedResponse(function() use($container) {
-
-            $results = $this->demandRepository->findAll();
-            $handle = fopen('php://output', 'r+');
-
-            foreach ($results as $result) {
-//                fputcsv($handle, $result->toArray());
-                fputcsv($handle, ['test1', 'test2']);
-            }
-            fclose($handle);
-        });
-
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition','attachment; filename="export.csv"');
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-
-        return $response->sendHeaders()->sendContent();
-    }
 
     /**
      * @Route("/buildings", name="list_buildings", methods={"GET"})

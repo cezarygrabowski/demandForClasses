@@ -3,8 +3,6 @@ import {MatTableDataSource, MatSort} from '@angular/material';
 import {DemandElement} from './demand-element';
 import {DemandListService} from './demand-list.service';
 import {Router} from '@angular/router';
-import {DemandFormService} from "../demand-form/demand-form.service";
-import { saveAs } from 'file-saver';
 @Component({
     selector: 'app-demand-list',
     templateUrl: './demand-list.component.html',
@@ -15,7 +13,8 @@ export class DemandListComponent implements OnInit {
     displayedColumns = [];
     @ViewChild(MatSort) sort: MatSort;
 
-  private demands;
+    private demands;
+    private filteredDemands;
     columnNames = [
         {id: 'id', value: 'Numer zapotrzebowania'},
         {id: 'subject', value: 'Przedmiot'},
@@ -32,6 +31,7 @@ export class DemandListComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.filteredDemands = [];
         this.displayedColumns = this.columnNames.map(x => x.id);
         this.demandListService.getDemands().subscribe(result => {
             this.demands = result;
@@ -49,15 +49,47 @@ export class DemandListComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-  exportDemands() {
-    this.demandFormService.exportDemands().subscribe(result => saveAs(result, `export.csv`), error1 => console.log(error1));
-  }
+    exportDemands() {
+        this.demandFormService.exportDemands().subscribe(result => saveAs(result, `export.csv`), error1 => console.log(error1));
+    }
 
-  downloadFile(data: Response) {
-    const blob = new Blob([data], { type: 'text/csv' });
-    const url= window.URL.createObjectURL(blob);
-    window.open(url);
-  }
+
+    filterBySubject(value: any) {
+        if (value === '') {
+            this.dataSource = new MatTableDataSource(this.demands);
+            this.filteredDemands = [];
+        } else {
+            const filteredDemands = this.demands.filter((demand: DemandElement) => {
+                return demand.subject === value;
+            });
+            if (this.filteredDemands.length === 0) {
+                this.filteredDemands = filteredDemands;
+            } else {
+                this.filteredDemands = this.filteredDemands.concat(filteredDemands);
+            }
+            this.dataSource = new MatTableDataSource(this.filteredDemands);
+        }
+    }
+
+    filterByGroup(value: any) {
+        if (value === '') {
+            this.dataSource = new MatTableDataSource(this.demands);
+            this.filteredDemands = [];
+        } else {
+            const filteredDemands = this.demands.filter((demand: DemandElement) => {
+                return demand.group === value;
+            });
+            if (this.filteredDemands.length === 0) {
+                this.filteredDemands = filteredDemands;
+            } else {
+                this.filteredDemands = this.filteredDemands.concat(filteredDemands);
+            }
+            this.dataSource = new MatTableDataSource(this.filteredDemands);
+        }
+    }
 }
+
+import {DemandFormService} from '../demand-form/demand-form.service';
+import {saveAs} from 'file-saver';
 
 
