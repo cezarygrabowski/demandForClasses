@@ -4,7 +4,9 @@ RUN yum install -y gcc-c++ make git net-tools && \
     curl -sL https://rpm.nodesource.com/setup_10.x | bash - && \
     yum install -y nodejs && \
     npm install -g npm && \
-    npm install -g --unsafe-perm @angular/cli
+    npm install -g --unsafe-perm @angular/cli && \
+    npm install jspdf && \
+    npm install html2canvas
 
 RUN useradd demand && \
     mkdir -p /var/www/frontend

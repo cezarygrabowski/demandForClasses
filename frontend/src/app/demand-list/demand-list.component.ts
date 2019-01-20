@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource, MatSort} from '@angular/material';
 import {DemandElement} from './demand-element';
 import {DemandListService} from './demand-list.service';
 import {Router} from '@angular/router';
+import {DemandFormService} from "../demand-form/demand-form.service";
 
 @Component({
     selector: 'app-demand-list',
@@ -13,7 +14,8 @@ export class DemandListComponent implements OnInit {
     dataSource;
     displayedColumns = [];
     @ViewChild(MatSort) sort: MatSort;
-    private demands;
+
+  private demands;
     columnNames = [
         {id: 'id', value: 'Numer zapotrzebowania'},
         {id: 'subject', value: 'Przedmiot'},
@@ -25,7 +27,8 @@ export class DemandListComponent implements OnInit {
 
     constructor(
         private demandListService: DemandListService,
-        private router: Router) {
+        private router: Router,
+        private demandFormService: DemandFormService) {
     }
 
     ngOnInit() {
@@ -45,6 +48,10 @@ export class DemandListComponent implements OnInit {
         this.dataSource = new MatTableDataSource(tableArr);
         this.dataSource.sort = this.sort;
     }
+
+  exportDemands() {
+    this.demandFormService.exportDemands().subscribe();
+  }
 }
 
 

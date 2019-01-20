@@ -5,51 +5,61 @@ import {DemandElement} from '../demand-list/demand-element';
 import {Observable, Subscription} from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class DemandFormService {
-    public roles;
+  public roles;
 
-    constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {
 
+  }
+
+  getDemandDetails(id: string): Observable<DemandElement> {
+    return this.http.get<DemandElement>(`${environment.apiUrl}/demands/details/${id}`);
+  }
+
+  getLecturers(demandId: string) {
+    return this.http.get(`${environment.apiUrl}/lecturers/${demandId}`);
+  }
+
+  getBuildings(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/demands/buildings`);
+  }
+
+  getRoles() {
+    return this.http.get(`${environment.apiUrl}/lecturer-roles`);
+  }
+
+  updateDemand(demand: DemandElement): Subscription {
+    return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
+      response => console.log(response),
+      err => console.log(err)
+    );
+  }
+
+  doesUserHaveRoles(roles: Array<string>): boolean {
+    let found = false;
+    if (this.roles) {
+      found = this.roles.some(r => roles.indexOf(r) >= 0);
     }
+    return found;
+  }
 
-    getDemandDetails(id: string): Observable<DemandElement> {
-        return this.http.get<DemandElement>(`${environment.apiUrl}/demands/details/${id}`);
-    }
+  apiRequest(demand: DemandElement): Promise<any> {
+    // this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand).subscribe(response => console.log(response.json()));
+    return this.http.post<any>(`${environment.apiUrl}/api`, demand).toPromise()
+      .then(value => console.log(value))
+      .catch(error => console.log(error));
+  }
 
-    getLecturers(demandId: string) {
-        return this.http.get(`${environment.apiUrl}/lecturers/${demandId}`);
-    }
+  setAutomaticallySendToPlanners(checked: boolean) {
+    return this.http.post(`http://127.240.0.2/lecturers/automatically-send-to-planners`, checked).subscribe(
+      response => console.log(response),
+      err => console.log(err)
+    );
+  }
 
-    getBuildings(): Observable<any> {
-        return this.http.get(`${environment.apiUrl}/demands/buildings`);
-    }
-
-    getRoles() {
-        return this.http.get(`${environment.apiUrl}/lecturer-roles`);
-    }
-
-    updateDemand(demand: DemandElement): Subscription {
-        return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
-            response => console.log(response),
-            err => console.log(err)
-        );
-    }
-
-    doesUserHaveRoles(roles: Array<string>): boolean {
-        let found = false;
-        if (this.roles) {
-            found = this.roles.some(r => roles.indexOf(r) >= 0);
-        }
-        return found;
-    }
-
-    apiRequest(demand: DemandElement): Promise<any> {
-        // this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand).subscribe(response => console.log(response.json()));
-        return this.http.post<any>(`${environment.apiUrl}/api`, demand).toPromise()
-            .then(value => console.log(value))
-            .catch(error => console.log(error));
-    }
-
+  exportDemands() {
+    return this.http.get(`${environment.apiUrl}/demands/export`);
+  }
 }

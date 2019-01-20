@@ -285,4 +285,26 @@ class Demand
     {
         $this->lectures = new ArrayCollection();
     }
+
+    public function toArray(): array {
+        return [
+            $this->id,
+            $this->yearNumber,
+            $this->institute,
+            $this->department,
+            $this->group,
+            $this->semester,
+            $this->getSubject()->getId(),
+            $this->groupType,
+//            ['test', 'test2'],
+        ];
+    }
+
+    private function getLecturesForExport()
+    {
+        $lectures = [];
+        foreach ($this->lectures as $lecture){
+            $lectures[] = $lecture->toArray();
+        }
+    }
 }

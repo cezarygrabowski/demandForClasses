@@ -37,9 +37,10 @@ class UserService
 
     public function generateUsers($data)
     {
+        $lecturers = [];
         $em = $this->userRepository->getEntityManager();
         foreach ($data as $row) {
-            $lecturer = $this->createUser($row);
+            $lecturers[] = $lecturer = $this->createUser($row);
             $em->persist($lecturer);
         }
         $em->flush();
@@ -48,16 +49,16 @@ class UserService
     private function createUser($row): User
     {
         if ($user = $this->userRepository->findOneBy(['username' => $row[0]])) {
-            $this->addQualifications($user, $row[14]);
+            $this->addQualifications($user, $row[1]);
         } else {
             $user = new User($row[0]);
             $role = new Role();
-            $role->setName($row[1]);
+            $role->setName($row[2]);
             $role->setUser($user);
             $user->addRole($role);
             $user->setIsActive(true);
             $user->setPassword('admin');
-            $this->addQualifications($user, $row[14]);
+            $this->addQualifications($user, $row[1]);
 //            $user->('admin');
 
         }
@@ -71,17 +72,18 @@ class UserService
         $subjects = array_unique($subjects);
         $em = $this->subjectRepository->getEntityManager();
         foreach ($subjects as $key => $value) {
-            if ($subject = $this->subjectRepository->findOneBy(['name' => $value])) {
+            if ($subject = $this->subjectRepository->findOneBy(['shortenedName' => $key])) {
                 $user->addQualification($subject);
             } else {
                 $subject = new Subject();
                 $subject->setShortenedName($key);
-                $subject->setName($key);
-                $em->persist($subject);
-                $em->flush();
+                $subject->setName($value);
+//                $em->persist($subject);
+//                $em->flush();
                 $user->addQualification($subject);
             }
         }
+//        $isThereQualificationDuplicate = print_r(array_count_values($user->getQualifications()));
     }
 
     private function parseCellOntoArray(string $row): array
@@ -96,5 +98,10 @@ class UserService
         }
 
         return $targetSubjects;
+    }
+
+    public function updateAutomaticalSendToPlanners(User $user, bool $data)
+    {
+
     }
 }

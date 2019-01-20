@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use AppBundle\Entity\ValueObject\Contract\ScheduleData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -187,4 +186,8 @@ class Lecture
         return false;
     }
 
+//    public function toArray()
+//    {
+//
+//    }
 }

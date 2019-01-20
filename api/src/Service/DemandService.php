@@ -124,4 +124,13 @@ class DemandService
         $lecture->setDemand($demand);
         $demand->addLecture($lecture);
     }
+
+    public function exportDemands()
+    {
+        $demands = $this->demandRepository->findAll();
+
+        foreach ($demands as $demand) {
+            $test = '';
+        }
+    }
 }

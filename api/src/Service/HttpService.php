@@ -27,6 +27,11 @@ class HttpService
         $this->serializer = $serializer;
     }
 
+    public function serializeCollection($items){
+        $items = $this->serializer->serialize($items, 'json');
+        return $items;
+    }
+
     public function createCollectionResponse($items){
         $items = $this->serializer->serialize($items, 'json');
 

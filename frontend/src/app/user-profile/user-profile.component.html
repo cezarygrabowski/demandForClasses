@@ -1,3 +1,4 @@
-<p>
-  user-profile works!
-</p>
+<!--*ngIf="demandFormService.doesUserHaveRoles(['Dziekan', 'Admin'])"-->
+
+<mat-checkbox
+  (change)="automaticallySendToPlanners($event)">Automatycznie przekazuj do planistów</mat-checkbox>

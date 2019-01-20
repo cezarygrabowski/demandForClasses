@@ -47,10 +47,10 @@ class User implements UserInterface
 
     /**
      * Many User have Many qualifications.
-     * @ManyToMany(targetEntity="Subject")
+     * @ManyToMany(targetEntity="Subject", cascade={"persist", "remove", "merge"})
      * @JoinTable(name="users_qualifications",
      *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="qualification_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@JoinColumn(name="qualification_id", referencedColumnName="id")}
      *      )
      */
     private $qualifications;

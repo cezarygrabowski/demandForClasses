@@ -1,24 +1,27 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DemandFormService} from './demand-form.service';
 import {Observable, Subscription} from 'rxjs';
 import {DemandElement} from '../demand-list/demand-element';
 import {Lecture} from '../_models/lecture';
 import {Building} from '../_interfaces/building';
+import * as JSPdf from 'jspdf';
 
+import html2canvas from 'html2canvas';
 @Component({
     selector: 'app-demand-form',
     templateUrl: './demand-form.component.html',
     styleUrls: ['./demand-form.component.css']
 })
 export class DemandFormComponent implements OnInit, OnDestroy {
-    submitted = false;
-    demandElement: DemandElement;
-    private subscriptions: Subscription;
-    private qualifiedLecturers: Object;
-    private buildings: Building[];
-    private lectures: Lecture[];
-    private currentlyLoggedUserRoles: Object;
+  @ViewChild('demandContent') demandContent: ElementRef;
+  submitted = false;
+  demandElement: DemandElement;
+  private subscriptions: Subscription;
+  private qualifiedLecturers: Object;
+  private buildings: Building[];
+  private lectures: Lecture[];
+  private currentlyLoggedUserRoles: Object;
 
     constructor(
         private route: ActivatedRoute,
@@ -43,10 +46,9 @@ export class DemandFormComponent implements OnInit, OnDestroy {
         this.subscriptions.add(this.demandFormService.getBuildings().subscribe(res => {
             this.buildings = res;
         }));
-
+        console.log(localStorage.getItem('currentUser'));
         this.subscriptions.add(this.demandFormService.getRoles().subscribe(roles => {
             this.demandFormService.roles = roles;
-            console.log(this.demandFormService.roles);
         }));
     }
 
@@ -87,4 +89,18 @@ export class DemandFormComponent implements OnInit, OnDestroy {
             if (lecture.lectureType.id === id) { this.lectures.splice(index, 1); }
         });
     }
+
+  showPdf() {
+    var printWindow = window.open('', '', 'height=400,width=800');
+    printWindow.document.write('<html><head><title>DIV Contents</title>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write(this.demandContent.toString());
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+    // let doc = new jsPDF();
+    // doc.text("Hello", 20, 20);
+    // doc.save('table.pdf');
+    // });
+  }
 }

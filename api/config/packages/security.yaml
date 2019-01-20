@@ -1,7 +1,7 @@
 security:
     encoders:
-        App\Entity\User:
-            algorithm: bcrypt
+        App\Entity\User: plaintext
+#            algorithm: bcrypt
 
         Symfony\Component\Security\Core\User\User: plaintext
     providers:
@@ -14,16 +14,16 @@ security:
                 users:
                     admin:
                         password: admin
-                        roles: 'ROLE_ADMIN'
+                        roles: 'Admin'
                     dziekan:
                         password: dziekan
-                        roles: 'ROLE_DZIEKAN'
+                        roles: 'Dziekan'
                     kierownikZakladu:
                         password: kierownikZakladu
-                        roles: 'ROLE_KIEROWNIK_ZAKLADU'
+                        roles: 'KierownikZakladu'
                     nauczyciel:
                         password: nauczyciel
-                        roles: 'ROLE_NAUCZYCIEL'
+                        roles: 'Nauczyciel'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -32,7 +32,7 @@ security:
             pattern:  ^/login
             stateless: true
             anonymous: true
-            provider: in_memory
+            provider: entity_provider
             json_login:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -45,14 +45,15 @@ security:
 
         api:
             pattern:  ^/
+            security: false
             stateless: true
             anonymous: false
-            provider: in_memory
+            provider: entity_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
