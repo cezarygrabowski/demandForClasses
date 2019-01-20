@@ -4,7 +4,7 @@ import {DemandElement} from './demand-element';
 import {DemandListService} from './demand-list.service';
 import {Router} from '@angular/router';
 import {DemandFormService} from "../demand-form/demand-form.service";
-
+import { saveAs } from 'file-saver';
 @Component({
     selector: 'app-demand-list',
     templateUrl: './demand-list.component.html',
@@ -50,7 +50,13 @@ export class DemandListComponent implements OnInit {
     }
 
   exportDemands() {
-    this.demandFormService.exportDemands().subscribe();
+    this.demandFormService.exportDemands().subscribe(result => saveAs(result, `export.csv`), error1 => console.log(error1));
+  }
+
+  downloadFile(data: Response) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url= window.URL.createObjectURL(blob);
+    window.open(url);
   }
 }
 
