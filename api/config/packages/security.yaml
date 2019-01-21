@@ -32,7 +32,7 @@ security:
             pattern:  ^/login
             stateless: true
             anonymous: true
-            provider: in_memory
+            provider: entity_provider
             json_login:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -47,7 +47,7 @@ security:
             pattern:  ^/
             stateless: true
             anonymous: false
-            provider: in_memory
+            provider: entity_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator

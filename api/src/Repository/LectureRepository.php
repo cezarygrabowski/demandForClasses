@@ -8,14 +8,13 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class LectureRepository extends ServiceEntityRepository
 {
-    private $em;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Lecture::class);
-        $em = $this->_em;
     }
 
-    public function getEm() {
-        return $this->em;
+    public function getEntityManager()
+    {
+        return parent::getEntityManager();
     }
 }

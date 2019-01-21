@@ -1,11 +1,12 @@
 <div [formGroup]="lectureForm">
     <div mat-dialog-content>
         <h2>{{lecture.lectureType.name}} - {{ lecture.hours }} godzin </h2>
-        <mat-form-field *ngIf="demandFormService.doesUserHaveRoles(['ROLE_KIEROWNIK_ZAKLADU', 'ROLE_ADMIN', 'ROLE_DZIEKAN', 'ROLE_DYREKTOR_INSTYTUTU'])">
+        <mat-form-field *ngIf="demandFormService.doesUserHaveRoles(['Admin', 'KierownikZakladu'])">
             <mat-label>Wybierz prowadzącego</mat-label>
             <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
         </mat-form-field>
         <app-schedule-form
+            *ngIf="demandFormService.doesUserHaveRoles(['Admin', 'Nauczyciel'])"
             [lecture]="lecture"
             [buildings]="buildings"
             (lectureEmitter)="onLectureEmitted($event)">
@@ -20,5 +21,5 @@
 
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let lecturer of qualifiedLecturers"
-                [value]="lecturer.username">{{lecturer.username}}</mat-option>
+                [value]="lecturer.name">{{lecturer.name}}</mat-option>
 </mat-autocomplete>

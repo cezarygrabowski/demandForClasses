@@ -2,8 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -12,9 +15,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class HttpService
 {
     private $serializer;
+    private $tokenStorage;
 
-    public function __construct(SerializerInterface $serializer)
-    {
+    public function __construct(
+        TokenStorageInterface $storage,
+        SerializerInterface $serializer
+    ) {
         $encoder = new JsonEncoder();
         $normalizer = new ObjectNormalizer();
 
@@ -25,6 +31,7 @@ class HttpService
 
         $serializer = new Serializer(array($normalizer), array($encoder));
         $this->serializer = $serializer;
+        $this->tokenStorage = $storage;
     }
 
     public function serializeCollection($items){
@@ -47,5 +54,19 @@ class HttpService
 
     public function createSuccessResponse() {
         return new JsonResponse("success");
+    }
+
+    public function getCurrentUser()
+    {
+        $token = $this->tokenStorage->getToken();
+        if ($token instanceof TokenInterface) {
+
+            /** @var User $user */
+            $user = $token->getUser();
+            return $user;
+
+        } else {
+            return null;
+        }
     }
 }

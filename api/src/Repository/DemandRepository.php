@@ -43,4 +43,42 @@ class DemandRepository extends ServiceEntityRepository
     {
         return parent::getEntityManager();
     }
+
+    public function findAllForNauczyciel(\App\Entity\User $user)
+    {
+        return $this->getEntityManager()->createQueryBuilder('d')
+            ->select('d')
+            ->from(Demand::class,'d')
+            ->leftJoin('d.lectures', 'l')
+            ->leftJoin('l.lecturer', 'user')
+            ->andWhere('user.id = :user')
+            ->setParameters(['user' => $user->getId()])
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllForKierownikZakladu()
+    {
+        return $this->getEntityManager()->createQueryBuilder('d')
+            ->select('d')
+            ->from(Demand::class,'d')
+            ->leftJoin('d.lectures', 'l')
+            ->leftJoin('l.lecturer', 'user')
+            ->orWhere('user is null')
+            ->orWhere('d.status = :acceptedByNauczyciel')
+            ->setParameter('acceptedByNauczyciel', Demand::STATUS_ACCEPTED_BY_NAUCZYCIEL)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllForDyrektorInstytutu()
+    {
+        return $this->getEntityManager()->createQueryBuilder('d')
+            ->select('d')
+            ->from(Demand::class,'d')
+            ->orWhere('d.status = :acceptedByKierownikZakladu')
+            ->setParameter('acceptedByKierownikZakladu', Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU)
+            ->getQuery()
+            ->getResult();
+    }
 }

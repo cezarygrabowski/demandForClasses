@@ -9,9 +9,12 @@ use App\Entity\Schedule;
 use App\Entity\Subject;
 use App\Repository\BuildingRepository;
 use App\Repository\DemandRepository;
+use App\Repository\LectureRepository;
 use App\Repository\LectureTypeRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping\DefaultNamingStrategy;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\User\User;
 
 class DemandService
@@ -22,6 +25,10 @@ class DemandService
     private $userRepository;
     private $lectureTypeRepository;
     private $subjectRepository;
+    /**
+     * @var LectureRepository
+     */
+    private $lectureRepository;
 
     /**
      * DemandService constructor.
@@ -29,6 +36,9 @@ class DemandService
      * @param LectureService $lectureService
      * @param BuildingRepository $buildingRepository
      * @param UserRepository $userRepository
+     * @param LectureTypeRepository $lectureTypeRepository
+     * @param SubjectRepository $subjectRepository
+     * @param LectureRepository $lectureRepository
      */
     public function __construct(
         DemandRepository $demandRepository,
@@ -36,7 +46,8 @@ class DemandService
         BuildingRepository $buildingRepository,
         UserRepository $userRepository,
         LectureTypeRepository $lectureTypeRepository,
-        SubjectRepository $subjectRepository
+        SubjectRepository $subjectRepository,
+        LectureRepository $lectureRepository
     ) {
         $this->demandRepository = $demandRepository;
         $this->lectureService = $lectureService;
@@ -44,6 +55,7 @@ class DemandService
         $this->userRepository = $userRepository;
         $this->lectureTypeRepository = $lectureTypeRepository;
         $this->subjectRepository = $subjectRepository;
+        $this->lectureRepository = $lectureRepository;
     }
 
     /**
@@ -83,23 +95,35 @@ class DemandService
         }
     }
 
-    public function updateDemand(Demand $demand, User $user, array $data)
+    public function updateDemand(Demand $demand, \App\Entity\User $user, array $data)
     {
-        //comments and lecturer
-        $this->lectureService->updateLectures($demand, $data['lectures']);
-        //check who updates demand(based on role)
-        //if it is a teacher then update it accordingly to what was passed in the request
         $this->updateStatus($user, $demand);
+        $this->lectureService->updateLectures($demand, $data['lectures']);
     }
 
-    public function findAll(): array
+    public function findAll(\App\Entity\User $user): array
     {
-        $demands = $this->demandRepository->findAll();
+        if($user->isAdmin()) {
+            $demands = $this->demandRepository->findAll();
+        }
+
+        if($user->isNauczyciel()) {
+            $demands = $this->demandRepository->findAllForNauczyciel($user);
+        }
+
+        if($user->isKierownikZakladu()) {
+            $demands = $this->demandRepository->findAllForKierownikZakladu();
+        }
+
+        if($user->isDyrektorInstytutu()) {
+            $demands = $this->demandRepository->findAllForDyrektorInstytutu();
+        }
 
         $dtos = [];
         foreach ($demands as $demand) {
             $dtos[] = \App\DTO\Demand::fromDemand($demand);
         }
+
         return $dtos;
     }
 
@@ -110,9 +134,20 @@ class DemandService
         return $demands;
     }
 
-    private function updateStatus(User $user, Demand $demand)
+    private function updateStatus(\App\Entity\User $user, Demand $demand)
     {
-//        if($user)
+        if($user->isNauczyciel()) {
+            $demand->setStatus(Demand::STATUS_ACCEPTED_BY_NAUCZYCIEL);
+        }
+
+        if($user->isKierownikZakladu()) {
+            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU);
+        }
+
+        if($user->isDyrektorInstytutu()) {
+            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU);
+            $demand->setStatus(Demand::STATUS_ACCEPTED_BY_DZIEKAN);
+        }
     }
 
     private function addLectureForDemand(Demand $demand, array $row)
@@ -125,12 +160,20 @@ class DemandService
         $demand->addLecture($lecture);
     }
 
-    public function exportDemands()
+    public function cancelDemand(Demand $demand, ?\App\Entity\User $user)
     {
-        $demands = $this->demandRepository->findAll();
-
-        foreach ($demands as $demand) {
-            $test = '';
+        if(!$user) {
+            throw new Exception("Użytkownik nie jest zalogowany!");
         }
+
+        /** @var Lecture $lecture */
+        foreach ($demand->getLectures() as $lecture) {
+            if($lecture->getLecturer() && $lecture->getLecturer()->getId() === $user->getId()) {
+                $lecture->setLecturer(null);
+                $this->lectureRepository->getEntityManager()->persist($lecture);
+            }
+        }
+        $demand->setStatus(Demand::STATUS_UNTOUCHED);
+        $this->lectureRepository->getEntityManager()->flush();
     }
 }

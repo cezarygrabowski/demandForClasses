@@ -17,6 +17,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    const ADMIN = 'Admin';
+    const NAUCZYCIEL = 'Nauczyciel';
+    const KIEROWNIK_ZAKLADU = 'KierownikZakladu';
+    const DYREKTOR_INSTYTUTU = 'DyrektorInstytutu';
+    const DZIEKAN = 'Dziekan';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -63,24 +69,28 @@ class User implements UserInterface
 
     public function isAdmin()
     {
+        return in_array(self::ADMIN, $this->getRoles());
     }
 
     public function isNauczyciel()
     {
+        return in_array(self::NAUCZYCIEL, $this->getRoles());
     }
 
     public function isKierownikZakladu()
     {
+        return in_array(self::KIEROWNIK_ZAKLADU, $this->getRoles());
     }
 
     public function isDziekan()
     {
+        return in_array(self::DZIEKAN, $this->getRoles());
     }
 
     public function isDyrektorInstytutu()
     {
+        return in_array(self::DYREKTOR_INSTYTUTU, $this->getRoles());
     }
-
 
     public function __construct($username)
     {
@@ -125,9 +135,14 @@ class User implements UserInterface
         $this->password = $password;
     }
 
-    public function getRoles(): array
+    public function getRoles()
     {
-        return $this->roles->toArray();
+        $roles = [];
+        foreach ($this->roles as $role) {
+            $roles[] = $role->__toString();
+        }
+
+        return $roles;
     }
 
     public function eraseCredentials()

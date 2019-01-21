@@ -48,7 +48,7 @@ class DemandController extends AbstractController
      * @Route("/", name="list_demands", methods={"GET"})
      */
     public function list(){
-        $demands = $this->demandService->findAll();
+        $demands = $this->demandService->findAll($this->httpService->getCurrentUser());
 
         return $this->httpService->createCollectionResponse($demands);
     }
@@ -67,9 +67,17 @@ class DemandController extends AbstractController
      */
     public function update(Request $request, Demand $demand){
         $data = json_decode($request->getContent(), true);
-        $this->demandService->updateDemand($demand, $this->getUser(), $data);
+        $this->demandService->updateDemand($demand, $this->httpService->getCurrentUser(), $data);
         $this->getDoctrine()->getEntityManager()->flush();
 
+        return $this->httpService->createSuccessResponse();
+    }
+
+    /**
+     * @Route("/cancel/{id}", name="cancel_demand", methods={"POST"})
+     */
+    public function cancel(Demand $demand) {
+        $this->demandService->cancelDemand($demand, $this->httpService->getCurrentUser());
         return $this->httpService->createSuccessResponse();
     }
 

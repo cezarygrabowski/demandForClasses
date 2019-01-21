@@ -84,9 +84,9 @@ class Demand
             $this->lectures->add($lecture);
         }
     }
+
     /**
-     * @return mixed
-     * Lecture[]
+     * @return ArrayCollection<Lecture>
      */
     public function getLectures()
     {

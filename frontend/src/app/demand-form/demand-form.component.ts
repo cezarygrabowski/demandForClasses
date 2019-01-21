@@ -98,9 +98,9 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.print();
-    // let doc = new jsPDF();
-    // doc.text("Hello", 20, 20);
-    // doc.save('table.pdf');
-    // });
   }
+
+    onCancel() {
+        this.demandFormService.cancelDemand(this.demandElement);
+    }
 }

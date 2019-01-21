@@ -32,7 +32,13 @@ class UserService
             'name' => $demand->getSubject()->getName()
         ]);
 
-        return $this->userRepository->getByQualification($subject);
+        $dtos = [];
+        $users = $this->userRepository->getByQualification($subject);
+        foreach ($users as $user) {
+            $dtos[] = \App\DTO\User::fromUser($user);
+        }
+
+        return $dtos;
     }
 
     public function generateUsers($data)
@@ -59,7 +65,6 @@ class UserService
             $user->setIsActive(true);
             $user->setPassword('admin');
             $this->addQualifications($user, $row[1]);
-//            $user->('admin');
 
         }
         return $user;
