@@ -109,10 +109,7 @@ class Lecture
         return $this->hours;
     }
 
-    /**
-     * @param mixed $hours
-     */
-    public function setHours($hours): void
+    public function setHours(string $hours): void
     {
         $this->hours = $hours;
     }

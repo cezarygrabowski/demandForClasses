@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\ScheduleRow;
 use App\Entity\Demand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -13,7 +14,7 @@ class DemandRepository extends ServiceEntityRepository
         parent::__construct($registry, Demand::class);
     }
 
-    public function findDemandByImportData(array $data): ?Demand
+    public function findDemandByScheduleData(ScheduleRow $scheduleRow): ?Demand
     {
         return $this->getEntityManager()->createQueryBuilder('d')
             ->select('d')
@@ -27,13 +28,13 @@ class DemandRepository extends ServiceEntityRepository
             ->andWhere('d.department like :department')
             ->andWhere('d.institute like :institute')
             ->setParameters([
-                'group' => $data[0],
-                'subjectName' => $data[1],
-                'yearNumber' => $data[6],
-                'groupType' => $data[7],
-                'semester' => $data[8],
-                'department' => $data[9],
-                'institute' => $data[10]
+                'group' => $scheduleRow->group,
+                'subjectName' => $scheduleRow->subject,
+                'yearNumber' => $scheduleRow->yearNumber,
+                'groupType' => $scheduleRow->groupType,
+                'semester' => $scheduleRow->semester,
+                'department' => $scheduleRow->department,
+                'institute' => $scheduleRow->institute
             ])
             ->getQuery()
             ->getOneOrNullResult();
@@ -66,7 +67,7 @@ class DemandRepository extends ServiceEntityRepository
             ->leftJoin('l.lecturer', 'user')
             ->orWhere('user is null')
             ->orWhere('d.status = :acceptedByNauczyciel')
-            ->setParameter('acceptedByNauczyciel', Demand::STATUS_ACCEPTED_BY_NAUCZYCIEL)
+            ->setParameter('acceptedByNauczyciel', Demand::STATUS_ACCEPTED_BY_TEACHER)
             ->getQuery()
             ->getResult();
     }
@@ -77,7 +78,7 @@ class DemandRepository extends ServiceEntityRepository
             ->select('d')
             ->from(Demand::class,'d')
             ->orWhere('d.status = :acceptedByKierownikZakladu')
-            ->setParameter('acceptedByKierownikZakladu', Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU)
+            ->setParameter('acceptedByKierownikZakladu', Demand::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER)
             ->getQuery()
             ->getResult();
     }

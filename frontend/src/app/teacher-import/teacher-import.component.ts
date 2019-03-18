@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UploadService} from './upload.service';
+import {FlashMessagesService} from "angular2-flash-messages";
 
 @Component({
   selector: 'app-teacher-import',
@@ -8,7 +9,10 @@ import {UploadService} from './upload.service';
 })
 export class TeacherImportComponent implements OnInit {
   @ViewChild('fileInput') fileInput;
-  constructor(private service: UploadService) { }
+  constructor(
+      private service: UploadService,
+      private flashMessageService: FlashMessagesService
+  ) { }
 
   ngOnInit() {
 
@@ -20,8 +24,8 @@ export class TeacherImportComponent implements OnInit {
       let fileToUpload = fi.files[0];
       this.service
           .upload(fileToUpload)
-          .subscribe(res => {
-            console.log(res);
+          .subscribe(() => {
+            this.flashMessageService.show('Pomyślnie zaimportowano nauczycieli!', { cssClass: 'alert-success', timeout: 2000 });
           });
     }
   }

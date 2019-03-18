@@ -4,13 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Demand;
 use App\Repository\DemandRepository;
+use App\Repository\LectureRepository;
 use App\Service\DemandService;
 use App\Service\HttpService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,27 +20,36 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DemandController extends AbstractController
 {
+    /**
+     * @var DemandService
+     */
     private $demandService;
 
     /**
      * @var HttpService
      */
     private $httpService;
-    private $demandRepository;
 
     /**
-     * DemandController constructor.
-     * @param DemandService $demandService
-     * @param HttpService $httpService
+     * @var LectureRepository
      */
+    private $lectureRepository;
+
+    /**
+     * @var DemandRepository
+     */
+    private $demandRepository;
+
     public function __construct(
         DemandService $demandService,
         HttpService $httpService,
-        DemandRepository $demandRepository
+        DemandRepository $demandRepository,
+        LectureRepository $lectureRepository
     ) {
         $this->demandService = $demandService;
         $this->httpService = $httpService;
         $this->demandRepository = $demandRepository;
+        $this->lectureRepository = $lectureRepository;
     }
 
     /**
@@ -68,7 +76,6 @@ class DemandController extends AbstractController
     public function update(Request $request, Demand $demand){
         $data = json_decode($request->getContent(), true);
         $this->demandService->updateDemand($demand, $this->httpService->getCurrentUser(), $data);
-        $this->getDoctrine()->getEntityManager()->flush();
 
         return $this->httpService->createSuccessResponse();
     }
@@ -78,6 +85,7 @@ class DemandController extends AbstractController
      */
     public function cancel(Demand $demand) {
         $this->demandService->cancelDemand($demand, $this->httpService->getCurrentUser());
+
         return $this->httpService->createSuccessResponse();
     }
 
@@ -86,5 +94,15 @@ class DemandController extends AbstractController
      */
     public function getDetails(Demand $demand){
         return $this->httpService->createItemResponse($demand);
+    }
+
+    /**
+     * @Route("/export", name="export_demands", methods={"POST"})
+     */
+    public function exportDemands(){
+        $results = $this->lectureRepository->findAll();
+        $response = $this->httpService->prepareStreamedResponse($results);
+
+        return $this->httpService->downloadCsvFileResponse($response, 'export.csv');
     }
 }

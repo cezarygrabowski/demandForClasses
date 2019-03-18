@@ -46,7 +46,6 @@ export class DemandFormComponent implements OnInit, OnDestroy {
         this.subscriptions.add(this.demandFormService.getBuildings().subscribe(res => {
             this.buildings = res;
         }));
-        console.log(localStorage.getItem('currentUser'));
         this.subscriptions.add(this.demandFormService.getRoles().subscribe(roles => {
             this.demandFormService.roles = roles;
         }));

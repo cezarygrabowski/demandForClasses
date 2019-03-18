@@ -15,16 +15,16 @@ use JMS\Serializer\Annotation as Serializer;
 class Demand
 {
     const STATUS_UNTOUCHED = 0;
-    const STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU = 1;
-    const STATUS_ACCEPTED_BY_NAUCZYCIEL = 2;
+    const STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER = 1;
+    const STATUS_ACCEPTED_BY_TEACHER = 2;
     const STATUS_ACCEPTED_BY_KIEROWNIK_ZAKLADU = 3;
     const STATUS_ACCEPTED_BY_DYREKTOR_INSTYTUTU = 4;
     const STATUS_ACCEPTED_BY_DZIEKAN = 5;
     
     const STATUSES = [
         self::STATUS_UNTOUCHED => 'Wygenerowane',
-        self::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU => 'Przypisane przez kierownika zakładu',
-        self::STATUS_ACCEPTED_BY_NAUCZYCIEL => 'Zaakceptowane i wypełnione przez nauczyciela',
+        self::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER => 'Przypisane przez kierownika zakładu',
+        self::STATUS_ACCEPTED_BY_TEACHER => 'Zaakceptowane i wypełnione przez nauczyciela',
         self::STATUS_ACCEPTED_BY_KIEROWNIK_ZAKLADU => 'Zaakceptowane przez kierownika zakładu',
         self::STATUS_ACCEPTED_BY_DYREKTOR_INSTYTUTU => 'Zaakceptowane przez dyrektora instytutu',
         self::STATUS_ACCEPTED_BY_DZIEKAN => 'Zaakceptowane przez dziekana'

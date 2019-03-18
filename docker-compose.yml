@@ -53,59 +53,59 @@ services:
     - "127.240.0.3:5432:5432"
 
   ### SERVICES ###
-  user-service:
-    build: docker/api
-    container_name: user_service
-    networks:
-      demands:
-        ipv4_address: 10.240.0.102
-    environment:
-      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
-      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - ./user_service:/var/www/api:Z
-    ports:
-      - "127.240.0.4:80:8080"
-
-  demand-service:
-    build: docker/api
-    container_name: demand_service
-    networks:
-      demands:
-        ipv4_address: 10.240.0.103
-    environment:
-      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
-      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - ./demand_service:/var/www/api:Z
-    ports:
-      - "127.240.0.5:80:8080"
-
-  import-export-service:
-    build: docker/api
-    container_name: import_export_service
-    networks:
-      demands:
-        ipv4_address: 10.240.0.104
-    environment:
-      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
-      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-    volumes:
-      - ./import_export_service:/var/www/api:Z
-    ports:
-      - "127.240.0.6:80:8080"
+#  user-service:
+#    build: docker/api
+#    container_name: user_service
+#    networks:
+#      demands:
+#        ipv4_address: 10.240.0.102
+#    environment:
+#      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+#      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+#      DATABASE_HOST: ${DATABASE_HOST}
+#      DATABASE_USER: ${DATABASE_USER}
+#      DATABASE_NAME: ${DATABASE_NAME}
+#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+#    volumes:
+#      - ./user_service:/var/www/api:Z
+#    ports:
+#      - "127.240.0.4:80:8080"
+#
+#  demand-service:
+#    build: docker/api
+#    container_name: demand_service
+#    networks:
+#      demands:
+#        ipv4_address: 10.240.0.103
+#    environment:
+#      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+#      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+#      DATABASE_HOST: ${DATABASE_HOST}
+#      DATABASE_USER: ${DATABASE_USER}
+#      DATABASE_NAME: ${DATABASE_NAME}
+#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+#    volumes:
+#      - ./demand_service:/var/www/api:Z
+#    ports:
+#      - "127.240.0.5:80:8080"
+#
+#  import-export-service:
+#    build: docker/api
+#    container_name: import_export_service
+#    networks:
+#      demands:
+#        ipv4_address: 10.240.0.104
+#    environment:
+#      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+#      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+#      DATABASE_HOST: ${DATABASE_HOST}
+#      DATABASE_USER: ${DATABASE_USER}
+#      DATABASE_NAME: ${DATABASE_NAME}
+#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+#    volumes:
+#      - ./import_export_service:/var/www/api:Z
+#    ports:
+#      - "127.240.0.6:80:8080"
 
 networks:
   demands:

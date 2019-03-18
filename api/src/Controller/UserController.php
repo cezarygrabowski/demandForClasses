@@ -18,7 +18,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
+    /**
+     * @var UserService
+     */
     private $userService;
+
     /**
      * @var HttpService
      */
@@ -47,6 +51,7 @@ class UserController extends AbstractController
     public function automaticallySendToPlanners(Request $request) {
         $data = json_decode($request->getContent(), true);
         $this->userService->updateAutomaticalSendToPlanners($this->getUser(), $data);
+
         return $this->httpService->createSuccessResponse();
     }
 
@@ -67,4 +72,16 @@ class UserController extends AbstractController
         return $this->httpService->createCollectionResponse($this->httpService->getCurrentUser()->getRoles());
     }
 
+    /**
+     * @Route("/import-teachers", name="import_lecturers")
+     */
+    public function importLecturers(Request $request): Response
+    {
+        $file = $request->files->get('file');
+
+        $data = $this->httpService->readCsvContent($file, true);
+        $this->importExportService->importUsers($data);
+
+        return $this->httpService->createSuccessResponse();
+    }
 }

@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
+use App\Domain\ScheduleReader;
+use App\DTO\ScheduleRow;
 use App\Entity\Demand;
 use App\Entity\Lecture;
 use App\Entity\LectureType;
-use App\Entity\Schedule;
-use App\Entity\Subject;
+use App\Entity\User;
 use App\Repository\BuildingRepository;
 use App\Repository\DemandRepository;
 use App\Repository\LectureRepository;
 use App\Repository\LectureTypeRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\Mapping\DefaultNamingStrategy;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\User\User;
 
 class DemandService
 {
@@ -29,17 +29,11 @@ class DemandService
      * @var LectureRepository
      */
     private $lectureRepository;
-
     /**
-     * DemandService constructor.
-     * @param DemandRepository $demandRepository
-     * @param LectureService $lectureService
-     * @param BuildingRepository $buildingRepository
-     * @param UserRepository $userRepository
-     * @param LectureTypeRepository $lectureTypeRepository
-     * @param SubjectRepository $subjectRepository
-     * @param LectureRepository $lectureRepository
+     * @var EntityManagerInterface
      */
+    private $entityManager;
+
     public function __construct(
         DemandRepository $demandRepository,
         LectureService $lectureService,
@@ -47,8 +41,10 @@ class DemandService
         UserRepository $userRepository,
         LectureTypeRepository $lectureTypeRepository,
         SubjectRepository $subjectRepository,
-        LectureRepository $lectureRepository
-    ) {
+        LectureRepository $lectureRepository,
+        EntityManagerInterface $entityManager
+    )
+    {
         $this->demandRepository = $demandRepository;
         $this->lectureService = $lectureService;
         $this->buildingRepository = $buildingRepository;
@@ -56,66 +52,81 @@ class DemandService
         $this->lectureTypeRepository = $lectureTypeRepository;
         $this->subjectRepository = $subjectRepository;
         $this->lectureRepository = $lectureRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * This method is used when importing schedules.
      * It generates demand that is partially filled.
+     * @param ScheduleRow $scheduleRow
+     * @return Demand
      */
-    public function generateDemand(array $row): Demand
+    public function generateDemand(ScheduleRow $scheduleRow): Demand
     {
-        if ($demand = $this->demandRepository->findDemandByImportData($row)) {
-            $this->addLectureForDemand($demand, $row);
+        if ($demand = $this->demandRepository->findDemandByScheduleData($scheduleRow)) {
+            $this->addLectureForDemand(
+                $demand,
+                $scheduleRow->hours,
+                $this->lectureTypeRepository->findOneBy(['name' => $scheduleRow->lectureType])
+            );
         } else {
             $demand = new Demand();
-            $demand->setGroup($row[0]);
-            $demand->setYearNumber($row[6]);
-            $demand->setGroupType($row[7]);
-            $demand->setSemester($row[8]);
-            $demand->setDepartment($row[9]);
-            $demand->setInstitute($row[10]);
+            $demand->setGroup($scheduleRow->group);
+            $demand->setYearNumber($scheduleRow->yearNumber);
+            $demand->setGroupType($scheduleRow->groupType);
+            $demand->setSemester($scheduleRow->semester);
+            $demand->setDepartment($scheduleRow->department);
+            $demand->setInstitute($scheduleRow->institute);
 
-            $subject = $this->subjectRepository->findOneBy(['name' => $row[1]]);
+            $subject = $this->subjectRepository->findOneBy(['name' => $scheduleRow->subject]);
             $demand->setStatus(Demand::STATUS_UNTOUCHED);
             $demand->setSubject($subject);
 
-            $this->addLectureForDemand($demand, $row);
+            $this->addLectureForDemand(
+                $demand,
+                $scheduleRow->hours,
+                $this->lectureTypeRepository->findOneBy(['name' => $scheduleRow->lectureType])
+            );
         }
 
         return $demand;
     }
 
-    public function generateDemands(array $data): void
+    /**
+     * @param ScheduleRow[] $schedules
+     */
+    public function generateDemands(array $schedules): void
     {
-        /** @var Schedule $schedule */
-        foreach ($data as $row) {
+        foreach ($schedules as $row) {
             $demand = $this->generateDemand($row);
-            $this->demandRepository->getEntityManager()->persist($demand);
-            $this->demandRepository->getEntityManager()->flush();
+            $this->entityManager->persist($demand);
+            $this->entityManager->flush();
         }
     }
 
-    public function updateDemand(Demand $demand, \App\Entity\User $user, array $data)
+    public function updateDemand(Demand $demand, User $user, array $data)
     {
         $this->updateStatus($user, $demand);
         $this->lectureService->updateLectures($demand, $data['lectures']);
+
+        $this->entityManager->flush();
     }
 
-    public function findAll(\App\Entity\User $user): array
+    public function findAll(User $user): array
     {
-        if($user->isAdmin()) {
+        if ($user->isAdmin()) {
             $demands = $this->demandRepository->findAll();
         }
 
-        if($user->isNauczyciel()) {
+        if ($user->isTeacher()) {
             $demands = $this->demandRepository->findAllForNauczyciel($user);
         }
 
-        if($user->isKierownikZakladu()) {
+        if ($user->isDepartmentManager()) {
             $demands = $this->demandRepository->findAllForKierownikZakladu();
         }
 
-        if($user->isDyrektorInstytutu()) {
+        if ($user->isInstituteDirector()) {
             $demands = $this->demandRepository->findAllForDyrektorInstytutu();
         }
 
@@ -134,46 +145,45 @@ class DemandService
         return $demands;
     }
 
-    private function updateStatus(\App\Entity\User $user, Demand $demand)
+    private function updateStatus(User $user, Demand $demand)
     {
-        if($user->isNauczyciel()) {
-            $demand->setStatus(Demand::STATUS_ACCEPTED_BY_NAUCZYCIEL);
+        if ($user->isTeacher()) {
+            $demand->setStatus(Demand::STATUS_ACCEPTED_BY_TEACHER);
         }
 
-        if($user->isKierownikZakladu()) {
-            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU);
+        if ($user->isDepartmentManager()) {
+            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER);
         }
 
-        if($user->isDyrektorInstytutu()) {
-            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_KIEROWNIK_ZAKLADU);
+        if ($user->isInstituteDirector()) {
+            $demand->setStatus(Demand::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER);
             $demand->setStatus(Demand::STATUS_ACCEPTED_BY_DZIEKAN);
         }
     }
 
-    private function addLectureForDemand(Demand $demand, array $row)
+    private function addLectureForDemand(Demand $demand, string $hours, LectureType $lectureType)
     {
-        $lectureType = $this->lectureTypeRepository->findOneBy(['name' => $row[3]]);
         $lecture = new Lecture();
-        $lecture->setHours($row[5]);
+        $lecture->setHours($hours);
         $lecture->setLectureType($lectureType);
         $lecture->setDemand($demand);
         $demand->addLecture($lecture);
     }
 
-    public function cancelDemand(Demand $demand, ?\App\Entity\User $user)
+    public function cancelDemand(Demand $demand, ?User $user)
     {
-        if(!$user) {
+        if (!$user) {
             throw new Exception("Użytkownik nie jest zalogowany!");
         }
 
         /** @var Lecture $lecture */
         foreach ($demand->getLectures() as $lecture) {
-            if($lecture->getLecturer() && $lecture->getLecturer()->getId() === $user->getId()) {
+            if ($lecture->getLecturer() && $lecture->getLecturer()->getId() === $user->getId()) {
                 $lecture->setLecturer(null);
-                $this->lectureRepository->getEntityManager()->persist($lecture);
+                $this->entityManager->persist($lecture);
             }
         }
         $demand->setStatus(Demand::STATUS_UNTOUCHED);
-        $this->lectureRepository->getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 }

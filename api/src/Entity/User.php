@@ -18,10 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     const ADMIN = 'Admin';
-    const NAUCZYCIEL = 'Nauczyciel';
-    const KIEROWNIK_ZAKLADU = 'KierownikZakladu';
-    const DYREKTOR_INSTYTUTU = 'DyrektorInstytutu';
-    const DZIEKAN = 'Dziekan';
+    const TEACHER = 'Nauczyciel';
+    const DISTRICT_MANAGER = 'KierownikZakladu';
+    const INSTITUTE_DIRECTOR = 'DyrektorInstytutu';
+    const DEAN = 'Dziekan';
 
     /**
      * @ORM\Column(type="integer")
@@ -52,7 +52,8 @@ class User implements UserInterface
     private $lectures;
 
     /**
-     * Many User have Many qualifications.
+     * Many Users have many qualifications
+     *
      * @ManyToMany(targetEntity="Subject", cascade={"persist", "remove", "merge"})
      * @JoinTable(name="users_qualifications",
      *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
@@ -72,24 +73,24 @@ class User implements UserInterface
         return in_array(self::ADMIN, $this->getRoles());
     }
 
-    public function isNauczyciel()
+    public function isTeacher()
     {
-        return in_array(self::NAUCZYCIEL, $this->getRoles());
+        return in_array(self::TEACHER, $this->getRoles());
     }
 
-    public function isKierownikZakladu()
+    public function isDepartmentManager()
     {
-        return in_array(self::KIEROWNIK_ZAKLADU, $this->getRoles());
+        return in_array(self::DISTRICT_MANAGER, $this->getRoles());
     }
 
-    public function isDziekan()
+    public function isDean()
     {
-        return in_array(self::DZIEKAN, $this->getRoles());
+        return in_array(self::DEAN, $this->getRoles());
     }
 
-    public function isDyrektorInstytutu()
+    public function isInstituteDirector()
     {
-        return in_array(self::DYREKTOR_INSTYTUTU, $this->getRoles());
+        return in_array(self::INSTITUTE_DIRECTOR, $this->getRoles());
     }
 
     public function __construct($username)
@@ -101,7 +102,7 @@ class User implements UserInterface
         $this->roles = new ArrayCollection();
     }
 
-    public function addQualification(Subject $subject)
+    public function addQualification(Subject $subject): void
     {
         if (!$this->qualifications->contains($subject)) {
             $this->qualifications->add($subject);
@@ -150,57 +151,42 @@ class User implements UserInterface
 
     }
 
-    /**
-     * @return mixed
-     */
-    public function getisActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
 
-    /**
-     * @param mixed $isActive
-     */
     public function setIsActive($isActive): void
     {
         $this->isActive = $isActive;
     }
 
     /**
-     * @return mixed
+     * @return Subject[]
      */
-    public function getQualifications()
+    public function getQualifications(): array
     {
-        return $this->qualifications;
+        return $this->qualifications->toArray();
     }
 
-    /**
-     * @param mixed $qualifications
-     */
     public function setQualifications($qualifications): void
     {
         $this->qualifications = $qualifications;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @return mixed
+     * @return Lecture[]
      */
-    public function getLectures()
+    public function getLectures(): array
     {
-        return $this->lectures;
+        return $this->lectures->toArray();
     }
 
-    /**
-     * @param mixed $lectures
-     */
     public function setLectures($lectures): void
     {
         $this->lectures = $lectures;

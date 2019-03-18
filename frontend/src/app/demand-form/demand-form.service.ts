@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {DemandElement} from '../demand-list/demand-element';
 import {Observable, Subscription} from 'rxjs';
 import {Router} from "@angular/router";
+import {FlashMessagesService} from "angular2-flash-messages";
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,8 @@ export class DemandFormService {
 
     constructor(
         private http: HttpClient,
-        private router: Router
+        private router: Router,
+        private flashMessageService: FlashMessagesService
     ) {
 
     }
@@ -36,8 +38,8 @@ export class DemandFormService {
 
     updateDemand(demand: DemandElement): Subscription {
         return this.http.post(`http://127.240.0.2/demands/update/${demand.id}`, demand).subscribe(
-            response => this.router.navigate(['/lista-zapotrzebowan'],
-            err => console.log(err))
+            response => this.router.navigate(['/lista-zapotrzebowan']),
+            err => console.log(err)
         );
     }
 
@@ -47,13 +49,6 @@ export class DemandFormService {
             found = this.roles.some(r => roles.indexOf(r) >= 0);
         }
         return found;
-    }
-
-    apiRequest(demand: DemandElement): Promise<any> {
-        // this.http.post<any>(`${environment.apiUrl}/demands/update/${demand.id}`, demand).subscribe(response => console.log(response.json()));
-        return this.http.post<any>(`${environment.apiUrl}/api`, demand).toPromise()
-            .then(value => console.log(value))
-            .catch(error => console.log(error));
     }
 
     setAutomaticallySendToPlanners(checked: boolean) {
@@ -69,8 +64,8 @@ export class DemandFormService {
 
     cancelDemand(demand: DemandElement): Subscription {
         return this.http.post(`${environment.apiUrl}/demands/cancel/${demand.id}`, {}).subscribe(
-            response => this.router.navigate(['/lista-zapotrzebowan'],
-            err => console.log(err)
-        ));
+            response => this.router.navigate(['/lista-zapotrzebowan']),
+                (err) => console.log(err)
+        );
     }
 }

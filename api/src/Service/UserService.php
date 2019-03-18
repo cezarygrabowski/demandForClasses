@@ -18,8 +18,7 @@ class UserService
         SubjectRepository $qualificationRepository,
         UserRepository $userRepository,
         SubjectRepository $subjectRepository
-    )
-    {
+    ) {
         $this->qualificationRepository = $qualificationRepository;
         $this->userRepository = $userRepository;
         $this->subjectRepository = $subjectRepository;

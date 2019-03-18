@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -34,39 +35,81 @@ class HttpService
         $this->tokenStorage = $storage;
     }
 
-    public function serializeCollection($items){
+    public function serializeCollection($items)
+    {
         $items = $this->serializer->serialize($items, 'json');
         return $items;
     }
 
-    public function createCollectionResponse($items){
+    public function createCollectionResponse($items): Response
+    {
         $items = $this->serializer->serialize($items, 'json');
 
         return new Response($items);
     }
 
-    public function createItemResponse($demand) {
+    public function createItemResponse($demand): Response
+    {
 
         $demand = $this->serializer->serialize($demand, 'json');
 
         return new Response($demand);
     }
 
-    public function createSuccessResponse() {
+    public function createSuccessResponse(): JsonResponse
+    {
         return new JsonResponse("success");
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(): ?User
     {
         $token = $this->tokenStorage->getToken();
         if ($token instanceof TokenInterface) {
-
-            /** @var User $user */
             $user = $token->getUser();
             return $user;
-
         } else {
             return null;
         }
     }
+
+    public function downloadCsvFileResponse(StreamedResponse $response, string $fileName): StreamedResponse
+    {
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition','attachment; filename=' . $fileName .'\'');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        return $response->sendHeaders()->sendContent();
+    }
+
+    public function prepareStreamedResponse(array $results): StreamedResponse
+    {
+        return new StreamedResponse(function() use ($results) {
+            $handle = fopen('php://output', 'r+');
+
+            foreach ($results as $result) {
+                fputcsv($handle, $result->toArray());
+            }
+
+            fclose($handle);
+        });
+    }
+
+    public function readCsvContent(string $file, bool $removeHeader)
+    {
+        $file = fopen($file, 'r');
+        $data = [];
+        while (($line = fgetcsv($file)) !== FALSE) {
+            $data[] = $line;
+        }
+        fclose($file);
+
+        /** remove first element which is header */
+        if($removeHeader) {
+            array_shift($data);
+        }
+
+        return $data;
+    }
+
+
 }

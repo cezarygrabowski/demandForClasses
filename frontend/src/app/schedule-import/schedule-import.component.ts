@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UploadService} from './upload.service';
+import {FlashMessagesService} from "angular2-flash-messages";
 
 @Component({
   selector: 'app-schedule-import',
@@ -8,7 +9,10 @@ import {UploadService} from './upload.service';
 })
 export class ScheduleImportComponent implements OnInit {
   @ViewChild('fileInput') fileInput;
-  constructor(private service: UploadService) { }
+  constructor(
+      private service: UploadService,
+      private flashMessageService: FlashMessagesService
+  ) { }
 
   ngOnInit() {
   }
@@ -20,7 +24,7 @@ export class ScheduleImportComponent implements OnInit {
       this.service
           .upload(fileToUpload)
           .subscribe(res => {
-            console.log(res);
+            this.flashMessageService.show('Pomyślnie zaimportowano plany zajeć!', { cssClass: 'alert-success', timeout: 2000 });
           });
     }
   }
