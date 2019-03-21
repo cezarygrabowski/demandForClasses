@@ -20,15 +20,17 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 class DemandService
 {
     private $demandRepository;
-    private $lectureService;
+    private $scheduleService;
     private $buildingRepository;
     private $userRepository;
     private $lectureTypeRepository;
     private $subjectRepository;
+
     /**
      * @var LectureRepository
      */
     private $lectureRepository;
+
     /**
      * @var EntityManagerInterface
      */
@@ -36,17 +38,16 @@ class DemandService
 
     public function __construct(
         DemandRepository $demandRepository,
-        LectureService $lectureService,
+        ScheduleService $scheduleService,
         BuildingRepository $buildingRepository,
         UserRepository $userRepository,
         LectureTypeRepository $lectureTypeRepository,
         SubjectRepository $subjectRepository,
         LectureRepository $lectureRepository,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->demandRepository = $demandRepository;
-        $this->lectureService = $lectureService;
+        $this->scheduleService = $scheduleService;
         $this->buildingRepository = $buildingRepository;
         $this->userRepository = $userRepository;
         $this->lectureTypeRepository = $lectureTypeRepository;
@@ -55,59 +56,10 @@ class DemandService
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * This method is used when importing schedules.
-     * It generates demand that is partially filled.
-     * @param ScheduleRow $scheduleRow
-     * @return Demand
-     */
-    public function generateDemand(ScheduleRow $scheduleRow): Demand
-    {
-        if ($demand = $this->demandRepository->findDemandByScheduleData($scheduleRow)) {
-            $this->addLectureForDemand(
-                $demand,
-                $scheduleRow->hours,
-                $this->lectureTypeRepository->findOneBy(['name' => $scheduleRow->lectureType])
-            );
-        } else {
-            $demand = new Demand();
-            $demand->setGroup($scheduleRow->group);
-            $demand->setYearNumber($scheduleRow->yearNumber);
-            $demand->setGroupType($scheduleRow->groupType);
-            $demand->setSemester($scheduleRow->semester);
-            $demand->setDepartment($scheduleRow->department);
-            $demand->setInstitute($scheduleRow->institute);
-
-            $subject = $this->subjectRepository->findOneBy(['name' => $scheduleRow->subject]);
-            $demand->setStatus(Demand::STATUS_UNTOUCHED);
-            $demand->setSubject($subject);
-
-            $this->addLectureForDemand(
-                $demand,
-                $scheduleRow->hours,
-                $this->lectureTypeRepository->findOneBy(['name' => $scheduleRow->lectureType])
-            );
-        }
-
-        return $demand;
-    }
-
-    /**
-     * @param ScheduleRow[] $schedules
-     */
-    public function generateDemands(array $schedules): void
-    {
-        foreach ($schedules as $row) {
-            $demand = $this->generateDemand($row);
-            $this->entityManager->persist($demand);
-            $this->entityManager->flush();
-        }
-    }
-
     public function updateDemand(Demand $demand, User $user, array $data)
     {
         $this->updateStatus($user, $demand);
-        $this->lectureService->updateLectures($demand, $data['lectures']);
+        $this->scheduleService->updateLectures($demand, $data['lectures']);
 
         $this->entityManager->flush();
     }
@@ -159,15 +111,6 @@ class DemandService
             $demand->setStatus(Demand::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER);
             $demand->setStatus(Demand::STATUS_ACCEPTED_BY_DZIEKAN);
         }
-    }
-
-    private function addLectureForDemand(Demand $demand, string $hours, LectureType $lectureType)
-    {
-        $lecture = new Lecture();
-        $lecture->setHours($hours);
-        $lecture->setLectureType($lectureType);
-        $lecture->setDemand($demand);
-        $demand->addLecture($lecture);
     }
 
     public function cancelDemand(Demand $demand, ?User $user)

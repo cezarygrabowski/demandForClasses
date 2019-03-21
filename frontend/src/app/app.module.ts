@@ -36,7 +36,7 @@ import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.componen
 import { LectureFormComponent } from './lecture-type-form/lecture-form.component';
 import { PlacesFormComponent } from './place-form/places-form.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
-import {FlashMessagesModule} from "angular2-flash-messages";
+import {FlashMessagesModule} from 'angular2-flash-messages';
 
 @NgModule({
   declarations: [

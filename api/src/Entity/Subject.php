@@ -27,6 +27,12 @@ class Subject
      */
     private $shortenedName;
 
+    public function __construct(string $name, string $shortenedName)
+    {
+        $this->name = $name;
+        $this->shortenedName = $shortenedName;
+    }
+
     /**
      * @return mixed
      */

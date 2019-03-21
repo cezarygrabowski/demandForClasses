@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use App\Domain\DemandGenerator;
 use App\DTO\ScheduleRow;
+use App\DTO\User;
+use App\Entity\Demand;
 use App\Entity\Lecture;
 use App\Entity\LectureType;
 use App\Entity\Schedule;
@@ -12,6 +15,7 @@ use App\Repository\LectureTypeRepository;
 use App\Repository\RoomRepository;
 use App\Repository\ScheduleRepository;
 use App\Repository\SubjectRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Exception\RuntimeException;
 
@@ -23,31 +27,35 @@ class ScheduleService
     private $buildingRepository;
     /** @var RoomRepository  */
     private $roomRepository;
-    /** @var DemandService  */
-    private $demandService;
+    /** @var DemandGenerator  */
+    private $demandGenerator;
     /** @var SubjectRepository  */
     private $subjectRepository;
     /** @var EntityManagerInterface  */
     private $em;
     /** @var LectureTypeRepository  */
     private $lectureTypeRepository;
+    /** @var UserRepository */
+    private $userRepository;
 
     public function __construct(
         ScheduleRepository $scheduleRepository,
         BuildingRepository $buildingRepository,
         RoomRepository $roomRepository,
-        DemandService $demandService,
+        DemandGenerator $demandGenerator,
         SubjectRepository $subjectRepository,
         EntityManagerInterface $entityManager,
-        LectureTypeRepository $lectureTypeRepository
+        LectureTypeRepository $lectureTypeRepository,
+        UserRepository $userRepository
     ) {
         $this->scheduleRepository = $scheduleRepository;
         $this->buildingRepository = $buildingRepository;
         $this->roomRepository = $roomRepository;
-        $this->demandService = $demandService;
+        $this->demandGenerator = $demandGenerator;
         $this->subjectRepository = $subjectRepository;
         $this->em = $entityManager;
         $this->lectureTypeRepository = $lectureTypeRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function updateSchedules(Lecture $lecture, array $lectureArray)
@@ -94,7 +102,7 @@ class ScheduleService
     {
         $this->generateSubjects($schedules);
         $this->generateLectureTypes($schedules);
-        $this->demandService->generateDemands($schedules);
+        $this->demandGenerator->generateDemands($schedules);
     }
 
     /**
@@ -111,9 +119,7 @@ class ScheduleService
         $subjects = array_unique($subjects);
         foreach ($subjects as $key => $name) {
             if(!$this->subjectRepository->findOneBy(['name' => $name])) {
-                $obj = new Subject();
-                $obj->setName($name);
-                $obj->setShortenedName($key);
+                $obj = new Subject($name, $key);
                 $this->em ->persist($obj);
             }
         }
@@ -141,5 +147,31 @@ class ScheduleService
             }
         }
         $this->em->flush();
+    }
+
+
+    public function updateLectures(Demand $demand, array $data) {
+        foreach ($data as $lecture) {
+            $this->updateLecture($demand, $lecture);
+        }
+    }
+
+    private function updateLecture(Demand $demand, array $lectureArray)
+    {
+        $lecture = $demand->getLecture($lectureArray['id']);
+        if(!$lecture) {
+            throw new RuntimeException("Zajęcia o podanym id nie istnieją!");
+        }
+
+        //Very dirty!
+        if(isset($lectureArray['lecturer']['id'])){
+            $newLecturer = $this->userRepository->find($lectureArray['lecturer']['id']);
+        } else {
+            $newLecturer = $this->userRepository->findOneBy(['username' => $lectureArray['lecturer']]);
+        }
+
+        $lecture->setComments($lectureArray['comments']);
+        $lecture->setLecturer($newLecturer);
+        $this->updateSchedules($lecture, $lectureArray);
     }
 }

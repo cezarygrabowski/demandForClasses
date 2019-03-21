@@ -28,6 +28,11 @@ class Role
      */
     private $user;
 
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
     /**
      * @ORM\Column(type="string")
      */

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Domain\UsersReader;
 use App\Entity\Role;
 use App\Entity\Subject;
 use App\Entity\User;
@@ -53,19 +54,17 @@ class UserService
 
     private function createUser($row): User
     {
-        if ($user = $this->userRepository->findOneBy(['username' => $row[0]])) {
-            $this->addQualifications($user, $row[1]);
+        if ($user = $this->userRepository->findOneBy(['username' => $row[UsersReader::USERNAME]])) {
+            $this->addQualifications($user, $row[UsersReader::QUALIFICATION]);
         } else {
-            $user = new User($row[0]);
-            $role = new Role();
-            $role->setName($row[2]);
-            $role->setUser($user);
+            $user = new User($row[UsersReader::USERNAME]);
+            $role = new Role($row[UsersReader::ROLE]);
             $user->addRole($role);
             $user->setIsActive(true);
             $user->setPassword('admin');
-            $this->addQualifications($user, $row[1]);
-
+            $this->addQualifications($user, $row[UsersReader::QUALIFICATION]);
         }
+
         return $user;
     }
 
@@ -74,20 +73,16 @@ class UserService
         $subjects = $this->parseCellOntoArray($row);
 
         $subjects = array_unique($subjects);
-        $em = $this->subjectRepository->getEntityManager();
         foreach ($subjects as $key => $value) {
             if ($subject = $this->subjectRepository->findOneBy(['shortenedName' => $key])) {
                 $user->addQualification($subject);
             } else {
-                $subject = new Subject();
+                $subject = new Subject($value, $key);
                 $subject->setShortenedName($key);
                 $subject->setName($value);
-//                $em->persist($subject);
-//                $em->flush();
                 $user->addQualification($subject);
             }
         }
-//        $isThereQualificationDuplicate = print_r(array_count_values($user->getQualifications()));
     }
 
     private function parseCellOntoArray(string $row): array

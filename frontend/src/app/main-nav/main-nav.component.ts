@@ -26,4 +26,8 @@ export class MainNavComponent {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
+
+  login() {
+    this.router.navigate(['/login']);
+  }
 }
