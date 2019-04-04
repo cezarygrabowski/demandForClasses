@@ -19,24 +19,26 @@ import {
   MatCardModule,
   MatProgressSpinnerModule,
   MatFormFieldModule,
-  MatAutocomplete, MatAutocompleteModule, MatButtonToggle, MatButtonToggleModule
+  MatAutocompleteModule, MatButtonToggleModule, MatRadioModule
 } from '@angular/material';
-import { MainNavComponent } from './main-nav/main-nav.component';
-import { DemandListComponent } from './demand-list/demand-list.component';
-import { DemandFormComponent } from './demand-form/demand-form.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { MainNavComponent } from './core/main-nav/main-nav.component';
+import { DemandListComponent } from './feature/demand-list/demand-list.component';
+import { DemandFormComponent } from './feature/demand-form/demand-form.component';
+import { UserProfileComponent } from './feature/user-profile/user-profile.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import {LoginComponent} from './login';
-import {JwtInterceptor} from './_helpers';
-import { TeacherImportComponent } from './teacher-import/teacher-import.component';
-import { ScheduleImportComponent } from './schedule-import/schedule-import.component';
-import { SemesterWeeksComponent } from './semester-weeks/semester-weeks.component';
-import { LectureFormComponent } from './lecture-type-form/lecture-form.component';
-import { PlacesFormComponent } from './place-form/places-form.component';
-import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
+import {LoginComponent} from './feature/login';
+import {JwtInterceptor} from './shared/_helpers';
+import { TeacherImportComponent } from './feature/teacher-importd/teacher-import.component';
+import { ScheduleImportComponent } from './feature/schedule-importd/schedule-import.component';
+import { SemesterWeeksComponent } from './feature/semester-weeks/semester-weeks.component';
+import { LectureFormComponent } from './feature/lecture-type-form/lecture-form.component';
+import { PlacesFormComponent } from './feature/place-form/places-form.component';
+import { ScheduleFormComponent } from './feature/schedule-form/schedule-form.component';
 import {FlashMessagesModule} from 'angular2-flash-messages';
+import { TeachersImportComponent } from './feature/teachers-import/teachers-import.component';
+import {MaterialFileInputModule} from "ngx-material-file-input";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import {FlashMessagesModule} from 'angular2-flash-messages';
     SemesterWeeksComponent,
     LectureFormComponent,
     PlacesFormComponent,
-    ScheduleFormComponent
+    ScheduleFormComponent,
+    TeachersImportComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +81,9 @@ import {FlashMessagesModule} from 'angular2-flash-messages';
     MatButtonModule,
     MatAutocompleteModule,
     MatButtonToggleModule,
-    FlashMessagesModule.forRoot()
+    FlashMessagesModule.forRoot(),
+    MatRadioModule,
+    MaterialFileInputModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

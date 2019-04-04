@@ -1,12 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './login';
-import { AuthGuard } from './_guards';
-import {DemandListComponent} from './demand-list/demand-list.component';
-import {ScheduleImportComponent} from './schedule-import/schedule-import.component';
-import {TeacherImportComponent} from './teacher-import/teacher-import.component';
-import {UserProfileComponent} from './user-profile/user-profile.component';
-import {DemandFormComponent} from './demand-form/demand-form.component';
+import { LoginComponent } from './feature/login';
+import { AuthGuard } from './shared/_guards';
+import {DemandListComponent} from './feature/demand-list/demand-list.component';
+import {ScheduleImportComponent} from './feature/schedule-importd/schedule-import.component';
+import {UserProfileComponent} from './feature/user-profile/user-profile.component';
+import {DemandFormComponent} from './feature/demand-form/demand-form.component';
+import {TeachersImportComponent} from "./feature/teachers-import/teachers-import.component";
 
 const appRoutes: Routes = [
   {
@@ -33,7 +33,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'importuj-nauczycieli',
-    component: TeacherImportComponent
+    component: TeachersImportComponent
   },
   // otherwise redirect to home
   { path: '**', redirectTo: 'zapotrzebowania' }

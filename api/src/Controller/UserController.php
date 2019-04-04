@@ -39,7 +39,7 @@ class UserController extends AbstractController
 
     /**
      * @return Response
-     * @Route("/api", methods={"POST"})
+     * @Route("/", methods={"GET"})
      */
     public function api()
     {
