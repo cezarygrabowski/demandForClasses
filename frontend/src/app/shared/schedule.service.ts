@@ -5,14 +5,11 @@ import {environment} from "../../environments/environment.local";
 @Injectable({
   providedIn: 'root'
 })
-export class UploadService {
+export class ScheduleService {
 
   constructor(private http: HttpClient) { }
 
-  upload(fileToUpload: any) {
-    let input = new FormData();
-    input.append("file", fileToUpload);
-
-    return this.http.post(`${environment.apiUrl}/import-teachers`, input);
+  upload(fd: FormData) {
+    return this.http.post(`${environment.apiUrl}/import-schedules`, fd);
   }
 }

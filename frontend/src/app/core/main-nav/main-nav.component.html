@@ -23,8 +23,8 @@
       </button>
       <span>Zapotrzebowania</span>
 <!--      <span><a class="sidenav" routerLink="/">Strona główna</a></span>-->
-<!--      <a mat-button *ngIf="authenticationService.isLoggedIn()" (click)="logout()" >Wyloguj</a>-->
-<!--      <a mat-button *ngIf="!authenticationService.isLoggedIn()" (click)="login()" >Zaloguj</a>-->
+      <a mat-button *ngIf="authenticationService.isLoggedIn()" (click)="logout()" >Wyloguj</a>
+      <a mat-button *ngIf="!authenticationService.isLoggedIn()" (click)="login()" >Zaloguj</a>
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>

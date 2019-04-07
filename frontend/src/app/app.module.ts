@@ -30,15 +30,19 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {LoginComponent} from './feature/login';
 import {JwtInterceptor} from './shared/_helpers';
-import { TeacherImportComponent } from './feature/teacher-importd/teacher-import.component';
-import { ScheduleImportComponent } from './feature/schedule-importd/schedule-import.component';
 import { SemesterWeeksComponent } from './feature/semester-weeks/semester-weeks.component';
 import { LectureFormComponent } from './feature/lecture-type-form/lecture-form.component';
 import { PlacesFormComponent } from './feature/place-form/places-form.component';
 import { ScheduleFormComponent } from './feature/schedule-form/schedule-form.component';
 import {FlashMessagesModule} from 'angular2-flash-messages';
 import { TeachersImportComponent } from './feature/teachers-import/teachers-import.component';
-import {MaterialFileInputModule} from "ngx-material-file-input";
+import {MaterialFileInputModule} from 'ngx-material-file-input';
+import {FeatureModule} from "./feature/feature.module";
+import {SharedModule} from "./shared/shared.module";
+import {CoreModule} from "./core/core.module";
+import {ScheduleImportComponent} from "./feature/schedule-import/schedule-import.component";
+import {TeacherService} from "./shared/teacher.service";
+import {ScheduleService} from "./shared/schedule.service";
 
 @NgModule({
   declarations: [
@@ -48,13 +52,12 @@ import {MaterialFileInputModule} from "ngx-material-file-input";
     DemandFormComponent,
     UserProfileComponent,
     LoginComponent,
-    TeacherImportComponent,
-    ScheduleImportComponent,
     SemesterWeeksComponent,
     LectureFormComponent,
     PlacesFormComponent,
     ScheduleFormComponent,
-    TeachersImportComponent
+    TeachersImportComponent,
+    ScheduleImportComponent
   ],
   imports: [
     BrowserModule,
@@ -83,10 +86,15 @@ import {MaterialFileInputModule} from "ngx-material-file-input";
     MatButtonToggleModule,
     FlashMessagesModule.forRoot(),
     MatRadioModule,
-    MaterialFileInputModule
+    MaterialFileInputModule,
+    FeatureModule,
+    SharedModule,
+    CoreModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    TeacherService,
+    ScheduleService
   ],
   bootstrap: [AppComponent]
 })

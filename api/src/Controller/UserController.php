@@ -57,7 +57,6 @@ class UserController extends AbstractController
         return $this->httpService->createSuccessResponse();
     }
 
-
     /**
      * @Route("/lecturers/{id}")
      */
