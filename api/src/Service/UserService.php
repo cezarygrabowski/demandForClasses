@@ -101,6 +101,5 @@ class UserService
 
     public function updateAutomaticalSendToPlanners(User $user, bool $data)
     {
-
     }
 }

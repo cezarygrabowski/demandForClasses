@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
 
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping\OneToMany;
  */
 class Building
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,9 +26,15 @@ class Building
     private $name;
 
     /**
-     * @OneToMany(targetEntity="Room", cascade={"persist", "remove", "merge"}, orphanRemoval=true, mappedBy="building")
+     * @var ArrayCollection
+     * @OneToMany(targetEntity="Room", cascade={"persist", "remove", "merge"}, orphanRemoval=true, mappedBy="building", cascade={"persist"})
      */
     private $rooms;
+
+    public function __construct()
+    {
+        $this->rooms = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -66,5 +74,12 @@ class Building
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    public function addRoom(Room $room)
+    {
+        if(!$this->rooms->contains($room)) {
+            $this->rooms->add($room);
+        }
     }
 }

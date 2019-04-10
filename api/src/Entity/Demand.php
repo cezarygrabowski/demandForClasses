@@ -64,6 +64,7 @@ class Demand
     private $semester;
 
     /**
+     * @var Subject
      * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"})
      */
     private $subject;
@@ -245,10 +246,7 @@ class Demand
         return $this->subject;
     }
 
-    /**
-     * @param mixed $subject
-     */
-    public function setSubject($subject): void
+    public function setSubject(Subject $subject): void
     {
         $this->subject = $subject;
     }

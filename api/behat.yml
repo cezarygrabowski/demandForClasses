@@ -1,0 +1,8 @@
+default:
+  suites:
+    demand_features:
+      paths:    [ '%paths.base%/features/demands' ]
+      contexts: [ DemandContext ]
+    user_features:
+      paths:    [ '%paths.base%/features/users' ]
+      contexts: [ DemandContext ]
