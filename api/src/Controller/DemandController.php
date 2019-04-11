@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Demand;
-use App\Repository\DemandRepository;
 use App\Repository\LectureRepository;
 use App\Service\DemandService;
 use App\Service\HttpService;
@@ -33,20 +32,13 @@ class DemandController extends AbstractController
      */
     private $lectureRepository;
 
-    /**
-     * @var DemandRepository
-     */
-    private $demandRepository;
-
     public function __construct(
         DemandService $demandService,
         HttpService $httpService,
-        DemandRepository $demandRepository,
         LectureRepository $lectureRepository
     ) {
         $this->demandService = $demandService;
         $this->httpService = $httpService;
-        $this->demandRepository = $demandRepository;
         $this->lectureRepository = $lectureRepository;
     }
 

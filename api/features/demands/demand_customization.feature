@@ -31,5 +31,3 @@ Feature: Demand customization
     When I add notes "Przykladowa notatka" in "Projekt" lecture type
     And I save a demand
     Then Demand should have filled in "notes" with "Przykladowa notatka" in "Projekt" lecture type
-
-
