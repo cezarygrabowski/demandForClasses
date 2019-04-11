@@ -4,14 +4,13 @@ Feature: Demand customization
   I need to be able to customize a demand
 
   Background:
-    Given There is a demand with subject "Wychowanie fizyczne" "WF"
-    And with lecture type "Projekt"
+    Given There is demand with subject "Wychowanie fizyczne" "WF" and lecture type "Projekt"
 
+  @OneScenarioAtTheTime
   Scenario: Change lecturer
     Given There is lecturer "Jan Kowalski"
-    When I change demand lecturer to "Jan Kowalski"
-    And I save a demand
-    Then I should see that "Jan Kowalski" is lecturer in "Projekt" lecture type
+    When I change demand lecturer to "Jan Kowalski" in "Projekt" lecture type
+    Then user "Jan Kowalski" should see this demand on his list
 
   Scenario: Choose date of lectures
     Given Demand lecture type "Projekt" has "30" hours undistributed

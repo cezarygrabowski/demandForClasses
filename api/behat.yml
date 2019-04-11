@@ -1,8 +1,10 @@
 default:
+  autoload:
+    - "%paths.base%/tests/features/bootstrap"
   suites:
     demand_features:
-      paths:    [ '%paths.base%/features/demands' ]
+      paths:    [ '%paths.base%/tests/features/demands' ]
       contexts: [ DemandContext ]
     user_features:
-      paths:    [ '%paths.base%/features/users' ]
-      contexts: [ DemandContext ]
+      paths:    [ '%paths.base%/tests/features/users' ]
+      contexts: [ UserContext ]

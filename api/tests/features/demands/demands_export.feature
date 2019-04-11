@@ -4,7 +4,8 @@ Feature: Demands' export
   I need to be able to export demands
 
   Scenario: Export demands
-    Given There is a demand with subject "Wychowanie fizyczne" "WF" with lecture type "Projekt"
+    Given There is a demand with subject "Wychowanie fizyczne" "WF"
+    And with lecture type "Projekt"
     And I have a role "Planner"
     When I export accepted demands
     Then Exported Demands should be "exported"

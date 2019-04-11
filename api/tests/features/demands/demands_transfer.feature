@@ -4,8 +4,9 @@ Feature: Demand transfer
   I need to be able to send customized demand
 
   Background:
-    Given There is a demand with subject "Wychowanie fizyczne" "WF" with lecture type "Projekt"
-    Given There is a user "Jan Kowalski"
+    Given There is a demand with subject "Wychowanie fizyczne" "WF"
+    And with lecture type "Projekt"
+    And There is a user "Jan Kowalski"
 
   Scenario: Send to District Manager
     And user "Jan Kowalski" has role "District Manager"
