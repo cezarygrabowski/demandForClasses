@@ -16,4 +16,4 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\Infrastructure\:
         resource: '../src/Infrastructure/*'
-        exclude: '../src/Infrastructure/Symfony/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+#        exclude: '../src/Infrastructure/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'

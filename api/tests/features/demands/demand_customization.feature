@@ -4,29 +4,32 @@ Feature: Demand customization
   I need to be able to customize a demand
 
   Background:
-    Given There is demand with subject "Wychowanie fizyczne" "WF" and lecture type "Projekt"
+    Given There is demand with subject "Wychowanie fizyczne" "WF"
+    And lecture set "Projekt"
 
   @OneScenarioAtTheTime
   Scenario: Change lecturer
     Given There is lecturer "Jan Kowalski"
-    When I change demand lecturer to "Jan Kowalski" in "Projekt" lecture type
+    When I change demand lecturer to "Jan Kowalski" in "Projekt" lecture set
     Then user "Jan Kowalski" should see this demand on his list
 
-  Scenario: Choose date of lectures
-    Given Demand lecture type "Projekt" has "30" hours undistributed
-    When I book "30" hours in "3" week
-    And I save a demand
-    Then I should see that demand has "0" hours undistributed
-    And That lectures are planned in "3" week
+  @OneScenarioAtTheTime
+  Scenario: Allocate hours in chosen weeks
+    Given Demand lecture set "Projekt" has "30" undistributed hours
+    When I book "20" hours in "3" week
+    And I book "10" hours in "4" week
+    Then in "3" week should be "20" hours allocated
+    And in "4" week should be "10" hours allocated
+    And lecture set "Projekt" should have "0" undistributed hours
 
+  @OneScenarioAtTheTime
   Scenario: Choose place of lectures in demand
-    Given Demand lecture type "Projekt" has "30" hours undistributed
-    And There is "30" hours booked in "3" week
-    When I choose building "65" and room "100"
-    And I save a demand
-    Then Demand should have building "65" and "100" room in "3" week in "Projekt" lecture type
+    Given There is a place with building "65" and room "100"
+    And I book "30" hours in "3" week
+    When I choose building "65" and room "100" in "3" week
+    Then Demand should have building "65" and room "100" in "3" week
 
+  @OneScenarioAtTheTime
   Scenario: Add notes
-    When I add notes "Przykladowa notatka" in "Projekt" lecture type
-    And I save a demand
-    Then Demand should have filled in "notes" with "Przykladowa notatka" in "Projekt" lecture type
+    When I add notes "Przykladowa notatka"
+    Then Lecture set should have "Przykladowa notatka" notes

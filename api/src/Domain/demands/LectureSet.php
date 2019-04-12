@@ -5,6 +5,8 @@ namespace App\Domain\demands;
 
 
 use App\Domain\users\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 
 class LectureSet
 {
@@ -33,19 +35,29 @@ class LectureSet
     private $lectureType;
 
     /**
-     * @var Subject
-     */
-    private $subject;
-
-    /**
      * @var User
      */
     private $lecturer;
 
-    public function __construct(int $lectureType, Subject $subject)
+    /**
+     * @var ArrayCollection<Week>
+     */
+    private $allocatedWeeks;
+
+    /**
+     * @var int
+     */
+    private $hoursToDistribute;
+
+    /**
+     * @var string
+     */
+    private $notes;
+
+    public function __construct(int $lectureType)
     {
         $this->lectureType = $lectureType;
-        $this->subject = $subject;
+        $this->allocatedWeeks = new ArrayCollection();
     }
 
     public function getLectureType(): int
@@ -59,13 +71,74 @@ class LectureSet
         return $this;
     }
 
-    public function getSubject(): Subject
-    {
-        return $this->subject;
-    }
-
     public function getLecturer(): User
     {
         return $this->lecturer;
+    }
+
+    /**
+     * @return Week[]
+     */
+    public function getAllocatedWeeks(): array
+    {
+        return $this->allocatedWeeks->toArray();
+    }
+
+    public function getDistributedHours(): int
+    {
+        $distributedHours = 0;
+        foreach ($this->getAllocatedWeeks() as $week) {
+            $distributedHours += $week->getAllocatedHours();
+        }
+
+        return $distributedHours;
+    }
+
+    public function getUndistributedHours(): int
+    {
+        return $this->hoursToDistribute - $this->getDistributedHours();
+    }
+
+    public function setHoursToDistribute($hours): self
+    {
+        $this->hoursToDistribute = $hours;
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function allocateWeek(Week $week): self
+    {
+        if ($this->allocatedWeeks->contains($week)) {
+            throw new Exception("Ten tydzień został już wybrany");
+        }
+
+        $this->allocatedWeeks->add($week);
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAllocatedWeek(int $weekNumber): Week
+    {
+        foreach ($this->getAllocatedWeeks() as $week) {
+            if($week->getNumber() === $weekNumber){
+                return $week;
+            }
+        }
+
+        throw new Exception("W danym tygodniu nie ma zalokowanych godzin");
+    }
+
+    public function addNotes($notes)
+    {
+        $this->notes = $notes;
+    }
+
+    public function getNotes(): string
+    {
+        return $this->notes;
     }
 }
