@@ -22,12 +22,12 @@ doctrine:
             Demands:
                 is_bundle: false
                 type: yml
-                dir: '%kernel.project_dir%/src/Infrastructure/demands/Doctrine/Mapping'
+                dir: '%kernel.project_dir%/src/Demands/Infrastructure/Doctrine/Mapping'
                 prefix: 'Demands\Entity'
                 alias: Demands
             Users:
                 is_bundle: false
                 type: yml
-                dir: '%kernel.project_dir%/src/Infrastructure/users/Doctrine/Mapping'
+                dir: '%kernel.project_dir%/src/Users/Infrastructure/Doctrine/Mapping'
                 prefix: 'Users\Entity'
                 alias: Users

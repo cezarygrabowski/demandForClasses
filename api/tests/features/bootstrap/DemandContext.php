@@ -1,25 +1,33 @@
 <?php
 
-use App\Domain\demands\DTO\DemandExportDTO;
-use App\Domain\demands\Group;
-use App\Domain\demands\Repository\GroupRepository;
-use App\Infrastructure\demands\InMemory\Repository\InMemoryGroupRepository;
-use Behat\Gherkin\Node\TableNode;
-use Behat\Behat\Tester\Exception\PendingException;
-use App\Domain\demands\Place;
-use App\Domain\demands\Repository\PlaceRepository;
-use App\Infrastructure\demands\InMemory\Repository\InMemoryPlaceRepository;
-use App\Domain\demands\Week;
-use App\Domain\demands\Demand;
-use App\Domain\demands\LectureSet;
-use App\Domain\demands\Repository\DemandRepository;
-use App\Domain\demands\Subject;
-use App\Domain\users\Repository\UserRepository;
-use App\Domain\users\User;
-use App\Infrastructure\demands\InMemory\Repository\InMemoryDemandRepository;
-use App\Infrastructure\users\InMemory\Repository\InMemoryUserRepository;
 use Behat\Behat\Context\Context;
-use PHPUnit\Framework\Assert;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
+use Demands\Application\Command\AcceptDemand;
+use Demands\Application\Command\ExportDemands;
+use Demands\Application\Handler\AcceptDemandHandler;
+use Demands\Application\FileManagers\CsvFileMaker;
+use Demands\Application\Handler\ExportDemandsHandler;
+use Demands\Application\Service\DemandService;
+use Demands\Domain\Demand;
+use Demands\Domain\Export\Csv\Positions;
+use Demands\Domain\Group;
+use Demands\Domain\LectureSet;
+use Demands\Domain\Place;
+use Demands\Domain\Repository\DemandRepository;
+use Demands\Domain\Repository\GroupRepository;
+use Demands\Domain\Repository\PlaceRepository;
+use Demands\Domain\StatusResolver;
+use Demands\Domain\Subject;
+use Demands\Domain\Week;
+use Demands\Infrastructure\InMemory\Repository\InMemoryDemandRepository;
+use Demands\Infrastructure\InMemory\Repository\InMemoryGroupRepository;
+use Demands\Infrastructure\InMemory\Repository\InMemoryPlaceRepository;
+use Users\Domain\Repository\UserRepository;
+use Users\Domain\Role;
+use Users\Domain\User;
+use Users\Infrastructure\InMemory\Repository\InMemoryUserRepository;
+use Webmozart\Assert\Assert;
 
 class DemandContext implements Context
 {
@@ -54,6 +62,11 @@ class DemandContext implements Context
     private $groupRepository;
 
     /**
+     * @var string
+     */
+    private $content;
+
+    /**
      * @Given There is demand with subject :name :shortenedName
      */
     public function thereIsADemandWithSubject($name, $shortenedName)
@@ -67,18 +80,23 @@ class DemandContext implements Context
      */
     public function lectureSet($lectureType)
     {
-        $this->lectureSet = new LectureSet(LectureSet::LECTURE_TYPES_FOR_IMPORT[$lectureType]);
+        $this->lectureSet = new LectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureType]);
         $this->demand->addLectureSet($this->lectureSet);
     }
 
     /**
-     * @Given There is lecturer :username
+     * @Given There is user :username
      */
-    public function thereIsLecturer($username)
+    public function thereIsUser($username)
     {
         $user = new User($username);
 
-        $this->userRepository = new InMemoryUserRepository([$user]);
+        if(!$this->userRepository) {
+            $this->userRepository = new InMemoryUserRepository([$user]);
+        } else {
+            $this->userRepository->addUser($user);
+        }
+
     }
 
     /**
@@ -88,20 +106,21 @@ class DemandContext implements Context
     {
         $this->demand->changeLecturer(
             $this->userRepository->findByUsername($username),
-            LectureSet::LECTURE_TYPES_FOR_IMPORT[$lectureType]
+            LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureType]
         );
     }
 
     /**
-     * @Then user :username should see this demand on his list
+     * @Then user :username should see this demand
      */
     public function userShouldSeeThisDemand($username)
     {
         $user = $this->userRepository->findByUsername($username);
         $this->demandRepository = new InMemoryDemandRepository([$this->demand]);
-        $demands = $this->demandRepository->listAllForUser($user);
+        $demandService = new DemandService($this->demandRepository, new StatusResolver());
+        $demands = $demandService->listAllForUser($user);
 
-        Assert::assertSame($demands[0], $this->demand);
+        Assert::same($demands[0], $this->demand);
     }
 
     /**
@@ -114,6 +133,7 @@ class DemandContext implements Context
 
     /**
      * @When I book :hours hours in :weekNumber week
+     * @throws Exception
      */
     public function iBookHoursInWeek($hours, $weekNumber)
     {
@@ -123,11 +143,12 @@ class DemandContext implements Context
 
     /**
      * @Then in :weekNumber week should be :hours hours allocated
+     * @throws Exception
      */
     public function inWeekShouldBeHoursAllocated(int $weekNumber, int $hours)
     {
         $week = $this->lectureSet->getAllocatedWeek($weekNumber);
-        Assert::assertSame($week->getAllocatedHours(), $hours);
+        Assert::same($week->getAllocatedHours(), $hours);
     }
 
     /**
@@ -135,20 +156,25 @@ class DemandContext implements Context
      */
     public function lectureTypeShouldHaveUndistributedHours($lectureType, int $hours)
     {
-        Assert::assertSame($this->lectureSet->getUndistributedHours(), $hours);
+        Assert::same($this->lectureSet->getUndistributedHours(), $hours);
     }
 
     /**
      * @Given There is a place with building :building and room :room
      */
-    public function thereIsAPlaceWithBuildingAndRoom($building, $room)
+    public function thereIsAPlaceWithBuildingAndRoom(int $building, int $room)
     {
         $place = new Place($building, $room);
-        $this->placeRepository = new InMemoryPlaceRepository([$place]);
+        if(!$this->placeRepository) {
+            $this->placeRepository = new InMemoryPlaceRepository([$place]);
+        } else {
+            $this->placeRepository->addPlace($place);
+        }
     }
 
     /**
      * @When I choose building :building and room :room in :weekNumber week
+     * @throws Exception
      */
     public function iChooseBuildingAndRoomInWeek(int $building, int $room, int $weekNumber)
     {
@@ -161,13 +187,14 @@ class DemandContext implements Context
 
     /**
      * @Then Demand should have building :building and room :room in :weekNumber week
+     * @throws Exception
      */
     public function demandShouldHaveBuildingAndRoomInWeek(int $building, int $room, int $weekNumber)
     {
         $week = $this->lectureSet->getAllocatedWeek($weekNumber);
         if($week->getPlace()) {
-            Assert::assertSame($week->getPlace()->getRoom(), $room);
-            Assert::assertSame($week->getPlace()->getBuilding(), $building);
+            Assert::same($week->getPlace()->getRoom(), $room);
+            Assert::same($week->getPlace()->getBuilding(), $building);
         }
     }
 
@@ -184,7 +211,7 @@ class DemandContext implements Context
      */
     public function lectureSetShouldHaveNotes($notes)
     {
-        Assert::assertSame($this->lectureSet->getNotes(), $notes);
+        Assert::same($this->lectureSet->getNotes(), $notes);
     }
 
     /**
@@ -195,63 +222,100 @@ class DemandContext implements Context
     {
         $row = $table->getRow(0);
 
-        $lecturer = $this->userRepository->findByUsername($row[DemandExportDTO::LECTURER]);
-        $group = $this->groupRepository->find($row[DemandExportDTO::GROUP]);
+        $lecturer = $this->userRepository->findByUsername($row[Positions::LECTURER]);
+        $group = $this->groupRepository->find($row[Positions::GROUP]);
+        $place1 = $this->placeRepository->findOneByBuildingAndRoom($row[11], $row[12]);
+        $week1 = new Week(1, $row[10], $place1);
+        $place2 = $this->placeRepository->findOneByBuildingAndRoom($row[14], $row[15]);
+        $week2 = new Week(2, $row[13], $place2);
 
-        $this->lectureSet = new LectureSet($row[DemandExportDTO::LECTURE_TYPE]);
+        $this->lectureSet = new LectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[
+            $row[Positions::LECTURE_TYPE]
+        ]);
         $this->lectureSet
             ->setLecturer($lecturer)
-            ->setHoursToDistribute($row[DemandExportDTO::HOURS]);
+            ->setHoursToDistribute($row[9])
+            ->setDemand($this->demand)
+            ->allocateWeek($week1)
+            ->allocateWeek($week2);
 
         $this->demand
             ->addLectureSet($this->lectureSet)
             ->setStatus(Demand::STATUS_ACCEPTED_BY_DEAN)
-            ->setSchoolYear($row[DemandExportDTO::SCHOOL_YEAR])
+            ->setSchoolYear($row[Positions::SCHOOL_YEAR])
             ->setGroup($group)
-            ->setInstitute($row[DemandExportDTO::INSTITUTE])
-            ->setDepartment($row[DemandExportDTO::DEPARTMENT])
-            ->setSemester($row[DemandExportDTO::SEMESTER]);
-        //TODO HERE
+            ->setSemester($row[6])
+            ->setInstitute($row[7])
+            ->setDepartment($row[8]);
+
+        $this->demandRepository = new InMemoryDemandRepository([$this->demand]);
     }
 
     /**
-     * @Given I have role :arg1
+     * @Then Exported demands should have status :status
      */
-    public function iHaveRole($arg1)
+    public function exportedDemandsShouldHaveStatus($status)
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @When I export accepted demands
-     */
-    public function iExportAcceptedDemands()
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then Exported demands should have status :arg1
-     */
-    public function exportedDemandsShouldHaveStatus($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then :arg1 row of created file should look like that:
-     */
-    public function rowOfCreatedFileShouldLookLikeThat($arg1, TableNode $table)
-    {
-        throw new PendingException();
+        Assert::same($this->demand->getStatus(), Demand::STATUSES_STRING_TO_INT[$status]);
     }
 
     /**
      * @Given There is group :name with type :type
      */
-    public function thereIsGroupWithType($name, $type)
+    public function thereIsGroupWithType(string $name, string $type)
     {
-        $group = new Group($name, $type);
+        $group = new Group($name, Group::GROUP_TYPE_STRING_TO_INT[$type]);
         $this->groupRepository = new InMemoryGroupRepository([$group]);
     }
+
+    /**
+     * @When user :userName export accepted demands
+     */
+    public function userExportAcceptedDemands(string $userName)
+    {
+        $command = new ExportDemands(
+            [$this->demand->getUuid()],
+            $this->userRepository->findByUsername($userName)
+        );
+        $handler = new ExportDemandsHandler(new CsvFileMaker(), $this->demandRepository);
+
+        $this->content = $handler->handle($command);
+    }
+
+    /**
+     * @Then created file should have following informations:
+     */
+    public function rowOfCreatedFileShouldHaveFollowingInformations(TableNode $table)
+    {
+        $row = $table->getRow(0);
+        foreach ($row as $key => $value) {
+            Assert::true(strpos($this->content, $value) !== false);
+        }
+    }
+
+    /**
+     * @Given user :userName has role :roleName
+     */
+    public function userHasRole(string $userName, string $roleName)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+        $role = new Role();
+        $role
+            ->setUser($user)
+            ->setName(Role::ROLES_STRING_TO_INT[$roleName]);
+        $user->addRole($role);
+    }
+
+    /**
+     * @When user :userName accept a demand
+     */
+    public function userAcceptADemand(string $userName)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+
+        $command = new AcceptDemand($this->demand, $user);
+        $handler = new AcceptDemandHandler(new StatusResolver());
+
+        $handler->handle($command);
+    }  
 }

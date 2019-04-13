@@ -1,5 +1,5 @@
 Feature: Import users with calendars and qualifications
-  In order to assign lecturers to Demand
+  In order to assign users to Demand
   As a District Manager
   I need to be able to import teachers with their calendars and qualifications
 

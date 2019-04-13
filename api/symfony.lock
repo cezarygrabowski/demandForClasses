@@ -92,6 +92,9 @@
     "exsyst/swagger": {
         "version": "v0.4.1"
     },
+    "facebook/webdriver": {
+        "version": "1.6.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -115,9 +118,6 @@
             "version": "2.5",
             "ref": "509b1542f3180a1cfe248ade8b7bf5092c2d4127"
         }
-    },
-    "myclabs/deep-copy": {
-        "version": "1.9.1"
     },
     "namshi/jose": {
         "version": "7.2.3"
@@ -149,12 +149,6 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
-    "phar-io/manifest": {
-        "version": "1.0.3"
-    },
-    "phar-io/version": {
-        "version": "2.0.1"
-    },
     "phpcollection/phpcollection": {
         "version": "0.5.0"
     },
@@ -170,39 +164,6 @@
     "phpoption/phpoption": {
         "version": "1.5.0"
     },
-    "phpspec/prophecy": {
-        "version": "1.8.0"
-    },
-    "phpunit/php-code-coverage": {
-        "version": "6.1.4"
-    },
-    "phpunit/php-file-iterator": {
-        "version": "2.0.2"
-    },
-    "phpunit/php-text-template": {
-        "version": "1.2.1"
-    },
-    "phpunit/php-timer": {
-        "version": "2.1.1"
-    },
-    "phpunit/php-token-stream": {
-        "version": "3.0.1"
-    },
-    "phpunit/phpunit": {
-        "version": "4.7",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "4.7",
-            "ref": "f6f9ee3a511e9d9ad6a53d92fbaa1a709ed8c1ca"
-        },
-        "files": [
-            ".env.test",
-            "phpunit.xml.dist",
-            "config/bootstrap.php",
-            "tests/.gitignore"
-        ]
-    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -216,40 +177,7 @@
         "version": "1.0.1"
     },
     "ramsey/uuid": {
-        "version": "2.9.0"
-    },
-    "sebastian/code-unit-reverse-lookup": {
-        "version": "1.0.1"
-    },
-    "sebastian/comparator": {
-        "version": "3.0.2"
-    },
-    "sebastian/diff": {
-        "version": "3.0.2"
-    },
-    "sebastian/environment": {
-        "version": "4.1.0"
-    },
-    "sebastian/exporter": {
-        "version": "3.1.0"
-    },
-    "sebastian/global-state": {
-        "version": "2.0.0"
-    },
-    "sebastian/object-enumerator": {
-        "version": "3.0.3"
-    },
-    "sebastian/object-reflector": {
-        "version": "1.1.1"
-    },
-    "sebastian/recursion-context": {
-        "version": "3.0.0"
-    },
-    "sebastian/resource-operations": {
-        "version": "2.0.1"
-    },
-    "sebastian/version": {
-        "version": "2.0.1"
+        "version": "3.8.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -259,6 +187,9 @@
             "version": "5.2",
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         }
+    },
+    "symfony/browser-kit": {
+        "version": "v4.2.5"
     },
     "symfony/cache": {
         "version": "v4.2.1"
@@ -292,6 +223,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v4.2.1"
+    },
+    "symfony/dom-crawler": {
+        "version": "v4.2.5"
     },
     "symfony/dotenv": {
         "version": "v4.2.1"
@@ -347,6 +281,25 @@
     "symfony/orm-pack": {
         "version": "v1.0.5"
     },
+    "symfony/panther": {
+        "version": "v0.3.0"
+    },
+    "symfony/phpunit-bridge": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "0e548dd90adba18fabd4ef419b14d361fe4d6c74"
+        },
+        "files": [
+            ".env.test",
+            "bin/phpunit",
+            "config/bootstrap.php",
+            "phpunit.xml.dist",
+            "tests/.gitignore"
+        ]
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
     },
@@ -401,6 +354,9 @@
     "symfony/stopwatch": {
         "version": "v4.2.1"
     },
+    "symfony/test-pack": {
+        "version": "v1.0.5"
+    },
     "symfony/translation": {
         "version": "3.3",
         "recipe": {
@@ -452,9 +408,6 @@
     },
     "symfony/yaml": {
         "version": "v4.2.1"
-    },
-    "theseer/tokenizer": {
-        "version": "1.1.2"
     },
     "twig/twig": {
         "version": "v2.6.0"

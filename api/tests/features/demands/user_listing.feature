@@ -1,5 +1,5 @@
 Feature: Listing users
-  In order to choose the least occupied lecturer
+  In order to choose the least occupied user
   As a District Manager
   I need to be able to list all users
 
