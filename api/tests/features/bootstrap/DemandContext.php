@@ -4,25 +4,34 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Demands\Application\Command\AcceptDemand;
+use Demands\Application\Command\AssignDemand;
+use Demands\Application\Command\DeclineDemand;
 use Demands\Application\Command\ExportDemands;
+use Demands\Application\Command\ImportStudyPlans;
 use Demands\Application\Handler\AcceptDemandHandler;
 use Demands\Application\FileManagers\CsvFileMaker;
+use Demands\Application\Handler\AssignDemandHandler;
+use Demands\Application\Handler\DeclineDemandHandler;
 use Demands\Application\Handler\ExportDemandsHandler;
+use Demands\Application\Handler\ImportStudyPlansHandler;
 use Demands\Application\Service\DemandService;
 use Demands\Domain\Demand;
 use Demands\Domain\Export\Csv\Positions;
 use Demands\Domain\Group;
+use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
 use Demands\Domain\LectureSet;
 use Demands\Domain\Place;
 use Demands\Domain\Repository\DemandRepository;
 use Demands\Domain\Repository\GroupRepository;
 use Demands\Domain\Repository\PlaceRepository;
+use Demands\Domain\Repository\SubjectRepository;
 use Demands\Domain\StatusResolver;
 use Demands\Domain\Subject;
 use Demands\Domain\Week;
 use Demands\Infrastructure\InMemory\Repository\InMemoryDemandRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemoryGroupRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemoryPlaceRepository;
+use Demands\Infrastructure\InMemory\Repository\InMemorySubjectRepository;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\Role;
 use Users\Domain\User;
@@ -65,6 +74,10 @@ class DemandContext implements Context
      * @var string
      */
     private $content;
+    /**
+     * @var SubjectRepository
+     */
+    private $subjectRepository;
 
     /**
      * @Given There is demand with subject :name :shortenedName
@@ -72,7 +85,11 @@ class DemandContext implements Context
     public function thereIsADemandWithSubject($name, $shortenedName)
     {
         $subject = new Subject($name, $shortenedName);
-        $this->demand = new Demand($subject);
+        $this->subjectRepository = new InMemorySubjectRepository([$subject]);
+        $this->demand = new Demand();
+        $this->demand->setSubject($subject);
+
+        $this->demandRepository = new InMemoryDemandRepository([$this->demand]);
     }
 
     /**
@@ -116,10 +133,8 @@ class DemandContext implements Context
     public function userShouldSeeThisDemand($username)
     {
         $user = $this->userRepository->findByUsername($username);
-        $this->demandRepository = new InMemoryDemandRepository([$this->demand]);
-        $demandService = new DemandService($this->demandRepository, new StatusResolver());
+        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, $this->groupRepository);
         $demands = $demandService->listAllForUser($user);
-
         Assert::same($demands[0], $this->demand);
     }
 
@@ -247,8 +262,6 @@ class DemandContext implements Context
             ->setSemester($row[6])
             ->setInstitute($row[7])
             ->setDepartment($row[8]);
-
-        $this->demandRepository = new InMemoryDemandRepository([$this->demand]);
     }
 
     /**
@@ -318,4 +331,143 @@ class DemandContext implements Context
 
         $handler->handle($command);
     }  
+
+    /**
+     * @Then user :userName should not see this demand
+     */
+    public function userShouldNotSeeThisDemand($userName)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, $this->groupRepository);
+        $demands = $demandService->listAllForUser($user);
+        Assert::isEmpty($demands);
+    }
+
+    /**
+     * @When user :userName decline a demand
+     */
+    public function userDeclineADemand($userName)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+        $command = new DeclineDemand($this->demand, $user);
+        $handler = new DeclineDemandHandler();
+
+        $handler->handle($command);
+    }
+
+    /**
+     * @Then demand should have status :status
+     */
+    public function demandShouldHaveStatus($status)
+    {
+        Assert::same($this->demand->getStatus(), Demand::STATUSES_STRING_TO_INT[$status]);
+    }
+
+    /**
+     * @When user :assignor assign a demand to user :assignee in type :lectureSetType
+     */
+    public function userAssignADemand($assignor, $assignee, $lectureSetType)
+    {
+        $assignor = $this->userRepository->findByUsername($assignor);
+        $assignee = $this->userRepository->findByUsername($assignee);
+        $command = new AssignDemand($this->demand, [LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType]], $assignor, $assignee);
+        $handler = new AssignDemandHandler();
+
+        $handler->handle($command);
+    }
+
+    /**
+     * @Given demand has status :status
+     */
+    public function demandHasStatus($status)
+    {
+        $this->demand->setStatus(Demand::STATUSES_STRING_TO_INT[$status]);
+    }
+
+    /**
+     * @When user :userName will import :fileName study plans that contains the following:
+     */
+    public function userWillImportFile($userName, $fileName, TableNode $table)
+    {
+        $row = $table->getRow(0);
+//        var_dump($row);die;
+        $fp = fopen($fileName, 'w');
+        fputcsv($fp, ['MOCKED HEADER']);
+        fputcsv($fp, $row);
+        fclose($fp);
+        $user = $this->userRepository->findByUsername($userName);
+        $demandService = new DemandService(new InMemoryDemandRepository([]), new StatusResolver(), new InMemorySubjectRepository([]), new InMemoryGroupRepository([]));
+
+        $command = new ImportStudyPlans($user, StudyPlansExtractor::extract($fileName));
+        $handler = new ImportStudyPlansHandler($demandService);
+        $createdDemands = $handler->handle($command);
+        $this->demand = $createdDemands[0];
+        $this->demandRepository = new InMemoryDemandRepository($createdDemands);
+        unlink($fileName);
+    }
+
+    /**
+     * @Then demand should have :name group
+     */
+    public function demandShouldHaveGroup($name)
+    {
+        Assert::same($this->demand->getGroup()->getName(), $name);
+    }
+
+    /**
+     * @Then demand should have :type group type
+     */
+    public function demandShouldHaveGroupType($type)
+    {
+        Assert::same($this->demand->getGroup()->getType(), Group::GROUP_TYPE_STRING_TO_INT[$type]);
+    }
+
+    /**
+     * @Then demand should have :name :shortName subject
+     */
+    public function demandShouldHaveSubject($name, $shortName)
+    {
+        Assert::same($this->demand->getSubject()->getName(), $name);
+        Assert::same($this->demand->getSubject()->getShortName(), $shortName);
+    }
+
+    /**
+     * @Then demand should have :type lecture set type
+     */
+    public function demandShouldHaveLectureSetType($type)
+    {
+        Assert::notNull($this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$type]));
+    }
+
+    /**
+     * @Then demand should have :institute institute
+     */
+    public function demandShouldHaveInstitute($institute)
+    {
+        Assert::same($this->demand->getInstitute(), $institute);
+    }
+
+    /**
+     * @Then demand should have :department department
+     */
+    public function demandShouldHaveDepartment($department)
+    {
+        Assert::same($this->demand->getDepartment(), $department);
+    }
+
+    /**
+     * @Then demand should have :yearNumber year number
+     */
+    public function demandShouldHaveYearNumber($yearNumber)
+    {
+        Assert::same($this->demand->getSchoolYear(), $yearNumber);
+    }
+
+    /**
+     * @Then lecture set :type should have :hours hours
+     */
+    public function lectureSetShouldHaveHours(string $type, int $hours)
+    {
+        Assert::same($this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$type])->getHoursToDistribute(), $hours);
+    }
 }

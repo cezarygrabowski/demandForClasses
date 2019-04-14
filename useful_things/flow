@@ -1,0 +1,55 @@
+1. Zapisz zapotrzebowanie.
+
+1.1. Wybierz budynek i salę.
+
+1.2. Dodaj komentarz.
+
+1.3. Wybierz jedną awaryjną salę.
+
+2. Zaakceptuj zapotrzebowanie.
+
+3. Edytuj zapotrzebowanie.
+
+4. Zmień status zapotrzebowania.
+
+5. Zaakceptuj automatycznie.
+
+6. Wylistuj zapotrzebowania.
+
+6.1. Filtruj zapotrzebowania.
+
+6.2. Sortuj zapotrzebowania.
+
+7. Włącz powiadomienia.
+
+Brak:
+
+Importów i eksportów,
+
+Brak drukowania
+
+Brak walidacji
+
+Brak wstępnego zasilenia przez programy studiów
+
+Brak przepływu prac, tj:
+
+1) Na podstawie planu studiów określone są:
+
+a. Lista przedmiotów
+
+b. Siatka godzinowa i punkty ects
+
+2) Kierownik zakładu pobiera wstępnie wypełnione zapotrzebowania z systemu;
+
+3) Kierownik zakładu przypisuje przedmioty prowadzącym (na podstawie ich kalendarzy, obciążenia i kwalifikacji)
+
+4) Prowadzący (akceptuje lub odrzuca zapotrzebowanie), określa terminy, lokalizacje i uwagi dotyczące realizacji zajęć w ustalonych formach (w każdym tygodniu)
+
+5) Prowadzący zajęcia przekazuje zapotrzebowanie do kierownika zakładu
+
+6) Kierownik zakładu zatwierdza zapotrzebowania i aktualizuje obciążenia nauczycieli
+
+7) Dyrektor Instytutu zatwierdza zapotrzebowania
+
+8) Zapotrzebowania są przekazywane do Dziekana (który kieruje je do planowania).

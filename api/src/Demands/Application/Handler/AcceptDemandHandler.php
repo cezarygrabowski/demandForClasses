@@ -19,7 +19,7 @@ class AcceptDemandHandler
         $this->statusResolver = $statusResolver;
     }
 
-    public function handle(AcceptDemand $command)
+    public function handle(AcceptDemand $command): void
     {
         $command->getDemand()->setStatus(
             $this->statusResolver->resolveStatusWhenDemandIsAccepted($command->getDemand(), $command->getUser())

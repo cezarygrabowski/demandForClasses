@@ -23,9 +23,13 @@ class InMemoryUserRepository implements UserRepository
         }
     }
 
-    public function findByUsername(string $username): User
+    public function findByUsername(string $username): ?User
     {
-        return $this->users[$username];
+        if(array_key_exists($username, $this->users)) {
+            return $this->users[$username];
+        }
+
+        return null;
     }
 
     public function addUser(User $user) {

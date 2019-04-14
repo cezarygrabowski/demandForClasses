@@ -13,7 +13,7 @@ class StatusResolver
             return Demand::STATUS_ASSIGNED_BY_DEPARTMENT_MANAGER;
         } elseif ($user->isTeacher()) {
             return Demand::STATUS_ACCEPTED_BY_TEACHER;
-        } elseif ($user->isDepartmentManager() && $demand->isAcceptedByTeacher()) {
+        } elseif ($user->isDepartmentManager()) {
             return Demand::STATUS_ACCEPTED_BY_DEPARTMENT_MANAGER;
         } elseif ($user->isInstituteDirector()) {
             return Demand::STATUS_ACCEPTED_BY_INSTITUTE_DIRECTOR;
@@ -24,29 +24,16 @@ class StatusResolver
         }
     }
 
-    public function resolveStatusWhenDemandIsDeclined(User $user): int
-    {
-        if ($user->isTeacher()) {
-            return Demand::DECLINED_BY_TEACHER;
-        } elseif ($user->isDepartmentManager()) {
-            return Demand::STATUS_ACCEPTED_BY_TEACHER;
-        } elseif ($user->isInstituteDirector()) {
-            return Demand::STATUS_ACCEPTED_BY_DEPARTMENT_MANAGER;
-        } elseif ($user->isDean()) {
-            return Demand::STATUS_ACCEPTED_BY_INSTITUTE_DIRECTOR;
-        }
-    }
-
-    public function resolveStatusForDemandListing(User $user)
+    public function resolveStatusesForDemandListing(User $user)
     {
         if ($user->isDepartmentManager()) {
-            return Demand::STATUS_ACCEPTED_BY_TEACHER;
+            return [Demand::STATUS_ACCEPTED_BY_TEACHER, Demand::DECLINED_BY_TEACHER];
         } elseif ($user->isInstituteDirector()) {
-            return Demand::STATUS_ACCEPTED_BY_DEPARTMENT_MANAGER;
+            return [Demand::STATUS_ACCEPTED_BY_DEPARTMENT_MANAGER];
         } elseif ($user->isDean()) {
-            return Demand::STATUS_ACCEPTED_BY_INSTITUTE_DIRECTOR;
+            return [Demand::STATUS_ACCEPTED_BY_INSTITUTE_DIRECTOR];
         } elseif ($user->isPlanner()) {
-            return Demand::STATUS_ACCEPTED_BY_DEAN;
+            return [Demand::STATUS_ACCEPTED_BY_DEAN];
         }
     }
 }

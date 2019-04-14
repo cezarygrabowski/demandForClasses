@@ -70,13 +70,13 @@ class LectureSet
         return $this->lectureType;
     }
 
-    public function setLecturer(User $lecturer): self
+    public function setLecturer(?User $lecturer): self
     {
         $this->lecturer = $lecturer;
         return $this;
     }
 
-    public function getLecturer(): User
+    public function getLecturer(): ?User
     {
         return $this->lecturer;
     }

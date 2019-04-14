@@ -21,8 +21,8 @@ interface DemandRepository
 
 
     /**
-     * @param int $status
+     * @param array $status
      * @return Demand[]
      */
-    public function listAllWithStatus(int $status): array;
+    public function listAllWithStatuses(array $status): array;
 }

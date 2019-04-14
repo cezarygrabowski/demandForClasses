@@ -18,7 +18,7 @@ class Demand
     public const STATUS_ACCEPTED_BY_INSTITUTE_DIRECTOR = 4;
     public const STATUS_ACCEPTED_BY_DEAN = 5;
     public const STATUS_EXPORTED = 6;
-    const DECLINED_BY_TEACHER = 7;
+    public const DECLINED_BY_TEACHER = 7;
 
     public const STATUSES_INT_TO_STRING = [
         self::STATUS_UNTOUCHED => 'Wygenerowane',
@@ -79,9 +79,18 @@ class Demand
      */
     private $exportedAt;
 
-    public function __construct(Subject $subject)
+    /**
+     * @var User
+     */
+    private $importedBy;
+
+    /**
+     * @var DateTime
+     */
+    private $importedAt;
+
+    public function __construct()
     {
-        $this->subject = $subject;
         $this->uuid = Uuid::uuid4();
         $this->lectureSets = new ArrayCollection();
         $this->status = self::STATUS_UNTOUCHED;
@@ -209,16 +218,6 @@ class Demand
         return $this;
     }
 
-    private function setExportedBy(User $user)
-    {
-        $this->exportedBy = $user;
-    }
-
-    private function setExportedAt(DateTime $date)
-    {
-        $this->exportedAt = $date;
-    }
-
     public function isUntouched()
     {
         return $this->getStatus() === self::STATUS_UNTOUCHED;
@@ -232,5 +231,104 @@ class Demand
     public function isAcceptedByTeacher()
     {
         return $this->getStatus() === self::STATUS_ACCEPTED_BY_TEACHER;
+    }
+
+    public function decline(User $user)
+    {
+        if(!$user->isTeacher()) {
+            throw new \Exception("Tylko nauczyciel może odrzucać zapotrzebowania!");
+        }
+
+        foreach ($this->getLectureSets() as $lectureSet) {
+            if ($lectureSet->getLecturer() && $lectureSet->getLecturer()->getUuid() === $user->getUuid()) {
+                $lectureSet->setLecturer(null);
+            }
+        }
+
+        $this->setStatus(self::DECLINED_BY_TEACHER);
+    }
+
+    public function assign(User $assignor, User $assignee, array $lectureSetTypes)
+    {
+        if(!$assignee->isTeacher()) {
+            throw new \Exception("Zapotrzebowanie można przypisywać tylko do nauczyciela!");
+        }
+
+        if(!$assignor->isDepartmentManager()) {
+            throw new \Exception("Tylko kierownik zakładu może przypisywać zapotrzebowania");
+        }
+
+        foreach ($lectureSetTypes as $lectureSetType) {
+            $lectureSet = $this->getLectureSet($lectureSetType);
+            $lectureSet->setLecturer($assignee);
+        }
+    }
+
+    /**
+     * @return User
+     */
+    public function getExportedBy(): User
+    {
+        return $this->exportedBy;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getExportedAt(): DateTime
+    {
+        return $this->exportedAt;
+    }
+
+    /**
+     * @param Subject $subject
+     * @return Demand
+     */
+    public function setSubject(Subject $subject): Demand
+    {
+        $this->subject = $subject;
+        return $this;
+    }
+
+    /**
+     * @param User $exportedBy
+     * @return Demand
+     */
+    public function setExportedBy(User $exportedBy): Demand
+    {
+        $this->exportedBy = $exportedBy;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $exportedAt
+     * @return Demand
+     */
+    public function setExportedAt(DateTime $exportedAt): Demand
+    {
+        $this->exportedAt = $exportedAt;
+        return $this;
+    }
+
+    public function getImportedBy(): User
+    {
+        return $this->importedBy;
+    }
+
+    public function setImportedBy(User $importedBy): Demand
+    {
+        $this->importedBy = $importedBy;
+        return $this;
+    }
+
+    public function getImportedAt(): DateTime
+    {
+        return $this->importedAt;
+    }
+
+    public function setImportedAt(DateTime $importedAt): Demand
+    {
+        $this->importedAt = $importedAt;
+        return $this;
     }
 }

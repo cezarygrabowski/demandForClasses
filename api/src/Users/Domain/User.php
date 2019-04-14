@@ -2,13 +2,13 @@
 
 namespace Users\Domain;
 
+use Demands\Domain\Subject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class User
 {
-
     /** @var string */
     private $username;
 
@@ -18,11 +18,30 @@ class User
     /** @var ArrayCollection<Role> */
     private $roles;
 
+    /** @var ArrayCollection<Qualification> */
+    private $qualifications;
+
+    /**
+     * @var Calendar
+     */
+    private $calendar;
+
+    /**
+     * @var User
+     */
+    private $importedBy;
+
+    /**
+     * @var \DateTime
+     */
+    private $importedAt;
+
     public function __construct(string $username)
     {
         $this->username = $username;
         $this->uuid = Uuid::uuid4();
         $this->roles = new ArrayCollection();
+        $this->qualifications = new ArrayCollection();
     }
 
     public function getUuid(): string
@@ -50,14 +69,14 @@ class User
         return $this->roles->toArray();
     }
 
-    public function getRole(string $name): Role {
+    public function getRole(string $name): ?Role {
         foreach ($this->getRoles() as $role) {
             if($role->getName() === Role::ROLES_STRING_TO_INT[$name]) {
                 return $role;
             }
         }
 
-        throw new \Exception("Rola o nazwie " . $name . " nie istnieje");
+        return null;
     }
 
     public function isAdmin()
@@ -101,5 +120,85 @@ class User
         }
 
         return $ids;
+    }
+
+    public function addQualification(Qualification $qualification)
+    {
+        if(!$this->qualifications->contains($qualification)) {
+            $this->qualifications->add($qualification);
+        }
+    }
+
+    /**
+     * @return Qualification[]
+     */
+    public function getQualifications(): array
+    {
+        return $this->qualifications->toArray();
+    }
+
+    /**
+     * @return Calendar
+     */
+    public function getCalendar(): Calendar
+    {
+        return $this->calendar;
+    }
+
+    /**
+     * @param Calendar $calendar
+     * @return User
+     */
+    public function setCalendar(Calendar $calendar): User
+    {
+        $this->calendar = $calendar;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getImportedBy(): User
+    {
+        return $this->importedBy;
+    }
+
+    /**
+     * @param User $importedBy
+     * @return User
+     */
+    public function setImportedBy(User $importedBy): User
+    {
+        $this->importedBy = $importedBy;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getImportedAt(): \DateTime
+    {
+        return $this->importedAt;
+    }
+
+    /**
+     * @param \DateTime $importedAt
+     * @return User
+     */
+    public function setImportedAt(\DateTime $importedAt): User
+    {
+        $this->importedAt = $importedAt;
+        return $this;
+    }
+
+    public function getQualification(string $subjectName): ?Qualification
+    {
+        foreach ($this->getQualifications() as $qualification) {
+            if($qualification->getSubject()->getName() === $subjectName){
+                return $qualification;
+            }
+        }
+
+        return null;
     }
 }

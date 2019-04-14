@@ -5,12 +5,12 @@ namespace Demands\Domain;
 class Subject
 {
     private $name;
-    private $shortenedName;
+    private $shortName;
 
     public function __construct(string $name, string $shortenedName)
     {
         $this->name = $name;
-        $this->shortenedName = $shortenedName;
+        $this->shortName = $shortenedName;
     }
 
     public function getName(): string
@@ -18,8 +18,8 @@ class Subject
         return $this->name;
     }
 
-    public function getShortenedName(): string
+    public function getShortName(): string
     {
-        return $this->shortenedName;
+        return $this->shortName;
     }
 }

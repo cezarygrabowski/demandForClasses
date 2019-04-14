@@ -8,5 +8,5 @@ use Users\Domain\User;
 
 interface UserRepository
 {
-    public function findByUsername(string $username): User;
+    public function findByUsername(string $username): ?User;
 }
