@@ -133,7 +133,7 @@ class DemandContext implements Context
     public function userShouldSeeThisDemand($username)
     {
         $user = $this->userRepository->findByUsername($username);
-        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, $this->groupRepository);
+        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, new InMemoryGroupRepository([]));
         $demands = $demandService->listAllForUser($user);
         Assert::same($demands[0], $this->demand);
     }
@@ -469,5 +469,50 @@ class DemandContext implements Context
     public function lectureSetShouldHaveHours(string $type, int $hours)
     {
         Assert::same($this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$type])->getHoursToDistribute(), $hours);
+    }
+
+    /**
+     * @When I book :hours hours in :weekNumber week in :lectureSetType lecture set
+     */
+    public function iBookHoursInWeekInLectureSet(int $hours, int $weekNumber, string $lectureSetType)
+    {
+        $lectureSet = $this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType]);
+        if (!$lectureSet) {
+            throw new Exception("Nie ma takiego zestawu zajęć");
+        }
+        $week = new Week($weekNumber, $hours);
+        $lectureSet->allocateWeek($week);
+    }
+
+    /**
+     * @When I choose building :building and room :room in :weekNumber week in :lectureSetType lecture set
+     */
+    public function iChooseBuildingAndRoomInWeekInLectureSet(int $building, int $room, int $weekNumber, string $lectureSetType)
+    {
+        $lectureSet = $this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType]);
+        if (!$lectureSet) {
+            throw new Exception("Nie ma takiego zestawu zajęć");
+        }
+        $week = $lectureSet->getAllocatedWeek($weekNumber);
+        $place = $this->placeRepository->findOneByBuildingAndRoom($building, $room);
+        if ($place) {
+            $week->setPlace($place);
+        }
+    }
+
+    /**
+     * @Then Demand should have building :building and room :room in :weekNumber week in :lectureSetType lecture set
+     */
+    public function demandShouldHaveBuildingAndRoomInWeekInLectureSet(int $building, int $room, int $weekNumber, string $lectureSetType)
+    {
+        $lectureSet = $this->demand->getLectureSet(LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType]);
+        if (!$lectureSet) {
+            throw new Exception("Nie ma takiego zestawu zajęć");
+        }
+        $week = $lectureSet->getAllocatedWeek($weekNumber);
+        if($week->getPlace()) {
+            Assert::same($week->getPlace()->getRoom(), $room);
+            Assert::same($week->getPlace()->getBuilding(), $building);
+        }
     }
 }

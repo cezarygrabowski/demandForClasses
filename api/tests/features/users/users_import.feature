@@ -14,10 +14,9 @@ Feature: Import users with calendars and qualifications
     And user "Robert Nowacki" should have following qualifications:
       | Analiza i projektowanie systemów teleinformatycznych |
       | Projekt zespołowy MSK                                |
-    And user "Robert Nowacki" has calendar that contains:
+    And user "Robert Nowacki" should have calendar that contains:
       | 0 | 100 |
       | 1 | 130 |
       | 2 | 40  |
       | 3 | 50  |
       | 4 | 55  |
-      | 5 | 35  |

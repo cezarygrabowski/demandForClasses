@@ -17,8 +17,8 @@ Feature: Demand customization
 
   @customization
   Scenario: Allocate hours in chosen weeks
-    When I book "20" hours in "3" week
-    And I book "10" hours in "4" week
+    When I book "20" hours in "3" week in "Projekt" lecture set
+    And I book "10" hours in "4" week in "Projekt" lecture set
     Then in "3" week should be "20" hours allocated
     And in "4" week should be "10" hours allocated
     And lecture set "Projekt" should have "0" undistributed hours
@@ -26,9 +26,9 @@ Feature: Demand customization
   @customization
   Scenario: Choose place of lectures in demand
     Given There is a place with building "65" and room "100"
-    And I book "30" hours in "3" week
-    When I choose building "65" and room "100" in "3" week
-    Then Demand should have building "65" and room "100" in "3" week
+    And I book "30" hours in "3" week in "Projekt" lecture set
+    When I choose building "65" and room "100" in "3" week in "Projekt" lecture set
+    Then Demand should have building "65" and room "100" in "3" week in "Projekt" lecture set
 
   @customization
   Scenario: Add notes

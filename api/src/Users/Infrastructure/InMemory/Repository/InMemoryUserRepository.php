@@ -35,4 +35,14 @@ class InMemoryUserRepository implements UserRepository
     public function addUser(User $user) {
         $this->users[$user->getUsername()] = $user;
     }
+
+    /**
+     * @return User[]
+     */
+    public function findAllTeachers(): array
+    {
+        $teachers = [];
+//        $this->users
+        // TODO: Implement findAllTeachers() method.
+    }
 }

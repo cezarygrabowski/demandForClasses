@@ -133,10 +133,7 @@ class LectureSet
         return $this;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getAllocatedWeek(int $weekNumber): Week
+    public function getAllocatedWeek(int $weekNumber): ?Week
     {
         foreach ($this->getAllocatedWeeks() as $week) {
             if($week->getNumber() === $weekNumber){
@@ -144,7 +141,7 @@ class LectureSet
             }
         }
 
-        throw new Exception("W danym tygodniu nie ma zalokowanych godzin");
+        return null;
     }
 
     public function addNotes($notes)
@@ -168,5 +165,17 @@ class LectureSet
         return $this;
     }
 
-
+    /**
+     * @param int $weekNumber
+     * @return int
+     */
+    public function getAllocatedHoursInWeek(int $weekNumber): int
+    {
+        $week = $this->getAllocatedWeek($weekNumber);
+        if($week) {
+            return $week->getAllocatedHours();
+        } else {
+            return 0;
+        }
+    }
 }

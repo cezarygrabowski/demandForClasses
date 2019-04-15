@@ -6,8 +6,21 @@ namespace Users\Domain;
 
 class Month
 {
+    /**
+     * MONTH_NUMBER => [WEEK_NUMBERS]
+     * @var array
+     */
+    const WEEKS_IN_EACH_MONTH = [
+        0 => [1, 2, 3, 4],
+        1 => [5, 6, 7, 8],
+        2 => [9, 10, 11, 12],
+        3 => [13, 14, 15, 16],
+        4 => [17, 18, 19, 20]
+    ];
+
     private $monthNumber;
     private $workingHours;
+    private $calendar;
 
     public function __construct(int $monthNumber, int $workingHours)
     {
@@ -23,5 +36,10 @@ class Month
     public function getWorkingHours(): int
     {
         return $this->workingHours;
+    }
+
+    public function getCalendar(): Calendar
+    {
+        return $this->calendar;
     }
 }

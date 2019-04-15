@@ -9,16 +9,27 @@ Feature: User profile
       | Wychowanie fizyczne    |
       | Elektronika            |
       | Podstawy programowania |
+    And user "Jan Kowalski" has calendar for "2018/2019 letni" semester that contains:
+      | 0 | 100 |
+      | 1 | 130 |
+      | 2 | 40  |
+      | 3 | 50  |
+      | 4 | 55  |
+      | 5 | 35  |
     When I request profile informations of "Jan Kowalski"
-    Then I should see following qualifications:
+    Then profile of "Jan Kowalski" should contain:
       | Wychowanie fizyczne    |
       | Elektronika            |
       | Podstawy programowania |
-
+    And user "Jan Kowalski" has calendar for "2018/2019 letni" semester that contains:
+      | 0 | 100 |
+      | 1 | 130 |
+      | 2 | 40  |
+      | 3 | 50  |
+      | 4 | 55  |
+      | 5 | 35  |
   Scenario: Get user's undistributed hours in given week
     Given There is a user "Jan Kowalski"
     And user "Jan Kowalski" has "15" undistributed hours in "3" week
     When I request profile informations of "Jan Kowalski"
     Then I should see that user has "15" undistributed hours in "3" week
-
-

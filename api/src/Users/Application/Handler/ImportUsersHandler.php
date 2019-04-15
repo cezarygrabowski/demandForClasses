@@ -36,6 +36,11 @@ class ImportUsersHandler
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param ImportUsers $command
+     * @return array|User[]
+     * @throws Exception
+     */
     public function handle(ImportUsers $command)
     {
         return $this->createUsersFromImportUsers($command->getImportUsers(), $command->getImportedBy());

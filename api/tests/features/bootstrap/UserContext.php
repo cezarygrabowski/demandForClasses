@@ -8,7 +8,10 @@ use Demands\Domain\Repository\SubjectRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemorySubjectRepository;
 use Users\Application\Command\ImportUsers;
 use Users\Application\Handler\ImportUsersHandler;
+use Users\Application\Service\CalendarService;
+use Users\Domain\Calendar;
 use Users\Domain\Import\CsvExtractor;
+use Users\Domain\Month;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\Role;
 use Users\Domain\User;
@@ -26,9 +29,9 @@ class UserContext implements Context
      */
     private $user;
     /**
-     * @var SubjectRepository
+     * @var array|User[]
      */
-    private $subjectRepository;
+    private $listedUsers;
 
     /**
      * @Given There is user :userName
@@ -105,14 +108,28 @@ class UserContext implements Context
     }
 
     /**
-     * @Then user :userName has calendar that contains:
+     * @Then user :userName should have calendar that contains:
      */
-    public function userHasCalendarThatContains($userName, TableNode $table)
+    public function userShouldHaveCalendarThatContains($userName, TableNode $table)
     {
         $user = $this->userRepository->findByUsername($userName);
         foreach ($table->getRows() as $row) {
             $month = $user->getCalendar()->getMonth($row[0]);
             Assert::same($month->getWorkingHours(), (int)$row[1]);
         }
+    }
+
+    /**
+     * @Given user :userName has calendar for :semester semester that contains:
+     */
+    public function userHasCalendarThatContains($userName, $semester, TableNode $table)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+        $calendar = new Calendar($semester);
+        foreach ($table->getRows() as $row) {
+            $month = new Month($row[0], $row[1]);
+            $calendar->addMonth($month);
+        }
+        $user->setCalendar($calendar);
     }
 }

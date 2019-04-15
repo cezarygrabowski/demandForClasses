@@ -20,7 +20,6 @@ class Qualification
 
     /**
      * Qualification constructor.
-     * @param User $user
      * @param Subject $subject
      */
     public function __construct(Subject $subject)

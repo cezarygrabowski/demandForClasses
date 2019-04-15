@@ -5,7 +5,6 @@ namespace Users\Domain;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-use MongoDB\Driver\Exception\Exception;
 
 class Calendar
 {
@@ -26,9 +25,7 @@ class Calendar
 
     /**
      * Calendar constructor.
-     * @param Month[] $months
      * @param string $semester
-     * @param User $user
      */
     public function __construct(string $semester)
     {
@@ -36,11 +33,13 @@ class Calendar
         $this->semester = $semester;
     }
 
-    public function addMonth(Month $month)
+    public function addMonth(Month $month): self
     {
         if(!$this->months->contains($month)) {
             $this->months->add($month);
         }
+
+        return $this;
     }
 
     /**
