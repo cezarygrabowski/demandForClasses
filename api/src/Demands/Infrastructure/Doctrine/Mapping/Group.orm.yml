@@ -1,0 +1,22 @@
+Group:
+  type: entity
+  table: groups
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      nullable: false
+    type:
+      type: integer
+      nullable: false
+
+  oneToMany:
+    demands:
+      targetEntity: Demand
+      mappedBy: group

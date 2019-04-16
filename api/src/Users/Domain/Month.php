@@ -4,6 +4,8 @@
 namespace Users\Domain;
 
 
+use Ramsey\Uuid\UuidInterface;
+
 class Month
 {
     /**
@@ -17,6 +19,11 @@ class Month
         3 => [13, 14, 15, 16],
         4 => [17, 18, 19, 20]
     ];
+
+    /**
+     * @var UuidInterface
+     */
+    private $uuid;
 
     private $monthNumber;
     private $workingHours;

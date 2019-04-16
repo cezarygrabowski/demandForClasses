@@ -1,0 +1,24 @@
+Month:
+  type: entity
+  table: months
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    monthNumber:
+      type: integer
+      nullable: false
+    workingHours:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    calendar:
+      targetEntity: Calendar
+      joinColumn:
+        name: calendar_uuid
+        referencedColumnType: uuid

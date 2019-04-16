@@ -9,25 +9,6 @@ Feature: Demand customization
     And Demand lecture set "Projekt" has "30" undistributed hours
 
   @customization
-  Scenario: Update demand
-    Given There is user "Jan Kowalski"
-    Given user "Jan Kowalski" has role "Nauczyciel"
-    And lecture set "Wykład"
-    And Demand lecture set "Wykład" has "50" undistributed hours
-    And lecture set "Ćwiczenia"
-    And Demand lecture set "Ćwiczenia" has "100" undistributed hours
-    And I change demand lecturer to "Jan Kowalski" in "Wykład" lecture set
-    And I change demand lecturer to "Jan Kowalski" in "Ćwiczenia" lecture set
-    And I book "10" hours in "3" week in "Wykład" lecture set
-    And I choose building "65" and room "100" in "3" week in "Wykład" lecture set
-    And I book "20" hours in "4" week in "Wykład" lecture set
-    And I choose building "65" and room "100" in "4" week in "Wykład" lecture set
-    And I book "50" hours in "3" week in "Ćwiczenia" lecture set
-    And I choose building "65" and room "100" in "3" week in "Ćwiczenia" lecture set
-    And I book "60" hours in "3" week in "Projekt" lecture set
-    And I choose building "65" and room "100" in "3" week in "Projekt" lecture set
-
-  @customization
   Scenario: Change user
     Given There is user "Jan Kowalski"
     Given user "Jan Kowalski" has role "Nauczyciel"

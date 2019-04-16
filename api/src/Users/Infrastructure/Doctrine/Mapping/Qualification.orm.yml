@@ -1,0 +1,20 @@
+Qualification:
+  type: entity
+  table: qualifications
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    user:
+      targetEntity: User
+      joinColumn:
+        name: user_uuid
+        referencedColumnName: uuid
+    subject:
+      targetEntity: Subject
+      joinColumn:
+        name: subject_uuid

@@ -14,7 +14,7 @@ class LectureSet
     public $type;
 
     /**
-     * @var User
+     * @var string
      */
-    public $assignor;
+    public $assigneeUuid;
 }

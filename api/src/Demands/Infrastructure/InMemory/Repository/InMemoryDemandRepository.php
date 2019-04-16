@@ -53,11 +53,12 @@ class InMemoryDemandRepository implements DemandRepository
                 $exportDemands[] = $this->demands[$uuid];
             }
         }
+
         return $exportDemands;
     }
 
     /**
-     * @param int $status
+     * @param array $statuses
      * @return Demand[]
      */
     public function listAllWithStatuses(array $statuses): array
@@ -70,5 +71,14 @@ class InMemoryDemandRepository implements DemandRepository
         }
 
         return $demands;
+    }
+
+    public function findOneByUuid(string $demandUuid): ?Demand
+    {
+        if (array_key_exists($demandUuid, $this->demands)) {
+            return $this->demands[$demandUuid];
+        }
+
+        return null;
     }
 }

@@ -9,7 +9,7 @@ use Users\Domain\User;
 
 class InMemoryUserRepository implements UserRepository
 {
-    /** @var [] */
+    /** @var User[] */
     public $users;
 
     /**
@@ -44,5 +44,21 @@ class InMemoryUserRepository implements UserRepository
         $teachers = [];
 //        $this->users
         // TODO: Implement findAllTeachers() method.
+    }
+
+    public function findOneByToken(string $apiToken): ?User
+    {
+        // TODO: Implement findOneByToken() method.
+    }
+
+    public function findByUuid(string $assignorUuid): ?User
+    {
+        foreach ($this->users as $user) {
+            if($user->getUuid() === $assignorUuid) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 }

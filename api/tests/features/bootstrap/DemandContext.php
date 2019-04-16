@@ -317,11 +317,7 @@ class DemandContext implements Context
     public function userHasRole(string $userName, string $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        $role = new Role();
-        $role
-            ->setUser($user)
-            ->setName(Role::ROLES_STRING_TO_INT[$roleName]);
-        $user->addRole($role);
+        $user->setRoles([User::ROLES_STRING_TO_INT[$roleName]]);
     }
 
     /**
@@ -375,8 +371,16 @@ class DemandContext implements Context
     {
         $assignor = $this->userRepository->findByUsername($assignor);
         $assignee = $this->userRepository->findByUsername($assignee);
-        $command = new AssignDemand($this->demand, [LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType]], $assignor, $assignee);
-        $handler = new AssignDemandHandler();
+        $lectureSet = new \Demands\Domain\Assign\LectureSet();
+        $lectureSet->assigneeUuid = $assignee->getUuid();
+        $lectureSet->type = LectureSet::LECTURE_TYPES_STRING_TO_INT[$lectureSetType];
+
+        $assignDemand = new \Demands\Domain\Assign\AssignDemand();
+        $assignDemand->lectureSets = [$lectureSet];
+        $assignDemand->demandUuid = $this->demand->getUuid();
+        $assignDemand->assignorUuid = $assignor->getUuid();
+        $command = new AssignDemand($assignDemand);
+        $handler = new AssignDemandHandler($this->userRepository, $this->demandRepository);
 
         $handler->handle($command);
     }
@@ -499,6 +503,9 @@ class DemandContext implements Context
             throw new Exception("Nie ma takiego zestawu zajęć");
         }
         $week = $lectureSet->getAllocatedWeek($weekNumber);
+//        if(!$this->placeRepository) {
+//            $this->placeRepository = new InMemoryPlaceRepository([new plac]);
+//        }
         $place = $this->placeRepository->findOneByBuildingAndRoom($building, $room);
         if ($place) {
             $week->setPlace($place);

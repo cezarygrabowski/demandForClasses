@@ -68,10 +68,8 @@ class ImportUsersHandler
             throw new Exception("Użytkownik z nazwą " . $importUser->userName . " już istnieje");
         }
 
-        $role = new Role();
-        $role->setName($importUser->roleName);
         $user = new User($importUser->userName);
-        $user->addRole($role);
+        $user->setRoles([$importUser->roleName]);
 
         foreach ($importUser->qualifications as $qualification) {
             $subject = $this->subjectRepository->findByName($qualification->name);

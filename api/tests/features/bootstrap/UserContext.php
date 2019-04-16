@@ -3,6 +3,7 @@
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Context\Context;
+use Demands\Domain\Demand;
 use Demands\Infrastructure\InMemory\Repository\InMemorySubjectRepository;
 use Users\Application\Command\ImportUsers;
 use Users\Application\Handler\ImportUsersHandler;
@@ -41,11 +42,7 @@ class UserContext implements Context
     public function userHasRole($userName, $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        $role = new Role();
-        $role->setName(Role::ROLES_STRING_TO_INT[$roleName])
-            ->setUser($user);
-
-        $user->addRole($role);
+        $user->setRoles([User::ROLES_STRING_TO_INT[$roleName]]);
     }
 
     /**
@@ -82,7 +79,7 @@ class UserContext implements Context
     public function userShouldHaveRole($userName, $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        Assert::notNull($user->getRole($roleName));
+        Assert::notNull($user->getRole(User::ROLES_STRING_TO_INT[$roleName]));
     }
 
     /**

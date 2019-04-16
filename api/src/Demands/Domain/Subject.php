@@ -4,6 +4,7 @@ namespace Demands\Domain;
 
 class Subject
 {
+    private $uuid;
     private $name;
     private $shortName;
 

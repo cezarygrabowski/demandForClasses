@@ -5,6 +5,7 @@ namespace Users\Domain\Import;
 
 
 use Users\Domain\Role;
+use Users\Domain\User;
 
 class ImportUser
 {
@@ -22,7 +23,7 @@ class ImportUser
         $importUser = new ImportUser();
 
         $importUser->userName = $row[CsvPositions::USER_NAME];
-        $importUser->roleName = Role::ROLES_STRING_TO_INT[$row[CsvPositions::ROLE]];
+        $importUser->roleName = User::ROLES_STRING_TO_INT[$row[CsvPositions::ROLE]];
         $qualifications = explode(',', $row[CsvPositions::QUALIFICATIONS]);
         $importUser->qualifications = [];
         foreach ($qualifications as $qualification) {

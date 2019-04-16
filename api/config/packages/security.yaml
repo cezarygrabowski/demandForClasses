@@ -1,58 +1,27 @@
 security:
     encoders:
-        App\Entity\User: plaintext
-#            algorithm: bcrypt
+        Users\Domain\User:
+#            algorithm: argon2i
+            algorithm: bcrypt
+            cost: 12
+        App\Entity\TEst:
+            algorithm: bcrypt
 
-        Symfony\Component\Security\Core\User\User: plaintext
     providers:
-        entity_provider:
+        app_user_provider:
             entity:
-                class: App\Entity\User
+                class: App\Entity\TEst
                 property: username
-        in_memory:
-            memory:
-                users:
-                    admin:
-                        password: admin
-                        roles: 'Admin'
-                    dziekan:
-                        password: dziekan
-                        roles: 'Dziekan'
-                    kierownikZakladu:
-                        password: kierownikZakladu
-                        roles: 'KierownikZakladu'
-                    nauczyciel:
-                        password: nauczyciel
-                        roles: 'Nauczyciel'
+        # used to reload user from session & other Behat (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        login:
-            pattern:  ^/login
-            stateless: true
-            anonymous: true
-            provider: entity_provider
-            json_login:
-                check_path: /login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        main:
+            anonymous: ~
+            logout: ~
 
-        register:
-            pattern:  ^/register
-            stateless: true
-            anonymous: true
-
-        api:
-            pattern:  ^/
-            stateless: true
-            anonymous: false
-            provider: entity_provider
             guard:
                 authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-
+                    - Common\Security\TokenAuthenticator
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

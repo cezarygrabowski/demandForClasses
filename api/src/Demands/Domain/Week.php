@@ -24,6 +24,8 @@ class Week
         15
     ];
 
+    private $uuid;
+
     /**
      * @var int
      */
@@ -38,6 +40,11 @@ class Week
      * @var Place|null
      */
     private $place;
+
+    /**
+     * @var LectureSet
+     */
+    private $lectureSet;
 
     /**
      * Week constructor.

@@ -1,0 +1,17 @@
+Subject:
+  type: entity
+  table: subjects
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      nullable: false
+    shortName:
+      type: string
+      nullable: false

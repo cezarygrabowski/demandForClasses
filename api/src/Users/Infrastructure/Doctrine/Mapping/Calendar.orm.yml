@@ -1,0 +1,27 @@
+Calendar:
+  type: entity
+  table: calendars
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    semester:
+      type: string
+      nullable: false
+
+  oneToOne:
+    user:
+      targetEntity: User
+      inversedBy: calendar
+      joinColumn:
+        name: calendar_uuid
+        referencedColumnName: uuid
+
+  OneToMany:
+    months:
+      targetEntity: Month
+      inversedBy: calendar

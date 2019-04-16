@@ -4,8 +4,10 @@
 namespace Demands\Domain;
 
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Ramsey\Uuid\UuidInterface;
 use Users\Domain\User;
 
 class LectureSet
@@ -28,6 +30,11 @@ class LectureSet
         self::PROJECT_LECTURE_TYPE => 'Projekt',
         self::LABORATORY_LECTURE_TYPE => 'Laboratoria'
     ];
+
+    /**
+     * @var UuidInterface
+     */
+    private $uuid;
 
     /**
      * @var int
@@ -58,6 +65,16 @@ class LectureSet
      * @var Demand
      */
     private $demand;
+
+    /**
+     * @var User
+     */
+    private $assignedBy;
+
+    /**
+     * @var DateTime
+     */
+    private $assignedAt;
 
     public function __construct(int $lectureType)
     {
@@ -182,5 +199,41 @@ class LectureSet
         } else {
             return 0;
         }
+    }
+
+    /**
+     * @return User
+     */
+    public function getAssignedBy(): User
+    {
+        return $this->assignedBy;
+    }
+
+    /**
+     * @param User $assignedBy
+     * @return LectureSet
+     */
+    public function setAssignedBy(User $assignedBy): LectureSet
+    {
+        $this->assignedBy = $assignedBy;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getAssignedAt(): DateTime
+    {
+        return $this->assignedAt;
+    }
+
+    /**
+     * @param DateTime $assignedAt
+     * @return LectureSet
+     */
+    public function setAssignedAt(DateTime $assignedAt): LectureSet
+    {
+        $this->assignedAt = $assignedAt;
+        return $this;
     }
 }

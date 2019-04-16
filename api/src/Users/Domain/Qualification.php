@@ -5,9 +5,15 @@ namespace Users\Domain;
 
 
 use Demands\Domain\Subject;
+use Ramsey\Uuid\UuidInterface;
 
 class Qualification
 {
+    /**
+     * @var UuidInterface
+     */
+    private $uuid;
+
     /**
      * @var User
      */

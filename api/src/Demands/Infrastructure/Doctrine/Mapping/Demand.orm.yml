@@ -1,0 +1,59 @@
+Demand:
+  type: entity
+  table: demands
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    status:
+      type: integer
+      nullable: false
+    schoolYear:
+      type: string
+      nullable: false
+    semester:
+      type: string
+      nullable: false
+    institute:
+      type: string
+      nullable: false
+    department:
+      type: string
+      nullable: false
+    exportedAt:
+      type: datetime
+      nullable: true
+    importedAt:
+      type: datetime
+      nullable: true
+
+  manyToOne:
+    subject:
+      targetEntity: Subject
+      joinColumn:
+        name: subject_uuid
+        referencedColumnName: uuid
+    group:
+      targetEntity: Group
+      joinColumn:
+        name: group_uuid
+        referencedColumnName: uuid
+    importedBy:
+      targetEntity: User
+      joinColumn:
+        name: imported_by_uuid
+        referencedColumnName: uuid
+    exportedBy:
+      targetEntity: User
+      joinColumn:
+        name: exported_by_uuid
+        referencedColumnName: uuid
+
+  oneToMany:
+    lectureSets:
+      targetEntity: LectureSet
+      mappedBy: demand

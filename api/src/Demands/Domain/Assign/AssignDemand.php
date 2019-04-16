@@ -4,27 +4,18 @@
 namespace Demands\Domain\Assign;
 
 
-use Demands\Domain\Demand;
-use Users\Domain\User;
-
 class AssignDemand
 {
     /**
-     * @var Demand
+     * @var string
      */
-    public $demand;
+    public $demandUuid;
 
     /**
      * User who assignes a demand
-     * @var User
+     * @var string
      */
-    public $assignor;
-
-    /**
-     * User who gets a demand
-     * @var User
-     */
-    public $assignee;
+    public $assignorUuid;
 
     /**
      * @var LectureSet[]

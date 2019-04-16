@@ -4,6 +4,8 @@
 namespace Demands\Domain;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Group
 {
     const FULL_TIME_STUDIES = 0;
@@ -18,14 +20,16 @@ class Group
         'Studia stacjonarne' => self::FULL_TIME_STUDIES,
         'Studia niestacjonarne' => self::PART_TIME_STUDIES
     ];
-
+    private $uuid;
     private $name;
     private $type;
+    private $demands;
 
     public function __construct(string $name, int $type)
     {
         $this->name = $name;
         $this->type = $type;
+        $this->demands = new ArrayCollection();
     }
 
     public function getName(): string

@@ -6,6 +6,7 @@ namespace Demands\Domain;
 
 class Place
 {
+    private $uuid;
     private $building;
     private $room;
 

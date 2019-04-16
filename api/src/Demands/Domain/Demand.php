@@ -4,11 +4,13 @@
 namespace Demands\Domain;
 
 
+use App\Entity\Lecture;
 use DateTime;
 use Demands\Domain\Update\DetailsToUpdate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Users\Domain\User;
+use Zend\EventManager\Exception\DomainException;
 
 class Demand
 {
@@ -249,7 +251,7 @@ class Demand
         $this->setStatus(self::DECLINED_BY_TEACHER);
     }
 
-    public function assign(User $assignor, User $assignee, array $lectureSetTypes)
+    public function assign(User $assignor, int $lectureType, User $assignee)
     {
         if (!$assignee->isTeacher()) {
             throw new \Exception("Zapotrzebowanie można przypisywać tylko do nauczyciela!");
@@ -259,10 +261,14 @@ class Demand
             throw new \Exception("Tylko kierownik zakładu może przypisywać zapotrzebowania");
         }
 
-        foreach ($lectureSetTypes as $lectureSetType) {
-            $lectureSet = $this->getLectureSet($lectureSetType);
-            $lectureSet->setLecturer($assignee);
+        $lectureSet = $this->getLectureSet($lectureType);
+        if(!$lectureSet) {
+            throw new DomainException("Na tym zapotrzebowaniu nie znaleziono takiego rodzaju zajęć: " . LectureSet::LECTURE_TYPES_INT_TO_STRING[$lectureType]);
         }
+
+        $lectureSet->setLecturer($assignee);
+        $lectureSet->setAssignedAt(new DateTime());
+        $lectureSet->setAssignedBy($assignor);
     }
 
     /**

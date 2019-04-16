@@ -1,0 +1,17 @@
+Place:
+  type: entity
+  table: places
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    building:
+      type: integer
+      nullable: false
+    room:
+      type: integer
+      nullable: false

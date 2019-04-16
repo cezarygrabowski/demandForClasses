@@ -1,0 +1,46 @@
+LectureSet:
+  type: entity
+  table: lecture_sets
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    lectureType:
+      type: integer
+      nullable: false
+    notes:
+      type: string
+      nullable: false
+    hoursToDistribute:
+      type: integer
+      nullable: false
+    assignedAt:
+      type: datetime
+      nullable: false
+
+  manyToOne:
+    lecturer:
+      targetEntity: User
+      joinColumn:
+        name: lecturer_uuid
+        referencedColumnName: uuid
+    demand:
+      targetEntity: Demand
+      inversedBy: lectureSets
+      joinColumn:
+        name: demand_uuid
+        referencedColumnName: uuid
+    assignedBy:
+      targetEntity: User
+        joinColumn:
+          name: assigned_by_uuid
+          referencedColumnName: uuid
+
+  oneToMany:
+    allocatedWeeks:
+      targetEntity: Week
+      mappedBy: lectureSet

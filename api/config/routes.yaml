@@ -1,1 +1,62 @@
+#demands
+import_study_plans:
+  path: /import-study-plans
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::importStudyPlans
+  methods: POST
 
+list_demands:
+  path: /
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::list
+  methods: GET
+
+list_places:
+  path: /places
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::listPlaces
+  methods: GET
+
+update_demand:
+  path: /update/{uuid}
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::update
+  methods: PUT
+
+decline_demand:
+  path: /decline/{uuid}
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::decline
+  methods: PUT
+
+get_details:
+  path: /details/{uuid}
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::getDetails
+  methods: GET
+
+export_demands:
+  path: /export
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::exportDemands
+  methods: PUT
+
+download_demand:
+  path: /download-demand/{uuid}
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::downloadDemand
+  methods: GET
+
+assign_demand:
+  path: /assign-demand/{uuid}
+  controller: Demands\Infrastructure\Symfony\Controller\DemandController::assignDemand
+  methods: PUT
+
+#users
+
+update_profile:
+  path: /profile/{id}
+  controller: Users\Infrastructure\Symfony\Controller\UserController::updateProfile
+  methods: PUT
+
+get_qualified_lecturers:
+  path: /lecturers/{demandId}
+  controller: Users\Infrastructure\Symfony\Controller\UserController::getQualifiedLecturers
+  methods: GET
+
+import_lecturers:
+  path: /import-lecturers
+  controller: Users\Infrastructure\Symfony\Controller\UserController::importLecturers
+  methods: POST

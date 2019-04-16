@@ -1,0 +1,30 @@
+Week:
+  type: entity
+  table: weeks
+
+  id:
+    uuid:
+      type: string
+      generator:
+        strategy: AUTO
+
+  fields:
+    number:
+      type: integer
+      nullable: false
+    allocatedHours:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    lectureSet:
+      targetEntity: LectureSet
+      inversedBy: allocatedWeeks
+      joinColumn:
+        name: lecture_set_uuid
+        referencedColumnName: uuid
+    place:
+      targetEntity: Place
+      joinColumn:
+        name: place_uuid
+        referencedColumnName: uuid

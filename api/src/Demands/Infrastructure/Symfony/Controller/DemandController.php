@@ -57,27 +57,18 @@ class DemandController
         return $this->httpService->createSuccessResponse();
     }
 
-    /**
-     * @Route("/", name="list_demands", methods={"GET"})
-     */
     public function list()
     {
         //TODO
 //        return $this->httpService->createCollectionResponse($demands);
     }
 
-    /**
-     * @Route("/buildings", name="list_buildings", methods={"GET"})
-     */
-    public function listBuildings()
+    public function listPlaces()
     {
         //TODO
 //        return $this->httpService->createCollectionResponse($buildings);
     }
 
-    /**
-     * @Route("/update/{uuid}", name="update_demand", methods={"POST"})
-     */
     public function update(Request $request, Demand $demand)
     {
         $data = json_decode($request->getContent(), true);
@@ -91,9 +82,6 @@ class DemandController
         return $this->httpService->createSuccessResponse();
     }
 
-    /**
-     * @Route("/decline/{uuid}", name="decline_demand", methods={"POST"})
-     */
     public function decline(Demand $demand)
     {
         $command = new DeclineDemand(
@@ -106,18 +94,12 @@ class DemandController
         return $this->httpService->createSuccessResponse();
     }
 
-    /**
-     * @Route("/details/{uuid}", name="get_details", methods={"GET"})
-     */
     public function getDetails(Demand $demand)
     {
         //TODO
         return $this->httpService->createItemResponse($demand);
     }
 
-    /**
-     * @Route("/export", name="export_demands", methods={"POST"})
-     */
     public function exportDemands()
     {
         $uuids = []; // TODO GET UUIDS
@@ -128,9 +110,6 @@ class DemandController
         return new Response($content);
     }
 
-    /**
-     * @Route("/download-demand/{uuid}", name="download_demand", methods={"POST"})
-     */
     public function downloadDemand(Demand $demand)
     {
         $uuids = []; // TODO GET UUIDS
@@ -141,9 +120,6 @@ class DemandController
         return new Response($content);
     }
 
-    /**
-     * @Route("/assign-demand/{uuid}", name="download_demand", methods={"POST"})
-     */
     public function assignDemand(Request $request, Demand $demand)
     {
         $data = json_decode($request->getContent(), true);
