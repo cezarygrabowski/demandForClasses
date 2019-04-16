@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
+    locale: 'pl'
 
 services:
     # default configuration for services in *this* file
@@ -14,8 +14,16 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    Demands\Infrastructure\:
-        resource: '../src/Demands/Infrastructure/*'
-#        exclude: '../src/Infrastructure/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-    Users\Infrastructure\:
-        resource: '../src/Users/Infrastructure/*'
+    Demands\:
+        resource: '../src/Demands/*'
+        exclude: '../src/Demands/Infrastructure/{InMemory}'
+    Users\:
+        resource: '../src/Users/*'
+        exclude: '../src/Users/Infrastructure/{InMemory}'
+    Common\:
+        resource: '../src/Common/*'
+#        exclude: '../src/Common/Infrastructure/{InMemory}'
+
+    #Repositories
+    Users\Infrastructure\Doctrine\Repository\DoctrineUserRepository:
+

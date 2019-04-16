@@ -2,23 +2,32 @@
 
 namespace Users\Domain;
 
-use Demands\Domain\Subject;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class User
+class User implements UserInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     private $username;
 
-    /** @var UuidInterface */
+    /**
+     * @var UuidInterface
+     */
     private $uuid;
 
-    /** @var ArrayCollection<Role> */
+    /**
+     * @var ArrayCollection<Role>
+     */
     private $roles;
 
-    /** @var ArrayCollection<Qualification> */
+    /**
+     * @var ArrayCollection<Qualification>
+     */
     private $qualifications;
 
     /**
@@ -32,9 +41,20 @@ class User
     private $importedBy;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $importedAt;
+
+    /**
+     * Hashed password
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var string
+     */
+    private $apiToken;
 
     public function __construct(string $username)
     {
@@ -174,18 +194,18 @@ class User
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getImportedAt(): \DateTime
+    public function getImportedAt(): DateTime
     {
         return $this->importedAt;
     }
 
     /**
-     * @param \DateTime $importedAt
+     * @param DateTime $importedAt
      * @return User
      */
-    public function setImportedAt(\DateTime $importedAt): User
+    public function setImportedAt(DateTime $importedAt): User
     {
         $this->importedAt = $importedAt;
         return $this;
@@ -200,5 +220,55 @@ class User
         }
 
         return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiToken(): string
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param string $apiToken
+     * @return User
+     */
+    public function setApiToken(string $apiToken): User
+    {
+        $this->apiToken = $apiToken;
+        return $this;
     }
 }

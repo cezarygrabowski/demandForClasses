@@ -45,4 +45,9 @@ class InMemoryUserRepository implements UserRepository
 //        $this->users
         // TODO: Implement findAllTeachers() method.
     }
+
+    public function findOneByToken(string $apiToken): ?User
+    {
+        // TODO: Implement findOneByToken() method.
+    }
 }

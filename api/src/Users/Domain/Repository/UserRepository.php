@@ -14,4 +14,6 @@ interface UserRepository
      * @return User[]
      */
     public function findAllTeachers(): array;
+
+    public function findOneByToken(string $apiToken): ?User;
 }

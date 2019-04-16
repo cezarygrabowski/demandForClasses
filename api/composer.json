@@ -32,6 +32,7 @@
         "psr-4": {
             "Demands\\": "src/Demands/",
             "Users\\": "src/Users/",
+            "Common\\": "src/Common/",
             "App\\": "src/",
             "spec\\App\\": "tests/spec"
         }
