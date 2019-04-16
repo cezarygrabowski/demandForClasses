@@ -5,6 +5,7 @@ namespace Demands\Domain;
 
 
 use DateTime;
+use Demands\Domain\Update\DetailsToUpdate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
 use Users\Domain\User;
@@ -235,7 +236,7 @@ class Demand
 
     public function decline(User $user)
     {
-        if(!$user->isTeacher()) {
+        if (!$user->isTeacher()) {
             throw new \Exception("Tylko nauczyciel może odrzucać zapotrzebowania!");
         }
 
@@ -250,11 +251,11 @@ class Demand
 
     public function assign(User $assignor, User $assignee, array $lectureSetTypes)
     {
-        if(!$assignee->isTeacher()) {
+        if (!$assignee->isTeacher()) {
             throw new \Exception("Zapotrzebowanie można przypisywać tylko do nauczyciela!");
         }
 
-        if(!$assignor->isDepartmentManager()) {
+        if (!$assignor->isDepartmentManager()) {
             throw new \Exception("Tylko kierownik zakładu może przypisywać zapotrzebowania");
         }
 

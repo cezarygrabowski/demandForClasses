@@ -2,13 +2,10 @@
 
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
-use Demands\Domain\Repository\SubjectRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemorySubjectRepository;
 use Users\Application\Command\ImportUsers;
 use Users\Application\Handler\ImportUsersHandler;
-use Users\Application\Service\CalendarService;
 use Users\Domain\Calendar;
 use Users\Domain\Import\CsvExtractor;
 use Users\Domain\Month;
@@ -28,10 +25,6 @@ class UserContext implements Context
      * @var User
      */
     private $user;
-    /**
-     * @var array|User[]
-     */
-    private $listedUsers;
 
     /**
      * @Given There is user :userName

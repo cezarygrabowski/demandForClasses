@@ -70,6 +70,11 @@ class LectureSet
         return $this->lectureType;
     }
 
+    public function getTranslatedLectureType(): string
+    {
+        return self::LECTURE_TYPES_INT_TO_STRING[$this->lectureType];
+    }
+
     public function setLecturer(?User $lecturer): self
     {
         $this->lecturer = $lecturer;

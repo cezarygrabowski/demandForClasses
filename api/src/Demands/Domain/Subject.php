@@ -7,10 +7,10 @@ class Subject
     private $name;
     private $shortName;
 
-    public function __construct(string $name, string $shortenedName)
+    public function __construct(string $name, string $shortName)
     {
         $this->name = $name;
-        $this->shortName = $shortenedName;
+        $this->shortName = $shortName;
     }
 
     public function getName(): string

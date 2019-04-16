@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Service;
+namespace Common\Http;
 
-use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -12,6 +11,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Users\Domain\User;
 
 class HttpService
 {
@@ -110,6 +110,4 @@ class HttpService
 
         return $data;
     }
-
-
 }

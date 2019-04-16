@@ -37,4 +37,9 @@ class Group
     {
         return $this->type;
     }
+
+    public function getTranslatedType(): string
+    {
+        return self::GROUP_TYPES_INT_TO_STRING[$this->type];
+    }
 }

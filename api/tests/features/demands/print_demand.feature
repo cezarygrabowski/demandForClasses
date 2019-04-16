@@ -3,6 +3,7 @@ Feature: Demand printing
   As a planner
   I need to be able to print demand
 
+  @print-demand
   Scenario: DTO for demand printing has all informations
     Given There is user "Kierownik"
     And user "Kierownik" has role "Kierownik zakładu"
@@ -30,6 +31,16 @@ Feature: Demand printing
     And I book "60" hours in "3" week in "Projekt" lecture set
     And I choose building "65" and room "100" in "3" week in "Projekt" lecture set
     When I print the demand
-    Then printed demand should have following informations:
-#    TODO do zastanowienia się co będzie w wydrukowanym zapotrzebowaniu
-      | K5C1N1 | Studia niestacjonarne | Podstawy programowania | PP | Wykład,Ćwiczenia,Projekt | 4 | 30,50, 60 | letni 2018/2019 | wcy | ITA |
+    And printed demand should have "K5C1N1" group name
+    And printed demand should have "Studia niestacjonarne" group type
+    And printed demand should have "Podstawy programowania" subject name
+    And printed demand should have "PP" subject short name
+    And printed demand should have "4" school year
+    And printed demand should have "letni 2018/2019" semester
+    And printed demand should have "wcy" department
+    And printed demand should have "ITA" institute
+    And lecture set "Wykład" of printed demand should have "10" hours booked in "3" week in "65" building and "100" room
+    And lecture set "Wykład" of printed demand should have "20" hours booked in "4" week in "65" building and "100" room
+    And lecture set "Ćwiczenia" of printed demand should have "50" hours booked in "3" week in "65" building and "100" room
+    And lecture set "Projekt" of printed demand should have "60" hours booked in "3" week in "65" building and "100" room
+

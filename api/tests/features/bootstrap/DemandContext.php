@@ -1,7 +1,6 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Demands\Application\Command\AcceptDemand;
 use Demands\Application\Command\AssignDemand;
@@ -21,6 +20,7 @@ use Demands\Domain\Group;
 use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
 use Demands\Domain\LectureSet;
 use Demands\Domain\Place;
+use Demands\Domain\Printing\PrintDemand;
 use Demands\Domain\Repository\DemandRepository;
 use Demands\Domain\Repository\GroupRepository;
 use Demands\Domain\Repository\PlaceRepository;
@@ -32,6 +32,7 @@ use Demands\Infrastructure\InMemory\Repository\InMemoryDemandRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemoryGroupRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemoryPlaceRepository;
 use Demands\Infrastructure\InMemory\Repository\InMemorySubjectRepository;
+use Users\Domain\Qualification;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\Role;
 use Users\Domain\User;
@@ -78,6 +79,10 @@ class DemandContext implements Context
      * @var SubjectRepository
      */
     private $subjectRepository;
+    /**
+     * @var PrintDemand
+     */
+    private $printedDemand;
 
     /**
      * @Given There is demand with subject :name :shortenedName
@@ -338,7 +343,7 @@ class DemandContext implements Context
     public function userShouldNotSeeThisDemand($userName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, $this->groupRepository);
+        $demandService = new DemandService($this->demandRepository, new StatusResolver(), $this->subjectRepository, new InMemoryGroupRepository([]));
         $demands = $demandService->listAllForUser($user);
         Assert::isEmpty($demands);
     }
@@ -514,5 +519,97 @@ class DemandContext implements Context
             Assert::same($week->getPlace()->getRoom(), $room);
             Assert::same($week->getPlace()->getBuilding(), $building);
         }
+    }
+
+    /**
+     * @Given user :userName has :name :shortName qualification
+     */
+    public function userHasQualification($userName, $name, $shortName)
+    {
+        $user = $this->userRepository->findByUsername($userName);
+        $user->addQualification(new Qualification(new Subject($name, $shortName)));
+    }
+
+    /**
+     * @When I print the demand
+     */
+    public function iPrintTheDemand()
+    {
+         $this->printedDemand = PrintDemand::create($this->demand);
+    }
+
+    /**
+     * @When printed demand should have :groupName group name
+     */
+    public function printedDemandShouldHaveGroupName($groupName)
+    {
+        Assert::same($groupName, $this->printedDemand->groupName);
+    }
+
+    /**
+     * @When printed demand should have :groupType group type
+     */
+    public function printedDemandShouldHaveGroupType($groupType)
+    {
+        Assert::same($groupType, $this->printedDemand->groupType);
+    }
+
+    /**
+     * @When printed demand should have :subjectName subject name
+     */
+    public function printedDemandShouldHaveSubjectName($subjectName)
+    {
+        Assert::same($subjectName, $this->printedDemand->subjectName);
+    }
+
+    /**
+     * @When printed demand should have :shortName subject short name
+     */
+    public function printedDemandShouldHaveSubjectShortName($shortName)
+    {
+        Assert::same($shortName, $this->printedDemand->subjectShortName);
+    }
+
+    /**
+     * @When printed demand should have :schoolYear school year
+     */
+    public function printedDemandShouldHaveSchoolYear($schoolYear)
+    {
+        Assert::same($schoolYear, $this->printedDemand->yearNumber);
+    }
+
+    /**
+     * @When printed demand should have :semester semester
+     */
+    public function printedDemandShouldHaveSemester($semester)
+    {
+        Assert::same($semester, $this->printedDemand->semester);
+    }
+
+    /**
+     * @When printed demand should have :department department
+     */
+    public function printedDemandShouldHaveDepartment($department)
+    {
+        Assert::same($department, $this->printedDemand->department);
+    }
+
+    /**
+     * @When printed demand should have :institute institute
+     */
+    public function printedDemandShouldHaveInstitute($institute)
+    {
+        Assert::same($institute, $this->printedDemand->institute);
+    }
+
+    /**
+     * @When lecture set :lectureType of printed demand should have :hours hours booked in :weekNumber week in :building building and :room room
+     */
+    public function lectureSetOfPrintedDemandShouldHaveHoursBookedInWeekInBuildingAndRoom($lectureType, int $hours, int $weekNumber, int $building, int $room)
+    {
+        $lectureSet = $this->printedDemand->allocatedWeeks[$lectureType];
+        Assert::same($hours, $lectureSet[$weekNumber]['hours']);
+        Assert::same($building, $lectureSet[$weekNumber]['building']);
+        Assert::same($room, $lectureSet[$weekNumber]['room']);
     }
 }
