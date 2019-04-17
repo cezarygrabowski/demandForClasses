@@ -50,12 +50,12 @@ login_check:
   path: /login_check
 
 update_profile:
-  path: /profile/{id}
+  path: /profile/{uuid}
   controller: Users\Infrastructure\Symfony\Controller\UserController::updateProfile
   methods: PUT
 
 get_qualified_lecturers:
-  path: /lecturers/{demandId}
+  path: /lecturers/{demandUuid}
   controller: Users\Infrastructure\Symfony\Controller\UserController::getQualifiedLecturers
   methods: GET
 

@@ -20,10 +20,10 @@ interface DemandRepository
     public function findByIdentifiers(array $uuids): array;
 
     /**
-     * @param array $status
+     * @param array $statuses
      * @return Demand[]
      */
-    public function listAllWithStatuses(array $status): array;
+    public function listAllWithStatuses(array $statuses): array;
 
     public function findOneByUuid(string $demandUuid): ?Demand;
 }

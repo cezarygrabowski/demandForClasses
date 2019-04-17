@@ -16,7 +16,5 @@ interface UserRepository
      */
     public function findAllTeachers(): array;
 
-    public function findOneByToken(string $apiToken): ?User;
-
     public function findByUuid(string $assignorUuid): ?User;
 }

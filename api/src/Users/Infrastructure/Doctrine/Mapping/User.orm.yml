@@ -13,7 +13,7 @@ Users\Domain\User:
       type: string
       nullable: false
     roles:
-      type: json
+      type: array
       nullable: false
     importedAt:
       type: datetime
