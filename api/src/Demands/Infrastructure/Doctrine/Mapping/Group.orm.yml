@@ -1,4 +1,4 @@
-Group:
+Demands\Domain\Group:
   type: entity
   table: groups
 
@@ -6,7 +6,7 @@ Group:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     name:

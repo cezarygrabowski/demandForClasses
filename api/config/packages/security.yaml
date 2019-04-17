@@ -1,27 +1,40 @@
 security:
     encoders:
         Users\Domain\User:
-#            algorithm: argon2i
             algorithm: bcrypt
             cost: 12
-        App\Entity\TEst:
-            algorithm: bcrypt
 
     providers:
-        app_user_provider:
+        user_provider:
             entity:
-                class: App\Entity\TEst
+                class: Users\Domain\User
                 property: username
-        # used to reload user from session & other Behat (e.g. switch_user)
+        jwt:
+            lexik_jwt: ~
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            json_login:
+                provider: user_provider
+                check_path:               /login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
         main:
             anonymous: ~
             logout: ~
-
+            pattern:   ^/
+            stateless: true
+            provider: jwt
             guard:
                 authenticators:
-                    - Common\Security\TokenAuthenticator
+                    - lexik_jwt_authentication.jwt_token_authenticator
     access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/,       roles: IS_AUTHENTICATED_FULLY }

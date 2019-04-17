@@ -4,11 +4,12 @@ namespace Users\Domain;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements UserInterface
+class User implements JWTUserInterface
 {
     const ROLE_ADMIN = 0;
     const ROLE_TEACHER = 1;
@@ -75,11 +76,6 @@ class User implements UserInterface
      * @var string
      */
     private $password;
-
-    /**
-     * @var string
-     */
-    private $apiToken;
 
     public function __construct(string $username)
     {
@@ -251,38 +247,38 @@ class User implements UserInterface
         return $this;
     }
 
+
     /**
-     * @see UserInterface
+     * Creates a new instance from a given JWT payload.
+     * @param string $username
+     * @param array $payload
+     * @return JWTUserInterface
+     */
+    public static function createFromPayload($username, array $payload)
+    {
+        $user =  new self($username);
+        $user->setRoles($payload['roles']);
+
+        return $user;
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     * This can return null if the password was not encoded using a salt.
+     * @return string|null The salt
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        // not needed in bcrypt
     }
 
     /**
-     * @see UserInterface
+     * Removes sensitive data from the user.
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiToken(): string
-    {
-        return $this->apiToken;
-    }
-
-    /**
-     * @param string $apiToken
-     * @return User
-     */
-    public function setApiToken(string $apiToken): User
-    {
-        $this->apiToken = $apiToken;
-        return $this;
+        // TODO: Implement eraseCredentials() method.
     }
 }

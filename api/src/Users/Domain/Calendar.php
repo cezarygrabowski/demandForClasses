@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\UuidInterface;
 
 class Calendar
-{
+{   
     /**
      * @var UuidInterface
      */

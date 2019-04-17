@@ -1,4 +1,4 @@
-LectureSet:
+Demands\Domain\LectureSet:
   type: entity
   table: lecture_sets
 
@@ -6,7 +6,7 @@ LectureSet:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     lectureType:
@@ -24,7 +24,7 @@ LectureSet:
 
   manyToOne:
     lecturer:
-      targetEntity: User
+      targetEntity: Users\Domain\User
       joinColumn:
         name: lecturer_uuid
         referencedColumnName: uuid
@@ -35,10 +35,10 @@ LectureSet:
         name: demand_uuid
         referencedColumnName: uuid
     assignedBy:
-      targetEntity: User
-        joinColumn:
-          name: assigned_by_uuid
-          referencedColumnName: uuid
+      targetEntity: Users\Domain\User
+      joinColumn:
+        name: assigned_by_uuid
+        referencedColumnName: uuid
 
   oneToMany:
     allocatedWeeks:

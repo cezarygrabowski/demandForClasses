@@ -1,4 +1,4 @@
-Month:
+Users\Domain\Month:
   type: entity
   table: months
 
@@ -6,7 +6,7 @@ Month:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     monthNumber:
@@ -19,6 +19,7 @@ Month:
   manyToOne:
     calendar:
       targetEntity: Calendar
+      inversedBy: months
       joinColumn:
         name: calendar_uuid
-        referencedColumnType: uuid
+        referencedColumnName: uuid

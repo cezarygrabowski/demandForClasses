@@ -1,4 +1,4 @@
-Demand:
+Demands\Domain\Demand:
   type: entity
   table: demands
 
@@ -6,7 +6,7 @@ Demand:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     status:
@@ -43,12 +43,12 @@ Demand:
         name: group_uuid
         referencedColumnName: uuid
     importedBy:
-      targetEntity: User
+      targetEntity: Users\Domain\User
       joinColumn:
         name: imported_by_uuid
         referencedColumnName: uuid
     exportedBy:
-      targetEntity: User
+      targetEntity: Users\Domain\User
       joinColumn:
         name: exported_by_uuid
         referencedColumnName: uuid

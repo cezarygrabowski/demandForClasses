@@ -9,7 +9,6 @@ use Users\Domain\User;
 
 class DoctrineUserRepository implements UserRepository
 {
-
     public function findByUsername(string $username): ?User
     {
         // TODO: Implement findByUsername() method.
@@ -26,5 +25,10 @@ class DoctrineUserRepository implements UserRepository
     public function findOneByToken(string $apiToken): ?User
     {
         // TODO: Implement findOneByToken() method.
+    }
+
+    public function findByUuid(string $assignorUuid): ?User
+    {
+        // TODO: Implement findByUuid() method.
     }
 }

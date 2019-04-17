@@ -1,4 +1,4 @@
-User:
+Users\Domain\User:
   type: entity
   table: users
 
@@ -6,7 +6,7 @@ User:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     username:
@@ -17,20 +17,17 @@ User:
       nullable: false
     importedAt:
       type: datetime
-      nullable: false
-    apiToken:
-      type: string
       nullable: true
     password:
       type: string
       nullable: false
 
+  oneToMany:
+    qualifications:
+      targetEntity: Qualification
+      mappedBy: user
+
   manyToOne:
-    qualification:
-      targetEntity: Subject
-      joinColumn:
-        name: qualification_uuid
-        referencedColumnName: uuid
     importedBy:
       targetEntity: User
       joinColumn:
@@ -40,4 +37,7 @@ User:
   oneToOne:
     calendar:
       targetEntity: Calendar
-      mappedBy: user
+      inversedBy: uuid
+      joinColumn:
+        name: calendar_uuid
+        referencedColumnName: uuid

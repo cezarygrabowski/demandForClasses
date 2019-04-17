@@ -1,4 +1,4 @@
-Place:
+Demands\Domain\Place:
   type: entity
   table: places
 
@@ -6,7 +6,7 @@ Place:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     building:

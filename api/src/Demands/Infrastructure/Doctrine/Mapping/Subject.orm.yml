@@ -1,4 +1,4 @@
-Subject:
+Demands\Domain\Subject:
   type: entity
   table: subjects
 
@@ -6,7 +6,7 @@ Subject:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     name:

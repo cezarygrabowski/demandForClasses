@@ -1,4 +1,4 @@
-Calendar:
+Users\Domain\Calendar:
   type: entity
   table: calendars
 
@@ -6,7 +6,7 @@ Calendar:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     semester:
@@ -16,12 +16,9 @@ Calendar:
   oneToOne:
     user:
       targetEntity: User
-      inversedBy: calendar
-      joinColumn:
-        name: calendar_uuid
-        referencedColumnName: uuid
+      mappedBy: calendar
 
-  OneToMany:
+  oneToMany:
     months:
       targetEntity: Month
-      inversedBy: calendar
+      mappedBy: calendar

@@ -1,4 +1,4 @@
-Week:
+Demands\Domain\Week:
   type: entity
   table: weeks
 
@@ -6,7 +6,7 @@ Week:
     uuid:
       type: string
       generator:
-        strategy: AUTO
+        strategy: NONE
 
   fields:
     number:

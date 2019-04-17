@@ -7,25 +7,28 @@ parameters:
     locale: 'pl'
 
 services:
-    # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    Demands\:
-        resource: '../src/Demands/*'
-        exclude: '../src/Demands/Infrastructure/{InMemory}'
-    Users\:
-        resource: '../src/Users/*'
-        exclude: '../src/Users/Infrastructure/{InMemory}'
-    Common\:
-        resource: '../src/Common/*'
-#        exclude: '../src/Common/Infrastructure/{InMemory}'
+    #fixtures
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
+
+#DEMANDS
+
+    #Controllers
+    Demands\Infrastructure\Symfony\Controller\:
+        resource: '../src/Demands/Infrastructure/Symfony/Controller/'
 
     #Repositories
-    Users\Infrastructure\Doctrine\Repository\DoctrineUserRepository:
+    Demands\Infrastructure\Doctrine\Repository\:
+        resource: '../src/Demands/Infrastructure/Doctrine/Repository'
+
+    #RepositoryInterfaces
+    Demands\Domain\Repository\DemandRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineDemandRepository'
+    Demands\Domain\Repository\SubjectRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineSubjectRepository'
+    Demands\Domain\Repository\GroupRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineGroupRepository'
 
     #Handlers
     Demands\Application\Handler\AcceptDemandHandler:
@@ -56,8 +59,30 @@ services:
         tags:
             - { name: tactician.handler, typehints: true }
 
+    #miscellaneous
+    Demands\Domain\StatusResolver:
+    Demands\Domain\FileMaker:
+    Demands\Application\Service\DemandService:
+
+#USERS
+
+    #Controllers
+    Users\Infrastructure\Symfony\Controller\:
+        resource: '../src/Users/Infrastructure/Symfony/Controller/'
+
+    #Repositories
+    Users\Infrastructure\Doctrine\Repository\:
+        resource: '../src/Users/Infrastructure/Doctrine/Repository'
 
 
+    #RepositoryInterfaces
+    Users\Domain\Repository\UserRepository: '@Users\Infrastructure\Doctrine\Repository\DoctrineUserRepository'
+
+    #Handlers
     Users\Application\Handler\ImportUsersHandler:
         tags:
             - { name: tactician.handler, typehints: true }
+
+    #miscellaneous
+    Common\Security\TokenAuthenticator:
+

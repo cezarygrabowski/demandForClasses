@@ -2,10 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Demand;
-use App\Repository\LectureRepository;
-use App\Service\DemandService;
-use App\Service\HttpService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
