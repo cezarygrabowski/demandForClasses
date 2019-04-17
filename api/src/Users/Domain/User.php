@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements JWTUserInterface
+class User implements UserInterface
 {
     const ROLE_ADMIN = 0;
     const ROLE_TEACHER = 1;
@@ -81,7 +81,6 @@ class User implements JWTUserInterface
     {
         $this->username = $username;
         $this->uuid = Uuid::uuid4();
-        $this->roles = new ArrayCollection();
         $this->qualifications = new ArrayCollection();
     }
 
@@ -100,7 +99,7 @@ class User implements JWTUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        $roles = !empty($this->roles) ? $this->roles : [];
         return array_unique($roles);
     }
 
@@ -245,21 +244,6 @@ class User implements JWTUserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-
-    /**
-     * Creates a new instance from a given JWT payload.
-     * @param string $username
-     * @param array $payload
-     * @return JWTUserInterface
-     */
-    public static function createFromPayload($username, array $payload)
-    {
-        $user =  new self($username);
-        $user->setRoles($payload['roles']);
-
-        return $user;
     }
 
     /**

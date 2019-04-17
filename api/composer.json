@@ -10,7 +10,6 @@
         "league/tactician-bundle": "^1.1",
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/api-doc-bundle": "^3.3",
-        "nelmio/cors-bundle": "^1.5",
         "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/console": "4.2.*",

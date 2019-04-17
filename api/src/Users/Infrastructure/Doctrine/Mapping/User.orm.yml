@@ -31,7 +31,7 @@ Users\Domain\User:
     importedBy:
       targetEntity: User
       joinColumn:
-        name: user_uuid
+        name: imported_by_uuid
         referencedColumnName: uuid
 
   oneToOne:

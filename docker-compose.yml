@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 services:
   ### FRONTEND ###
   frontend:
@@ -13,30 +13,60 @@ services:
       - "80:4200"
 
   ### API ###
-  api:
-    build: docker/api
-    container_name: api
+#  api:
+#    build: docker/api
+#    container_name: api
+#    networks:
+#      demands:
+#        ipv4_address: 192.168.16.3
+#    environment:
+#      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+#      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+#      DATABASE_HOST: ${DATABASE_HOST}
+#      DATABASE_USER: ${DATABASE_USER}
+#      DATABASE_NAME: ${DATABASE_NAME}
+#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+#    volumes:
+#      - ./api:/var/www/api:Z
+#    ports:
+#      - "81:8080"
+
+  webserver:
+    image: nginx:alpine
+    container_name: api-webserver
+    working_dir: /application
     networks:
       demands:
         ipv4_address: 192.168.16.3
     volumes:
-      - ./api:/var/www/api:Z
+      - .:/application
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "81:8080"
+      - "8080:80"
 
-  ### DATABASE ###
   db-service:
     image: postgres:11-alpine
     container_name: database
     networks:
       demands:
-        ipv4_address: 192.168.16.4
+        ipv4_address: 192.168.16.5
     environment:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     ports:
     - "5432:5432"
+
+  php-fpm:
+    build: docker/php-fpm
+    container_name: api-php-fpm
+    working_dir: /application
+    networks:
+      demands:
+        ipv4_address: 192.168.16.4
+    volumes:
+      - .:/application
+      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
 
 volumes:
   db-service-data:
