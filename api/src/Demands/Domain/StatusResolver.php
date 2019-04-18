@@ -35,5 +35,7 @@ class StatusResolver
         } elseif ($user->isPlanner()) {
             return [Demand::STATUS_ACCEPTED_BY_DEAN];
         }
+
+        var_dump($user->getRoles());die;
     }
 }

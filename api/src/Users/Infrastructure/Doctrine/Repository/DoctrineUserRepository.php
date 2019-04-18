@@ -4,7 +4,6 @@
 namespace Users\Infrastructure\Doctrine\Repository;
 
 
-use Demands\Domain\Group;
 use Doctrine\ORM\EntityManagerInterface;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\User;
@@ -28,13 +27,12 @@ class DoctrineUserRepository implements UserRepository
     public function findByUsername(string $username): ?User
     {
         return $this->entityManager->createQueryBuilder()
-            ->select('d')
+            ->select('u')
             ->from(User::class, 'u')
             ->where('u.username LIKE :username')
             ->setParameter('username', $username)
             ->getQuery()
-            ->setMaxResults(1)
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     /**
@@ -43,7 +41,7 @@ class DoctrineUserRepository implements UserRepository
     public function findAllTeachers(): array
     {
         return $this->entityManager->createQueryBuilder()
-            ->select('d')
+            ->select('u')
             ->from(User::class, 'u')
             ->where('u.username LIKE :teacherRole')
             ->setParameter('teacherRole', User::ROLE_TEACHER)
@@ -54,11 +52,11 @@ class DoctrineUserRepository implements UserRepository
     public function findByUuid(string $assignorUuid): ?User
     {
         return $this->entityManager->createQueryBuilder()
-            ->select('d')
+            ->select('u')
             ->from(User::class, 'u')
             ->where('u.uuid LIKE :uuid')
             ->setParameter('uuid', $assignorUuid)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }

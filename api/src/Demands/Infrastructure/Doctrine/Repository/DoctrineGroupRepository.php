@@ -27,12 +27,11 @@ class DoctrineGroupRepository implements GroupRepository
     public function find(string $groupName): ?Group
     {
         return $this->entityManager->createQueryBuilder()
-            ->select('d')
+            ->select('g')
             ->from(Group::class, 'g')
             ->where('g.name LIKE :groupName')
             ->setParameter('groupName', $groupName)
             ->getQuery()
-            ->setMaxResults(1)
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }

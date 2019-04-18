@@ -9,13 +9,16 @@ use Demands\Application\Command\DownloadDemand;
 use Demands\Application\Command\ExportDemands;
 use Demands\Application\Command\ImportStudyPlans;
 use Demands\Application\Command\UpdateDemand;
+use Demands\Application\Service\DemandService;
 use Demands\Domain\Demand;
 use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
 use Demands\Domain\Update\DetailsToUpdate;
 use League\Tactician\CommandBus;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class DemandController
@@ -34,12 +37,26 @@ class DemandController
      */
     private $httpService;
 
+    /**
+     * @var DemandService
+     */
+    private $demandService;
+
+    /**
+     * @var \Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         CommandBus $commandBus,
-        HttpService $httpService
+        HttpService $httpService,
+        DemandService $demandService,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
+        $this->demandService = $demandService;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -59,6 +76,9 @@ class DemandController
 
     public function list()
     {
+        $demands = $this->demandService->listAllForUser($this->tokenStorage->getToken()->getUser());
+
+        return new JsonResponse($demands);
         //TODO
 //        return $this->httpService->createCollectionResponse($demands);
     }

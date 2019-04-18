@@ -42,7 +42,7 @@ class UserContext implements Context
     public function userHasRole($userName, $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        $user->setRoles([User::ROLES_STRING_TO_INT[$roleName]]);
+        $user->setRoles([User::ROLES_VALUE_TO_KEY[$roleName]]);
     }
 
     /**
@@ -79,7 +79,7 @@ class UserContext implements Context
     public function userShouldHaveRole($userName, $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        Assert::notNull($user->getRole(User::ROLES_STRING_TO_INT[$roleName]));
+        Assert::notNull($user->getRole(User::ROLES_VALUE_TO_KEY[$roleName]));
     }
 
     /**

@@ -34,8 +34,8 @@ class DoctrineDemandRepository implements DemandRepository
     {
         return $this->entityManager->createQueryBuilder()
             ->select('d')
-            ->leftJoin('d.lectureSets', 'lS')
             ->from(Demand::class, 'd')
+            ->leftJoin('d.lectureSets', 'lS')
             ->where('lS.lecturer = :user')
             ->setParameter('user', $user)
             ->getQuery()

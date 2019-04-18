@@ -31,6 +31,7 @@ class UserFixtures extends Fixture
              'janusz'
          ));
 
+        $user->setRoles([User::ROLE_TEACHER]);
         $manager->persist($user);
         $manager->flush();
     }

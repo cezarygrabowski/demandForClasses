@@ -16,19 +16,22 @@ class LectureSet
     const PROJECT_LECTURE_TYPE = 1;
     const LABORATORY_LECTURE_TYPE = 2;
     const EXERCISES_LECTURE_TYPE = 3;
+    const SEMINAR_LECTURE_TYPE = 4;
 
     const LECTURE_TYPES_STRING_TO_INT = [
         'Ćwiczenia' => self::EXERCISES_LECTURE_TYPE,
         'Wykład' => self::LECTURE_LECTURE_TYPE,
         'Projekt' => self::PROJECT_LECTURE_TYPE,
-        'Laboratoria' => self::LABORATORY_LECTURE_TYPE
+        'Laboratorium' => self::LABORATORY_LECTURE_TYPE,
+        'Seminarium' => self::SEMINAR_LECTURE_TYPE
     ];
 
     const LECTURE_TYPES_INT_TO_STRING = [
         self::EXERCISES_LECTURE_TYPE => 'Ćwiczenia',
         self::LECTURE_LECTURE_TYPE => 'Wykład',
         self::PROJECT_LECTURE_TYPE => 'Projekt',
-        self::LABORATORY_LECTURE_TYPE => 'Laboratoria'
+        self::LABORATORY_LECTURE_TYPE => 'Laboratorium',
+        self::SEMINAR_LECTURE_TYPE => 'Seminarium'
     ];
 
     /**

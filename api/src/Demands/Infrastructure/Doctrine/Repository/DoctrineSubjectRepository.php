@@ -4,7 +4,6 @@
 namespace Demands\Infrastructure\Doctrine\Repository;
 
 
-use Demands\Domain\Group;
 use Demands\Domain\Repository\SubjectRepository;
 use Demands\Domain\Subject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,12 +27,11 @@ class DoctrineSubjectRepository implements SubjectRepository
     public function findByName(string $name): ?Subject
     {
         return $this->entityManager->createQueryBuilder()
-            ->select('d')
+            ->select('s')
             ->from(Subject::class, 's')
             ->where('s.name LIKE :name')
             ->setParameter('name', $name)
             ->getQuery()
-            ->setMaxResults(1)
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }

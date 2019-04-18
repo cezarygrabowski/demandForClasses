@@ -36,7 +36,10 @@ export class TeachersImportComponent implements OnInit {
             .upload(fd)
             .subscribe(() => {
                 this.flashMessageService.show('Pomyślnie zaimportowano nauczycieli!');
-            }, error1 => this.flashMessageService.show(error1)
+                  console.log('dsadasdas');
+            }, (error1) => {
+                this.flashMessageService.show(error1);
+              }
             );
     }
 }

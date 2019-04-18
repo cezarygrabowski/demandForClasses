@@ -317,7 +317,7 @@ class DemandContext implements Context
     public function userHasRole(string $userName, string $roleName)
     {
         $user = $this->userRepository->findByUsername($userName);
-        $user->setRoles([User::ROLES_STRING_TO_INT[$roleName]]);
+        $user->setRoles([User::ROLES_VALUE_TO_KEY[$roleName]]);
     }
 
     /**

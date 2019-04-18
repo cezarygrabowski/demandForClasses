@@ -51,15 +51,15 @@ class StudyPlan
         $scheduleRow = new self();
         $scheduleRow->groupName = $row[$positions::GROUP];
         $scheduleRow->groupType = Group::GROUP_TYPE_STRING_TO_INT[$row[$positions::GROUP_TYPE]];
-        $scheduleRow->subjectName= $row[$positions::SUBJECT_NAME];
+        $scheduleRow->subjectName = $row[$positions::SUBJECT_NAME];
         $scheduleRow->subjectShortName = $row[$positions::SUBJECT_SHORT_NAME];
         $scheduleRow->schoolYear = $row[$positions::YEAR_NUMBER];
         $scheduleRow->semester = $row[$positions::SEMESTER];
         $scheduleRow->department = $row[$positions::DEPARTMENT];
         $scheduleRow->institute = $row[$positions::INSTITUTE];
 
-        $lectureTypes = explode(',', $row[$positions::LECTURE_TYPES]);
-        $hours = explode(',', $row[$positions::LECTURE_HOURS]);
+        $lectureTypes = explode(';', $row[$positions::LECTURE_TYPES]);
+        $hours = explode(';', $row[$positions::LECTURE_HOURS]);
         $lectureSets = [];
         foreach ($lectureTypes as $key => $value) {
             $lectureSets[] = new LectureSet(\Demands\Domain\LectureSet::LECTURE_TYPES_STRING_TO_INT[$value], $hours[$key]);

@@ -11,29 +11,29 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
 {
-    const ROLE_ADMIN = 0;
-    const ROLE_TEACHER = 1;
-    const ROLE_DISTRICT_MANAGER = 2;
-    const ROLE_INSTITUTE_DIRECTOR = 3;
-    const ROLE_DEAN = 4;
-    const ROLE_PLANNER = 5;
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_TEACHER = 'ROLE_TEACHER';
+    const ROLE_DISTRICT_MANAGER = 'ROLE_DISTRICT_MANAGER';
+    const ROLE_INSTITUTE_DIRECTOR = 'ROLE_INSTITUTE_DIRECTOR';
+    const ROLE_DEAN = 'ROLE_DEAN';
+    const ROLE_PLANNER = 'ROLE_PLANNER';
 
-    const ROLES_STRING_TO_INT = [
-        'Administrator' => 0,
-        'Nauczyciel' => 1,
-        'Kierownik zakładu' => 2,
-        'Dyrektor instytutu' => 3,
-        'Dziekan' => 4,
-        'Planista' => 5,
+    const ROLES_VALUE_TO_KEY = [
+        'Administrator' => self::ROLE_ADMIN,
+        'Nauczyciel' => self::ROLE_TEACHER,
+        'Kierownik zakładu' => self::ROLE_DISTRICT_MANAGER,
+        'Dyrektor instytutu' => self::ROLE_INSTITUTE_DIRECTOR,
+        'Dziekan' => self::ROLE_DEAN,
+        'Planista' => self::ROLE_PLANNER,
     ];
 
-    const ROLES_INT_TO_STRING = [
-        0 => 'Administrator',
-        1 => 'Nauczyciel',
-        2 => 'Kierownik zakładu',
-        3 => 'Dyrektor instytutu',
-        4 => 'Dziekan',
-        5 => 'Planista'
+    const ROLES_KEY_TO_VALUE = [
+        self::ROLE_ADMIN => 'Administrator',
+        self::ROLE_TEACHER => 'Nauczyciel',
+        self::ROLE_DISTRICT_MANAGER => 'Kierownik zakładu',
+        self::ROLE_INSTITUTE_DIRECTOR => 'Dyrektor instytutu',
+        self::ROLE_DEAN => 'Dziekan',
+        self::ROLE_PLANNER => 'Planista'
     ];
 
     /**

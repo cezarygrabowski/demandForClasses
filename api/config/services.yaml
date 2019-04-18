@@ -18,8 +18,9 @@ services:
 #DEMANDS
 
     #Controllers
-    Demands\Infrastructure\Symfony\Controller\:
-        resource: '../src/Demands/Infrastructure/Symfony/Controller/'
+    Demands\Infrastructure\Symfony\Controller\DemandController:
+        tags:
+            - { name: controller.service_arguments, typehints: true }
 
     #Repositories
     Demands\Infrastructure\Doctrine\Repository\:
@@ -67,8 +68,9 @@ services:
 #USERS
 
     #Controllers
-    Users\Infrastructure\Symfony\Controller\:
-        resource: '../src/Users/Infrastructure/Symfony/Controller/'
+    Users\Infrastructure\Symfony\Controller\UserController:
+        tags:
+            - { name: controller.service_arguments, typehints: true }
 
     #Repositories
     Users\Infrastructure\Doctrine\Repository\:
@@ -83,6 +85,6 @@ services:
         tags:
             - { name: tactician.handler, typehints: true }
 
-    #miscellaneous
-    Common\Security\TokenAuthenticator:
-
+#Common
+    Common\Http\:
+        resource: '../src/Common/Http'

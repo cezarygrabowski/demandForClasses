@@ -81,10 +81,9 @@ class ImportUsersHandler
             $user->addQualification($qualification);
         }
 
-
-        $months = [];
         $calendar = new Calendar($importUser->semester);
         foreach ($importUser->workingHours as $monthNumber => $workingHours) {
+            var_dump($monthNumber);var_dump($workingHours);
             $calendar->addMonth(new Month($monthNumber, $workingHours));
         }
 

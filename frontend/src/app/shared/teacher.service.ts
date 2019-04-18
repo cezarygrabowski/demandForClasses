@@ -10,6 +10,6 @@ export class TeacherService {
   constructor(private http: HttpClient) { }
 
   upload(fd: FormData) {
-    return this.http.post(`${environment.apiUrl}/import-teachers`, fd);
+    return this.http.post(`${environment.apiUrl}/import-lecturers`, fd);
   }
 }

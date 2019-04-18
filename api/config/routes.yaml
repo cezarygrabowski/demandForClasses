@@ -5,7 +5,7 @@ import_study_plans:
   methods: POST
 
 list_demands:
-  path: /
+  path: /demands
   controller: Demands\Infrastructure\Symfony\Controller\DemandController::list
   methods: GET
 

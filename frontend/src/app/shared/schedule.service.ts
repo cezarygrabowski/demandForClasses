@@ -10,6 +10,6 @@ export class ScheduleService {
   constructor(private http: HttpClient) { }
 
   upload(fd: FormData) {
-    return this.http.post(`${environment.apiUrl}/schedules/import`, fd);
+    return this.http.post(`${environment.apiUrl}/import-study-plans`, fd);
   }
 }
