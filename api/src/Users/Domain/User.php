@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     const ROLE_ADMIN = 0;
-    const ROLE_TEACHER = 1;
+    const ROLE_TEACHER = "ROLE_TEACHER";
     const ROLE_DISTRICT_MANAGER = 2;
     const ROLE_INSTITUTE_DIRECTOR = 3;
     const ROLE_DEAN = 4;
