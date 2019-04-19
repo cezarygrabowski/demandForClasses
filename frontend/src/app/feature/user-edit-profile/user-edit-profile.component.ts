@@ -4,10 +4,10 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  templateUrl: './user-edit-profile.component.html',
+  styleUrls: ['./user-edit-profile.component.css']
 })
-export class UserProfileComponent implements OnInit, OnDestroy {
+export class UserEditProfileComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription;
 
   constructor(private demandFormService: DemandFormService

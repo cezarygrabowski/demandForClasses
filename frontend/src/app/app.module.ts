@@ -24,7 +24,6 @@ import {
 import { MainNavComponent } from './core/main-nav/main-nav.component';
 import { DemandListComponent } from './feature/demand-list/demand-list.component';
 import { DemandFormComponent } from './feature/demand-form/demand-form.component';
-import { UserProfileComponent } from './feature/user-profile/user-profile.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -43,6 +42,7 @@ import {CoreModule} from "./core/core.module";
 import {ScheduleImportComponent} from "./feature/schedule-import/schedule-import.component";
 import {TeacherService} from "./shared/teacher.service";
 import {ScheduleService} from "./shared/schedule.service";
+import {UserEditProfileComponent} from "./feature/user-edit-profile/user-edit-profile.component";
 
 @NgModule({
   declarations: [
@@ -50,7 +50,7 @@ import {ScheduleService} from "./shared/schedule.service";
     MainNavComponent,
     DemandListComponent,
     DemandFormComponent,
-    UserProfileComponent,
+    UserEditProfileComponent,
     LoginComponent,
     SemesterWeeksComponent,
     LectureFormComponent,
