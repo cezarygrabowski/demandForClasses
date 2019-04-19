@@ -7,6 +7,7 @@ namespace Demands\Domain;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Users\Domain\User;
 
@@ -81,6 +82,7 @@ class LectureSet
 
     public function __construct(int $lectureType)
     {
+        $this->uuid = Uuid::uuid4();
         $this->lectureType = $lectureType;
         $this->allocatedWeeks = new ArrayCollection();
     }

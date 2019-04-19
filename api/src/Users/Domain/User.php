@@ -4,7 +4,6 @@ namespace Users\Domain;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -86,7 +85,7 @@ class User implements UserInterface
 
     public function getUuid(): string
     {
-        return $this->uuid->toString();
+        return $this->uuid;
     }
 
     public function getUsername(): string

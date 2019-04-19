@@ -4,6 +4,9 @@
 namespace Demands\Domain;
 
 
+use Exception;
+use Ramsey\Uuid\Uuid;
+
 class Week
 {
     const WEEKS_IN_SEMESTER = [
@@ -51,12 +54,14 @@ class Week
      * @param int $number
      * @param int $allocatedHours
      * @param Place $place
+     * @throws Exception
      */
     public function __construct(
         int $number,
         int $allocatedHours,
         Place $place = null
     ) {
+        $this->uuid = Uuid::uuid4();
         $this->number = $number;
         $this->allocatedHours = $allocatedHours;
         $this->place = $place;

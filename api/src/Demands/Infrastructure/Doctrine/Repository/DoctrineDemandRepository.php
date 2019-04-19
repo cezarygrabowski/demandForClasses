@@ -66,7 +66,8 @@ class DoctrineDemandRepository implements DemandRepository
         return $this->entityManager->createQueryBuilder()
             ->select('d')
             ->from(Demand::class, 'd')
-            ->where('d.status IN :statuses')
+            ->leftJoin('d.lectureSets', 'lS')
+            ->where('d.status IN (:statuses)')
             ->setParameter('statuses', $statuses)
             ->getQuery()
             ->getResult();

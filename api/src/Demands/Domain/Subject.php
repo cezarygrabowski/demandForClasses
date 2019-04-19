@@ -2,6 +2,8 @@
 
 namespace Demands\Domain;
 
+use Ramsey\Uuid\Uuid;
+
 class Subject
 {
     private $uuid;
@@ -10,6 +12,7 @@ class Subject
 
     public function __construct(string $name, string $shortName)
     {
+        $this->uuid = Uuid::uuid4();
         $this->name = $name;
         $this->shortName = $shortName;
     }

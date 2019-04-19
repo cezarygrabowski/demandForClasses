@@ -21,8 +21,7 @@
       </button>
       <span></span>
       <span class="fill-space"></span>
-<!--      <span><a class="sidenav" routerLink="/">Strona główna</a></span>-->
-      <a mat-list-item routerLink="/profil">Profil</a>
+      <a mat-button *ngIf="authenticationService.isLoggedIn()" routerLink="/profil">Profil</a>
       <a mat-button *ngIf="authenticationService.isLoggedIn()" (click)="logout()" >Wyloguj</a>
       <a mat-button *ngIf="!authenticationService.isLoggedIn()" (click)="login()" >Zaloguj</a>
     </mat-toolbar>

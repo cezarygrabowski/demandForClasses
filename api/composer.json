@@ -8,6 +8,7 @@
         "jms/serializer": "^1.13",
         "league/tactician": "^1.0",
         "league/tactician-bundle": "^1.1",
+        "league/tactician-doctrine": "^1.1",
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/api-doc-bundle": "^3.3",
         "ramsey/uuid": "^3.8",

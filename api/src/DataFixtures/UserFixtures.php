@@ -23,16 +23,26 @@ class UserFixtures extends Fixture
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    private $data = [
+        ['nauczyciel', 'nauczyciel', User::ROLE_TEACHER],
+        ['kierownik', 'kierownik', User::ROLE_DISTRICT_MANAGER],
+        ['dziekan', 'dziekan', User::ROLE_DEAN],
+        ['planista', 'planista', User::ROLE_TEACHER],
+        ['admin', 'admin', User::ROLE_ADMIN]
+    ];
+
     public function load(ObjectManager $manager)
     {
-        $user = new User('janusz');
-        $user->setPassword($this->passwordEncoder->encodePassword(
-             $user,
-             'janusz'
-         ));
+        foreach ($this->data as $item) {
+            $user = new User($item[0]);
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                $item[1]
+            ));
+            $user->setRoles([$item[2]]);
+            $manager->persist($user);
+        }
 
-        $user->setRoles([User::ROLE_TEACHER]);
-        $manager->persist($user);
         $manager->flush();
     }
 }

@@ -5,6 +5,7 @@ namespace Users\Domain;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class Calendar
@@ -35,6 +36,7 @@ class Calendar
      */
     public function __construct(string $semester)
     {
+        $this->uuid = Uuid::uuid4();
         $this->months = new ArrayCollection();
         $this->semester = $semester;
     }

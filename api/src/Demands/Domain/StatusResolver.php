@@ -27,7 +27,7 @@ class StatusResolver
     public function resolveStatusesForDemandListing(User $user)
     {
         if ($user->isDepartmentManager()) {
-            return [Demand::STATUS_ACCEPTED_BY_TEACHER, Demand::DECLINED_BY_TEACHER];
+            return [Demand::STATUS_ACCEPTED_BY_TEACHER, Demand::DECLINED_BY_TEACHER, Demand::STATUS_UNTOUCHED];
         } elseif ($user->isInstituteDirector()) {
             return [Demand::STATUS_ACCEPTED_BY_DEPARTMENT_MANAGER];
         } elseif ($user->isDean()) {

@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DemandListService } from './demand-list.service';
+import { DemandService } from './demand.service';
 
-describe('DemandFormService', () => {
+describe('DemandServiceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: DemandListService = TestBed.get(DemandListService);
+    const service: DemandService = TestBed.get(DemandService);
     expect(service).toBeTruthy();
   });
 });

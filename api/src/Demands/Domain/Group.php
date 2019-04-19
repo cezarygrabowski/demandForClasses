@@ -5,6 +5,7 @@ namespace Demands\Domain;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Ramsey\Uuid\Uuid;
 
 class Group
 {
@@ -27,6 +28,7 @@ class Group
 
     public function __construct(string $name, int $type)
     {
+        $this->uuid = Uuid::uuid4();
         $this->name = $name;
         $this->type = $type;
         $this->demands = new ArrayCollection();

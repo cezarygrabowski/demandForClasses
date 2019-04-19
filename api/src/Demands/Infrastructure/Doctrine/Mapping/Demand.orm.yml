@@ -34,21 +34,25 @@ Demands\Domain\Demand:
   manyToOne:
     subject:
       targetEntity: Subject
+      cascade: ["persist"]
       joinColumn:
         name: subject_uuid
         referencedColumnName: uuid
     group:
       targetEntity: Group
+      cascade: ["persist"]
       joinColumn:
         name: group_uuid
         referencedColumnName: uuid
     importedBy:
       targetEntity: Users\Domain\User
+      cascade: ["persist"]
       joinColumn:
         name: imported_by_uuid
         referencedColumnName: uuid
     exportedBy:
       targetEntity: Users\Domain\User
+      cascade: ["persist"]
       joinColumn:
         name: exported_by_uuid
         referencedColumnName: uuid
@@ -57,3 +61,5 @@ Demands\Domain\Demand:
     lectureSets:
       targetEntity: LectureSet
       mappedBy: demand
+      cascade: ["persist"]
+      fetch: 'EAGER'

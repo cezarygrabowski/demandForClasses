@@ -4,6 +4,8 @@
 namespace Demands\Domain;
 
 
+use Ramsey\Uuid\Uuid;
+
 class Place
 {
     private $uuid;
@@ -12,6 +14,7 @@ class Place
 
     public function __construct(int $building, int $room)
     {
+        $this->uuid = Uuid::uuid4();
         $this->building = $building;
         $this->room = $room;
     }

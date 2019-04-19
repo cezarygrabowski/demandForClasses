@@ -106,7 +106,7 @@ class Demand
 
     public function getUuid(): string
     {
-        return $this->uuid->toString();
+        return $this->uuid;
     }
 
     public function addLectureSet(LectureSet $lectureSet): self
@@ -149,6 +149,11 @@ class Demand
     public function getStatus(): int
     {
         return $this->status;
+    }
+
+    public function getTranslatedStatus(): string
+    {
+        return self::STATUSES_INT_TO_STRING[$this->status];
     }
 
     public function setStatus(int $status): self

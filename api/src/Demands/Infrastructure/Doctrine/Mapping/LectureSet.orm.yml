@@ -14,13 +14,13 @@ Demands\Domain\LectureSet:
       nullable: false
     notes:
       type: string
-      nullable: false
+      nullable: true
     hoursToDistribute:
       type: integer
       nullable: false
     assignedAt:
       type: datetime
-      nullable: false
+      nullable: true
 
   manyToOne:
     lecturer:

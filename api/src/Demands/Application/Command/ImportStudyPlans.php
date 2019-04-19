@@ -4,7 +4,7 @@
 namespace Demands\Application\Command;
 
 
-use Demands\Domain\StudyPlan\StudyPlan;
+use Demands\Domain\Import\StudyPlan\StudyPlan;
 use Users\Domain\User;
 
 class ImportStudyPlans

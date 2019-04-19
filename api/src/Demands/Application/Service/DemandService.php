@@ -18,6 +18,7 @@ use Demands\Domain\Subject;
 use Demands\Domain\Update\AllocatedWeek;
 use Demands\Domain\Update\DetailsToUpdate;
 use Demands\Domain\Week;
+use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 use Exception;
 use Users\Domain\User;
@@ -47,26 +48,39 @@ class DemandService
      */
     private $placeRepository;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     public function __construct(
         DemandRepository $demandRepository,
         StatusResolver $statusResolver,
         SubjectRepository $subjectRepository,
-        GroupRepository $groupRepository
-    )
-    {
+        GroupRepository $groupRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $this->demandRepository = $demandRepository;
         $this->statusResolver = $statusResolver;
         $this->subjectRepository = $subjectRepository;
         $this->groupRepository = $groupRepository;
+        $this->entityManager = $entityManager;
     }
 
     public function listAllForUser(User $user)
     {
         if ($user->isTeacher()) {
-            return $this->demandRepository->listAllForUser($user);
+            $demands = $this->demandRepository->listAllForUser($user);
         } else {
-            return $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
+            $demands =  $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
         }
+
+        $demandDtos = [];
+        foreach ($demands as $demand) {
+            $demandDtos[] = \App\Demands\Domain\Query\Demand::fromDemand($demand);
+        }
+
+        return $demandDtos;
     }
 
     /**
@@ -78,9 +92,12 @@ class DemandService
     {
         $demands = [];
         foreach ($studyPlans as $studyPlan) {
-            $demands[] = $this->createDemandFromStudyPlan($importedBy, $studyPlan);
+            $demand = $this->createDemandFromStudyPlan($importedBy, $studyPlan);
+            $demands[] = $demand;
+            $this->entityManager->persist($demand);
         }
 
+        $this->entityManager->flush();
         return $demands;
     }
 
@@ -110,6 +127,7 @@ class DemandService
         foreach ($studyPlan->lectureSets as $lectureSetDto) {
             $lectureSet = new LectureSet($lectureSetDto->type);
             $lectureSet->setHoursToDistribute($lectureSetDto->hours);
+            $lectureSet->setDemand($demand);
             $demand->addLectureSet($lectureSet);
         }
 

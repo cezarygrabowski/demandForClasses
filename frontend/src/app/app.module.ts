@@ -19,7 +19,7 @@ import {
   MatCardModule,
   MatProgressSpinnerModule,
   MatFormFieldModule,
-  MatAutocompleteModule, MatButtonToggleModule, MatRadioModule
+  MatAutocompleteModule, MatButtonToggleModule, MatRadioModule, MatPaginatorModule
 } from '@angular/material';
 import { MainNavComponent } from './core/main-nav/main-nav.component';
 import { DemandListComponent } from './feature/demand-list/demand-list.component';
@@ -43,6 +43,7 @@ import {ScheduleImportComponent} from "./feature/schedule-import/schedule-import
 import {TeacherService} from "./shared/teacher.service";
 import {ScheduleService} from "./shared/schedule.service";
 import {UserEditProfileComponent} from "./feature/user-edit-profile/user-edit-profile.component";
+import {DemandService} from "./feature/demands/demand.service";
 
 @NgModule({
   declarations: [
@@ -89,12 +90,14 @@ import {UserEditProfileComponent} from "./feature/user-edit-profile/user-edit-pr
     MaterialFileInputModule,
     FeatureModule,
     SharedModule,
-    CoreModule
+    CoreModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     TeacherService,
-    ScheduleService
+    ScheduleService,
+    DemandService
   ],
   bootstrap: [AppComponent]
 })
