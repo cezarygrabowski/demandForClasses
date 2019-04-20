@@ -24,7 +24,7 @@ class ImportUser
 
         $importUser->userName = $row[CsvPositions::USER_NAME];
         $importUser->roleName = User::ROLES_VALUE_TO_KEY[$row[CsvPositions::ROLE]];
-        $qualifications = explode(',', $row[CsvPositions::QUALIFICATIONS]);
+        $qualifications = explode(';', $row[CsvPositions::QUALIFICATIONS]);
         $importUser->qualifications = [];
         foreach ($qualifications as $qualification) {
             $subject = explode(' - ', $qualification);

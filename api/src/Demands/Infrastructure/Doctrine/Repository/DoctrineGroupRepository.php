@@ -32,6 +32,7 @@ class DoctrineGroupRepository implements GroupRepository
             ->where('g.name LIKE :groupName')
             ->setParameter('groupName', $groupName)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

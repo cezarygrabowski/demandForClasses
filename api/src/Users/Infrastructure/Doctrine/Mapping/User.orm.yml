@@ -25,6 +25,7 @@ Users\Domain\User:
   oneToMany:
     qualifications:
       targetEntity: Qualification
+      cascade: ["persist"]
       mappedBy: user
 
   manyToOne:
@@ -37,7 +38,8 @@ Users\Domain\User:
   oneToOne:
     calendar:
       targetEntity: Calendar
-      inversedBy: uuid
+      inversedBy: user
+      cascade: ["persist"]
       joinColumn:
         name: calendar_uuid
         referencedColumnName: uuid

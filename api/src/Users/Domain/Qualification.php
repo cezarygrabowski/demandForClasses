@@ -5,6 +5,7 @@ namespace Users\Domain;
 
 
 use Demands\Domain\Subject;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class Qualification
@@ -30,6 +31,7 @@ class Qualification
      */
     public function __construct(Subject $subject)
     {
+        $this->uuid = Uuid::uuid4();
         $this->subject = $subject;
     }
 

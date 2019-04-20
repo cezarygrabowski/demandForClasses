@@ -16,6 +16,7 @@ Users\Domain\Qualification:
         referencedColumnName: uuid
     subject:
       targetEntity: Demands\Domain\Subject
+      cascade: ["persist"]
       joinColumn:
         name: subject_uuid
         referencedColumnName: uuid

@@ -24,10 +24,10 @@ class UserFixtures extends Fixture
     }
 
     private $data = [
-        ['nauczyciel', 'nauczyciel', User::ROLE_TEACHER],
+        ['nauczyciel', 'nauczyciel', User::ROLE_LECTURER],
         ['kierownik', 'kierownik', User::ROLE_DISTRICT_MANAGER],
         ['dziekan', 'dziekan', User::ROLE_DEAN],
-        ['planista', 'planista', User::ROLE_TEACHER],
+        ['planista', 'planista', User::ROLE_LECTURER],
         ['admin', 'admin', User::ROLE_ADMIN]
     ];
 

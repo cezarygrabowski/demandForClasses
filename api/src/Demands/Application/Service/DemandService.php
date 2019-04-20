@@ -91,21 +91,25 @@ class DemandService
     public function createDemandsFromStudyPlans(User $importedBy, array $studyPlans): array
     {
         $demands = [];
+        $subjects = []; //Help array to assure that no duplicates will be made
         foreach ($studyPlans as $studyPlan) {
-            $demand = $this->createDemandFromStudyPlan($importedBy, $studyPlan);
+            $demand = $this->createDemandFromStudyPlan($importedBy, $studyPlan, $subjects);
             $demands[] = $demand;
             $this->entityManager->persist($demand);
         }
 
-        $this->entityManager->flush();
         return $demands;
     }
 
-    private function createDemandFromStudyPlan(User $importedBy, StudyPlan $studyPlan): Demand
+    private function createDemandFromStudyPlan(User $importedBy, StudyPlan $studyPlan, array &$subjects): Demand
     {
         $subject = $this->subjectRepository->findByName($studyPlan->subjectName);
-        if (!$subject) {
+
+        if(array_key_exists($studyPlan->subjectName, $subjects)) {
+            $subject = $subjects[$studyPlan->subjectName];
+        } elseif (!$subject) {
             $subject = new Subject($studyPlan->subjectName, $studyPlan->subjectShortName);
+            $subjects[$studyPlan->subjectName] = $subject;
         }
 
         $group = $this->groupRepository->find($studyPlan->groupName);

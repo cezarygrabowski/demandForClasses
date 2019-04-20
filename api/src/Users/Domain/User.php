@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     const ROLE_ADMIN = 'ROLE_ADMIN';
-    const ROLE_TEACHER = 'ROLE_TEACHER';
+    const ROLE_LECTURER = 'ROLE_LECTURER';
     const ROLE_DISTRICT_MANAGER = 'ROLE_DISTRICT_MANAGER';
     const ROLE_INSTITUTE_DIRECTOR = 'ROLE_INSTITUTE_DIRECTOR';
     const ROLE_DEAN = 'ROLE_DEAN';
@@ -19,7 +19,7 @@ class User implements UserInterface
 
     const ROLES_VALUE_TO_KEY = [
         'Administrator' => self::ROLE_ADMIN,
-        'Nauczyciel' => self::ROLE_TEACHER,
+        'Nauczyciel' => self::ROLE_LECTURER,
         'Kierownik zakładu' => self::ROLE_DISTRICT_MANAGER,
         'Dyrektor instytutu' => self::ROLE_INSTITUTE_DIRECTOR,
         'Dziekan' => self::ROLE_DEAN,
@@ -28,12 +28,20 @@ class User implements UserInterface
 
     const ROLES_KEY_TO_VALUE = [
         self::ROLE_ADMIN => 'Administrator',
-        self::ROLE_TEACHER => 'Nauczyciel',
+        self::ROLE_LECTURER => 'Nauczyciel',
         self::ROLE_DISTRICT_MANAGER => 'Kierownik zakładu',
         self::ROLE_INSTITUTE_DIRECTOR => 'Dyrektor instytutu',
         self::ROLE_DEAN => 'Dziekan',
         self::ROLE_PLANNER => 'Planista'
     ];
+
+    /**
+     * !IMPORTANT!
+     * This should not be used during users import. Target behaviour is this:
+     * Import user, generate random string, encode this string and set user's password, send random string to user's email so he can log in
+     * Things we need: EmailSender
+     */
+    const DEFAULT_PASSWORD = 'doZmiany123';
 
     /**
      * @var string
@@ -102,6 +110,15 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    public function getTranslatedRoles(): string 
+    {
+        $roles = '';
+        foreach ($this->getRoles() as $role) {
+            $roles .= self::ROLES_KEY_TO_VALUE[$role] . ',';
+        }
+
+        return trim($roles, ',');
+    }
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -127,7 +144,7 @@ class User implements UserInterface
 
     public function isTeacher()
     {
-        return in_array(self::ROLE_TEACHER, $this->getRoles());
+        return in_array(self::ROLE_LECTURER, $this->getRoles());
     }
 
     public function isDepartmentManager()
@@ -163,6 +180,16 @@ class User implements UserInterface
     public function getQualifications(): array
     {
         return $this->qualifications->toArray();
+    }
+
+    public function getQualificationsAsSubjectNames()
+    {
+        $subjects = '';
+        foreach ($this->getQualifications() as $qualification) {
+            $subjects .= $qualification->getSubject()->getName() . ',';
+        }
+
+        return trim($subjects, ',');
     }
 
     /**

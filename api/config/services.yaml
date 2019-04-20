@@ -85,6 +85,9 @@ services:
         tags:
             - { name: tactician.handler, typehints: true }
 
-#Common
+
+    #Common
     Common\Http\:
         resource: '../src/Common/Http'
+
+    Users\Application\Service\UserService:

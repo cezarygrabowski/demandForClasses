@@ -32,6 +32,7 @@ class DoctrineSubjectRepository implements SubjectRepository
             ->where('s.name LIKE :name')
             ->setParameter('name', $name)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

@@ -11,10 +11,10 @@ interface UserRepository
 {
     public function findByUsername(string $username): ?User;
 
+    public function findByUuid(string $assignorUuid): ?User;
+
     /**
      * @return User[]
      */
-    public function findAllTeachers(): array;
-
-    public function findByUuid(string $assignorUuid): ?User;
+    public function findAllLecturers(): array;
 }

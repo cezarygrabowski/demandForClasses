@@ -6,6 +6,7 @@ namespace Users\Application\Service;
 
 use Demands\Domain\Repository\DemandRepository;
 use Demands\Domain\Week;
+use Users\Domain\Repository\UserRepository;
 use Users\Domain\User;
 
 class UserService
@@ -14,14 +15,22 @@ class UserService
      * @var DemandRepository
      */
     private $demandRepository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * UserService constructor.
      * @param DemandRepository $demandRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(DemandRepository $demandRepository)
+    public function __construct(
+        DemandRepository $demandRepository,
+        UserRepository $userRepository)
     {
         $this->demandRepository = $demandRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function getAllocatedHoursInMonth(int $monthNumber) {
@@ -54,5 +63,15 @@ class UserService
         }
 
         return $weeksWithAllocatedHours;
+    }
+
+    /**
+     * @return \Users\Domain\Query\User[]
+     */
+    public function getAllLecturers(): array
+    {
+        $lecturers = $this->userRepository->findAllLecturers();
+
+        return \Users\Domain\Query\User::fromUsersCollection($lecturers);
     }
 }

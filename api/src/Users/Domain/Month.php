@@ -4,6 +4,7 @@
 namespace Users\Domain;
 
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class Month
@@ -29,10 +30,15 @@ class Month
     private $workingHours;
     private $calendar;
 
-    public function __construct(int $monthNumber, int $workingHours)
-    {
+    public function __construct(
+        int $monthNumber,
+        int $workingHours,
+        Calendar $calendar
+    ) {
+        $this->uuid = Uuid::uuid4();
         $this->monthNumber = $monthNumber;
         $this->workingHours = $workingHours;
+        $this->calendar = $calendar;
     }
 
     public function getMonthNumber(): int
@@ -48,5 +54,15 @@ class Month
     public function getCalendar(): Calendar
     {
         return $this->calendar;
+    }
+
+    /**
+     * @param mixed $calendar
+     * @return Month
+     */
+    public function setCalendar($calendar)
+    {
+        $this->calendar = $calendar;
+        return $this;
     }
 }

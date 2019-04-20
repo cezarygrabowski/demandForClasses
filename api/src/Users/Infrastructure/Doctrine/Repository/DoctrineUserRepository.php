@@ -32,19 +32,20 @@ class DoctrineUserRepository implements UserRepository
             ->where('u.username LIKE :username')
             ->setParameter('username', $username)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
     /**
      * @return User[]
      */
-    public function findAllTeachers(): array
+    public function findAllLecturers(): array
     {
         return $this->entityManager->createQueryBuilder()
             ->select('u')
             ->from(User::class, 'u')
-            ->where('u.username LIKE :teacherRole')
-            ->setParameter('teacherRole', User::ROLE_TEACHER)
+            ->where('u.roles like :teacherRole')
+            ->setParameter('teacherRole', '%'.User::ROLE_LECTURER.'%')
             ->getQuery()
             ->getResult();
     }
@@ -57,6 +58,7 @@ class DoctrineUserRepository implements UserRepository
             ->where('u.uuid LIKE :uuid')
             ->setParameter('uuid', $assignorUuid)
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 }

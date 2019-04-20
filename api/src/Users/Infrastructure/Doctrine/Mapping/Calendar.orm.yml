@@ -20,5 +20,6 @@ Users\Domain\Calendar:
 
   oneToMany:
     months:
+      cascade: ["persist"]
       targetEntity: Month
       mappedBy: calendar

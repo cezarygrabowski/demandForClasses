@@ -9,6 +9,7 @@ use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Users\Application\Command\ImportUsers;
+use Users\Application\Service\UserService;
 use Users\Domain\Import\CsvExtractor;
 
 class UserController
@@ -24,12 +25,19 @@ class UserController
      */
     private $httpService;
 
+    /**
+     * @var UserService
+     */
+    private $userService;
+
     public function __construct(
         CommandBus $commandBus,
-        HttpService $httpService
+        HttpService $httpService,
+        UserService $userService
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
+        $this->userService = $userService;
     }
 
     public function api()
@@ -47,7 +55,7 @@ class UserController
 
     public function getQualifiedLecturers(int $demandId)
     {
-        $users = $this->userService->getQualifiedLecturers($demand);
+        $users = $this->userService->getQualifiedLecturers($demandId);
 
         return $this->httpService->createCollectionResponse($users);
     }
@@ -68,5 +76,12 @@ class UserController
         $this->commandBus->handle($command);
 
         return $this->httpService->createSuccessResponse();
+    }
+
+    public function lecturers()
+    {
+        $users = $this->userService->getAllLecturers();
+
+        return $this->httpService->createCollectionResponse($users);
     }
 }

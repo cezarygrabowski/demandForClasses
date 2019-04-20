@@ -63,3 +63,8 @@ import_lecturers:
   path: /import-lecturers
   controller: Users\Infrastructure\Symfony\Controller\UserController::importLecturers
   methods: POST
+
+lecturers:
+  path: /lecturers
+  controller: Users\Infrastructure\Symfony\Controller\UserController::lecturers
+  methods: GET
