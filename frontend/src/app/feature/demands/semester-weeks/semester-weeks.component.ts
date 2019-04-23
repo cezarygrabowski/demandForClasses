@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Week} from '../../../shared/_models/week';
-import {Lecture} from '../../../shared/_models/lecture';
 import {Schedule} from '../../../shared/_models/schedule';
+import {LectureSet} from "../interfaces/form/lecture-set";
 
 @Component({
     selector: 'app-semester-weeks',
@@ -31,8 +31,8 @@ export class SemesterWeeksComponent implements OnInit {
     ];
     formControlNames: string[];
 
-    @Input('lecture') lecture: Lecture;
-    @Output() lectureEmitter: EventEmitter<Lecture> = new EventEmitter();
+    @Input('lectureSet') lectureSet: LectureSet;
+    @Output() lectureSetEmitter: EventEmitter<LectureSet> = new EventEmitter();
 
     constructor(
         private formBuilder: FormBuilder,
@@ -80,7 +80,7 @@ export class SemesterWeeksComponent implements OnInit {
     }
 
     private initFormValues() {
-        this.lecture.schedules.forEach((schedule: Schedule) => {
+        this.lectureSet.schedules.forEach((schedule: Schedule) => {
             const control = this.weeksFormGroup.get(schedule.weekNumber);
             if (control) {
                 control.setValue(schedule.suggestedHours);
@@ -96,17 +96,17 @@ export class SemesterWeeksComponent implements OnInit {
             this.addOrModifySchedule(name, value);
         }
 
-        this.lectureEmitter.emit(this.lecture);
+        this.lectureSetEmitter.emit(this.lectureSet);
     }
 
     private removeSchedule(weekNumber: string) {
-        this.lecture.schedules = this.lecture.schedules.filter((schedule: Schedule, index) => {
+        this.lectureSet.schedules = this.lectureSet.schedules.filter((schedule: Schedule, index) => {
             return schedule.weekNumber !== weekNumber;
         });
     }
 
     private addOrModifySchedule(name: string, value: number) {
-        const schedule = this.lecture.schedules.filter((schedule: Schedule) => {
+        const schedule = this.lectureSet.schedules.filter((schedule: Schedule) => {
             if (schedule.weekNumber === name) {
                 schedule.suggestedHours = value;
                 return schedule;
@@ -116,7 +116,7 @@ export class SemesterWeeksComponent implements OnInit {
         // console.log(schedule);
         if (schedule == null) {
             let schedule = new Schedule(null, name, value, null, null);
-            this.lecture.schedules.push(schedule);
+            this.lectureSet.schedules.push(schedule);
         }
     }
 }

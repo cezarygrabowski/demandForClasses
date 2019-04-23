@@ -55,7 +55,7 @@ update_profile:
   methods: PUT
 
 get_qualified_lecturers:
-  path: /lecturers/{demandUuid}
+  path: /lecturers/{subjectName}
   controller: Users\Infrastructure\Symfony\Controller\UserController::getQualifiedLecturers
   methods: GET
 

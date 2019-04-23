@@ -30,6 +30,7 @@ services:
     Demands\Domain\Repository\DemandRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineDemandRepository'
     Demands\Domain\Repository\SubjectRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineSubjectRepository'
     Demands\Domain\Repository\GroupRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrineGroupRepository'
+    Demands\Domain\Repository\PlaceRepository: '@Demands\Infrastructure\Doctrine\Repository\DoctrinePlaceRepository'
 
     #Handlers
     Demands\Application\Handler\AcceptDemandHandler:

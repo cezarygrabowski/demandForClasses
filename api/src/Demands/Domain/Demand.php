@@ -279,7 +279,7 @@ class Demand
     /**
      * @return User
      */
-    public function getExportedBy(): User
+    public function getExportedBy(): ?User
     {
         return $this->exportedBy;
     }
@@ -287,7 +287,7 @@ class Demand
     /**
      * @return DateTime
      */
-    public function getExportedAt(): DateTime
+    public function getExportedAt(): ?DateTime
     {
         return $this->exportedAt;
     }

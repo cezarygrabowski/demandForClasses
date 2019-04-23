@@ -4,7 +4,6 @@
 namespace Users\Domain\Repository;
 
 
-use Ramsey\Uuid\UuidInterface;
 use Users\Domain\User;
 
 interface UserRepository
@@ -17,4 +16,9 @@ interface UserRepository
      * @return User[]
      */
     public function findAllLecturers(): array;
+
+    /**
+     * @return User[]
+     */
+    public function findAllByQualificationSubjectName(string $subjectName): array;
 }

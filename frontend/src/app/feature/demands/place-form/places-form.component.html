@@ -2,7 +2,7 @@
   <div class="place-input" *ngFor="let schedule of lecture.schedules">
     <p>{{ weekTranslations[schedule.weekNumber] }}</p>
     <mat-form-field class="place-input">
-      <mat-label>Budynek </mat-label>
+      <mat-label>Budynek</mat-label>
       <input type="text" matInput (click)="onScheduleEditing(schedule)" (change)="onScheduleEditing(schedule)" [matAutocomplete]="buildingAutoComplete">
     </mat-form-field>
 

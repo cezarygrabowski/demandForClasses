@@ -34,7 +34,6 @@ final class Version20190417202436 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE users DROP CONSTRAINT FK_1483A5E933EC5544');
         $this->addSql('DROP INDEX IDX_1483A5E933EC5544');
         $this->addSql('ALTER TABLE users RENAME COLUMN imported_by_uuid TO user_uuid');

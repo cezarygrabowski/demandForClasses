@@ -2,10 +2,10 @@
   <p>
     Rozkład godzin w poszczególnych tygodniach
   </p>
-  <p *ngIf="lecture.hours >= distributedHours">
-    Pozostało godzin do rozdysponowania: {{ lecture.hours - distributedHours }}
+  <p *ngIf="lectureSet.hoursToDistribute >= distributedHours">
+    Pozostało godzin do rozdysponowania: {{ lectureSet.hoursToDistribute - distributedHours }}
   </p>
-  <mat-error *ngIf="lecture.hours < distributedHours">
+  <mat-error *ngIf="lectureSet.hoursToDistribute < distributedHours">
     Zalokowano za dużo godzin! ({{distributedHours}})
   </mat-error>
   <div [formGroup]="weeksFormGroup">

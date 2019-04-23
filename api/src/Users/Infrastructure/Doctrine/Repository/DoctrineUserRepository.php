@@ -61,4 +61,21 @@ class DoctrineUserRepository implements UserRepository
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
+
+    /**
+     * @param string $subjectName
+     * @return User[]
+     */
+    public function findAllByQualificationSubjectName(string $subjectName): array
+    {
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->leftJoin('u.qualifications', 'q')
+            ->leftJoin('q.subject', 's')
+            ->where('s.name = :subjectName')
+            ->setParameter('subjectName', $subjectName)
+            ->getQuery()
+            ->getResult();
+    }
 }

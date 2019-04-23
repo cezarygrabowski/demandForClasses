@@ -192,10 +192,7 @@ class User implements UserInterface
         return trim($subjects, ',');
     }
 
-    /**
-     * @return Calendar
-     */
-    public function getCalendar(): Calendar
+    public function getCalendar(): ?Calendar
     {
         return $this->calendar;
     }
@@ -210,10 +207,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getImportedBy(): User
+    public function getImportedBy(): ?User
     {
         return $this->importedBy;
     }
@@ -228,10 +222,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getImportedAt(): DateTime
+    public function getImportedAt(): ?DateTime
     {
         return $this->importedAt;
     }

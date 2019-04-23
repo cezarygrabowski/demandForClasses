@@ -15,7 +15,6 @@ use Demands\Domain\Repository\PlaceRepository;
 use Demands\Domain\Repository\SubjectRepository;
 use Demands\Domain\StatusResolver;
 use Demands\Domain\Subject;
-use Demands\Domain\Update\AllocatedWeek;
 use Demands\Domain\Update\DetailsToUpdate;
 use Demands\Domain\Week;
 use Doctrine\ORM\EntityManagerInterface;

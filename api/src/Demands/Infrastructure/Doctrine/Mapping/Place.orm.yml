@@ -1,6 +1,9 @@
 Demands\Domain\Place:
   type: entity
   table: places
+  uniqueConstraints:
+    search_idx:
+      columns: [ building, room ]
 
   id:
     uuid:

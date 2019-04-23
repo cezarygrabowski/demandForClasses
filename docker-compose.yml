@@ -12,25 +12,6 @@ services:
     ports:
       - "80:4200"
 
-  ### API ###
-#  api:
-#    build: docker/api
-#    container_name: api
-#    networks:
-#      demands:
-#        ipv4_address: 192.168.16.3
-#    environment:
-#      XDEBUG_CONFIG: ${XDEBUG_CONFIG}
-#      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
-#      DATABASE_HOST: ${DATABASE_HOST}
-#      DATABASE_USER: ${DATABASE_USER}
-#      DATABASE_NAME: ${DATABASE_NAME}
-#      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-#    volumes:
-#      - ./api:/var/www/api:Z
-#    ports:
-#      - "81:8080"
-
   webserver:
     image: nginx:alpine
     container_name: api-webserver

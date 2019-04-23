@@ -176,7 +176,7 @@ class LectureSet
         $this->notes = $notes;
     }
 
-    public function getNotes(): string
+    public function getNotes(): ?string
     {
         return $this->notes;
     }
@@ -206,10 +206,7 @@ class LectureSet
         }
     }
 
-    /**
-     * @return User
-     */
-    public function getAssignedBy(): User
+    public function getAssignedBy(): ?User
     {
         return $this->assignedBy;
     }
@@ -227,7 +224,7 @@ class LectureSet
     /**
      * @return DateTime
      */
-    public function getAssignedAt(): DateTime
+    public function getAssignedAt(): ?DateTime
     {
         return $this->assignedAt;
     }
@@ -240,5 +237,10 @@ class LectureSet
     {
         $this->assignedAt = $assignedAt;
         return $this;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
     }
 }

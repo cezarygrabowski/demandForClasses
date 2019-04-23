@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
-import {Lecturer} from '../../../shared/_interfaces/lecturer';
-import {Lecture} from '../../../shared/_models/lecture';
-import {Building} from '../../../shared/_interfaces/building';
 import {DemandService} from "../demand.service";
+import {LectureSet} from "../interfaces/form/lecture-set";
+import {Place} from "../interfaces/form/place";
+import {Lecturer} from "../interfaces/form/lecturer";
+import {Week} from "../../../shared/_models/week";
+import {MatAutocompleteSelectedEvent} from "@angular/material";
 
 @Component({
     selector: 'app-lecture-form',
@@ -12,56 +12,70 @@ import {DemandService} from "../demand.service";
     styleUrls: ['./lecture-form.component.css']
 })
 export class LectureFormComponent implements OnInit, OnDestroy {
-
-    lectureForm: FormGroup;
-
-    @Input('lecture') lecture: Lecture;
+    @Input('lectureSet') lectureSet: LectureSet;
     @Input('userRoles') userRoles: [];
-    @Input('buildings') buildings: Building[];
+    @Input('places') places: Place[];
     @Input('qualifiedLecturers') qualifiedLecturers: Lecturer[];
 
-    @Output() lectureEmitter: EventEmitter<Lecture> = new EventEmitter();
-
+    @Output() lectureEmitter: EventEmitter<LectureSet> = new EventEmitter();
+    private distributedHours: number;
+    private weeks = Week.WEEK_TRANSLATION;
     constructor(
-        private formBuilder: FormBuilder,
         private demandService: DemandService
     ) {
+
     }
 
     ngOnInit() {
-        this.initForm();
-    }
 
-    initForm() {
-        let lecturer = '';
-        if (this.lecture.lecturer) {
-            lecturer = this.lecture.lecturer.username;
-        }
-        this.lectureForm = this.formBuilder.group({
-            lecturer: [lecturer, Validators.required],
-            lectureComments: [this.lecture.comments, Validators.required],
-        });
-
-        this.onChanges();
     }
 
     ngOnDestroy(): void {
     }
 
-    private onLectureChange() {
-        this.lecture.lecturer = this.lectureForm.get('lecturer').value;
-        this.lecture.comments = this.lectureForm.get('lectureComments').value;
-        this.lectureEmitter.emit(this.lecture);
+    onLectureEmitted(lectureSet: LectureSet) {
+        this.lectureSet = lectureSet;
+        this.lectureEmitter.emit(this.lectureSet);
     }
 
-    private onChanges() {
-        this.lectureForm.valueChanges.subscribe(() =>
-            this.onLectureChange()
-        );
+    getHoursForGivenWeek(number: number) {
+        this.lectureSet.allocatedWeeks.map(item => {
+            if(item['weekNumber'] === number) {
+                return item['allocatedHours'];
+            }
+        });
+
+        return 0;
     }
 
-    onLectureEmitted(lecture: Lecture) {
-        this.lecture = lecture;
-        this.lectureEmitter.emit(lecture);
+    getPlaceForGivenWeek(number: number) {
+        this.lectureSet.allocatedWeeks.map(item => {
+            if(item['weekNumber'] === number) {
+                return item['building'] + ' ' + item['room'];
+            }
+        });
+
+        return '';
+    }
+
+    onPlaceChange($event: MatAutocompleteSelectedEvent) {
+        let place = $event.toString().split(' ');
+        this.lectureSet.allocatedWeeks[number]['room'] = place[0];
+        console.log('onPlaceChange');
+    }
+
+    onLecturerChange($event) {
+        console.log('onLecturerChange');
+
+    }
+
+    onNotesChange($event: Event) {
+        console.log('onNotesChange');
+    }
+
+    onHoursChange($event: Event, number: number) {
+        console.log($event);
+        console.log('onHoursChange');
+        // this.lectureSet.allocatedWeeks[number]['allocatedHours'] = $event
     }
 }

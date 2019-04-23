@@ -5,6 +5,8 @@ namespace Users\Infrastructure\Symfony\Controller;
 
 
 use Common\Http\HttpService;
+use Demands\Domain\Demand;
+use Demands\Domain\Subject;
 use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,9 +55,9 @@ class UserController
         return $this->httpService->createSuccessResponse();
     }
 
-    public function getQualifiedLecturers(int $demandId)
+    public function getQualifiedLecturers(string $subjectName)
     {
-        $users = $this->userService->getQualifiedLecturers($demandId);
+        $users = $this->userService->getQualifiedLecturers($subjectName);
 
         return $this->httpService->createCollectionResponse($users);
     }

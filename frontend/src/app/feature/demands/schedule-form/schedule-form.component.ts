@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Lecture} from '../../../shared/_models/lecture';
 import {Building} from '../../../shared/_interfaces/building';
+import {LectureSet} from "../interfaces/form/lecture-set";
+import {Place} from "../interfaces/form/place";
 
 @Component({
   selector: 'app-schedule-form',
@@ -10,8 +12,8 @@ import {Building} from '../../../shared/_interfaces/building';
 export class ScheduleFormComponent implements OnInit {
   hoursProperlyDistributed: boolean;
 
-  @Input('lecture') lecture: Lecture;
-  @Input('buildings') buildings: Building[];
+  @Input('lectureSet') lectureSet: LectureSet;
+  @Input('places') places: Place[];
   @Output() lectureEmitter: EventEmitter<Lecture> = new EventEmitter();
 
   constructor() {}
@@ -21,7 +23,7 @@ export class ScheduleFormComponent implements OnInit {
   }
 
   onLectureUpdate(lecture: Lecture) {
-    this.lecture = lecture;
+    // this.lecture = lecture;
     this.lectureEmitter.emit(lecture);
   }
 }

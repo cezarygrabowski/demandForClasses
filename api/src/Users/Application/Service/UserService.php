@@ -5,6 +5,7 @@ namespace Users\Application\Service;
 
 
 use Demands\Domain\Repository\DemandRepository;
+use Demands\Domain\Subject;
 use Demands\Domain\Week;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\User;
@@ -71,6 +72,16 @@ class UserService
     public function getAllLecturers(): array
     {
         $lecturers = $this->userRepository->findAllLecturers();
+
+        return \Users\Domain\Query\User::fromUsersCollection($lecturers);
+    }
+
+    /**
+     * @return \Users\Domain\Query\User[]
+     */
+    public function getQualifiedLecturers(string $subjectName): array
+    {
+        $lecturers = $this->userRepository->findAllByQualificationSubjectName($subjectName);
 
         return \Users\Domain\Query\User::fromUsersCollection($lecturers);
     }

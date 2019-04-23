@@ -1,25 +1,47 @@
-<div [formGroup]="lectureForm">
-    <div mat-dialog-content>
-        <h2>{{lecture.lectureType.name}} - {{ lecture.hours }} godzin </h2>
-        <mat-form-field *ngIf="demandFormService.doesUserHaveRoles(['Admin', 'KierownikZakladu'])">
-            <mat-label>Wybierz prowadzącego</mat-label>
-            <input type="text" matInput formControlName="lecturer" [matAutocomplete]="auto">
-        </mat-form-field>
-        <app-schedule-form
-            *ngIf="demandFormService.doesUserHaveRoles(['Admin', 'Nauczyciel'])"
-            [lecture]="lecture"
-            [buildings]="buildings"
-            (lectureEmitter)="onLectureEmitted($event)">
-        </app-schedule-form>
-        <div class="style-cleaner"></div>
-        <mat-form-field>
-            <mat-label>Wpisz swoje uwagi</mat-label>
-            <textarea class="input-comments" matInput formControlName="lectureComments"></textarea>
-        </mat-form-field>
+<div mat-dialog-content>
+    <h2>{{lectureSet.type}} - {{ lectureSet.hoursToDistribute }} godzin </h2>
+    <mat-form-field>
+        <mat-label>Wybierz prowadzącego</mat-label>
+        <input type="text" matInput [matAutocomplete]="auto">
+    </mat-form-field>
+
+    <div class="semester-weeks-wrapper">
+        <p>
+            Harmonogram
+        </p>
+        <p *ngIf="lectureSet.hoursToDistribute >= distributedHours">
+            Pozostało godzin do rozdysponowania: {{ lectureSet.hoursToDistribute - distributedHours }}
+        </p>
+        <mat-error *ngIf="lectureSet.hoursToDistribute < distributedHours">
+            Zalokowano za dużo godzin! ({{distributedHours}})
+        </mat-error>
+        <div *ngFor="let item of weeks;" class="week-wrapper">
+            <p>{{ item.label }}</p>
+            <mat-form-field class="week-input">
+                <mat-label>Godziny</mat-label> <input (change)="onHoursChange($event, item.number)" [value]="getHoursForGivenWeek(item.number)" type="number" min="0" matInput>
+            </mat-form-field>
+            <mat-form-field class="place-input">
+                <mat-label>Miejsce</mat-label>
+                <input type="text" matInput [matAutocomplete]="placesAutoComplete" [value]="getPlaceForGivenWeek(item.number)">
+            </mat-form-field>
+        </div>
+        <div style="float:none; clear: both"></div>
     </div>
+
+    <div class="style-cleaner"></div>
+    <mat-form-field>
+        <mat-label>Wpisz swoje uwagi</mat-label>
+        <textarea (change)="onNotesChange($event)" class="input-comments" matInput label="Uwagi"></textarea>
+    </mat-form-field>
 </div>
 
-<mat-autocomplete #auto="matAutocomplete">
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLecturerChange($event)">
     <mat-option *ngFor="let lecturer of qualifiedLecturers"
-                [value]="lecturer.name">{{lecturer.name}}</mat-option>
+                [value]="lecturer.username">{{lecturer.username}}</mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete (optionSelected)="onPlaceChange($event.option.value)" #placesAutoComplete="matAutocomplete">
+    <mat-option class="place-input" *ngFor="let place of places"
+                [value]="place.building + ' ' + place.room">{{place.building + ' ' + place.room}}
+    </mat-option>
 </mat-autocomplete>

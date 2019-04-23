@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment.local';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
 import {DemandListElement} from './demandListElement';
-import {Router} from '@angular/router';
-import {Demand} from "./demand";
+import {Demand} from "./interfaces/form/demand";
+import {Lecturer} from "./interfaces/form/lecturer";
+import {Place} from "./interfaces/form/place";
 
 @Injectable({
   providedIn: 'root'
@@ -12,27 +13,30 @@ import {Demand} from "./demand";
 export class DemandService {
 
   constructor(
-      private http: HttpClient,
-      private router: Router
-      ) { }
+    private http: HttpClient
+  ) {
+  }
 
   public getDemands(): Observable<DemandListElement[]> {
-    console.log('dsadas');
     return this.http.get<DemandListElement[]>(`${environment.apiUrl}/demands`);
   }
 
-  //
-  // getDemandDetails(id: string): Observable<Demand> {
-  //   return this.http.get<Demand>(`${environment.apiUrl}/demands/details/${id}`);
-  // }
-  //
-  // getLecturers(demandId: string) {
-  //   return this.http.get(`${environment.apiUrl}/lecturers/${demandId}`);
-  // }
-  //
-  // getBuildings(): Observable<any> {
-  //   return this.http.get(`${environment.apiUrl}/demands/buildings`);
-  // }
+  getDemandDetails(uuid: string): Observable<Demand> {
+    return this.http.get<Demand>(`${environment.apiUrl}/details/${uuid}`);
+  }
+
+  getLecturers(demandUuid: string): Observable<Lecturer[]> {
+    return this.http.get<Lecturer[]>(`${environment.apiUrl}/lecturers/${demandUuid}`);
+  }
+
+  getPlaces(): Observable<Place[]> {
+    return this.http.get<Place[]>(`${environment.apiUrl}/places`);
+  }
+
+  getQualifiedLecturers(subjectName: string): Observable<Lecturer[]> {
+    return this.http.get<Lecturer[]>(`${environment.apiUrl}/lecturers/${subjectName}`);
+  }
+
   //
   // getRoles() {
   //   return this.http.get(`${environment.apiUrl}/lecturer-roles`);
@@ -65,7 +69,7 @@ export class DemandService {
   // }
   //
   // cancelDemand(demand: DemandListElement): Subscription {
-  //   return this.http.post(`${environment.apiUrl}/demands/cancel/${demand.id}`, {}).subscribe(
+  //   return this.http.post(`${environment.apiUrl}/demands/cancel/${demand.uuid}`, {}).subscribe(
   //       response => this.router.navigate(['/lista-zapotrzebowan']),
   //       (err) => console.log(err)
   //   );

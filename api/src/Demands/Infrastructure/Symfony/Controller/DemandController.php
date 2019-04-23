@@ -2,6 +2,7 @@
 
 namespace Demands\Infrastructure\Symfony\Controller;
 
+use Demands\Domain\Query\Details\DemandDetails;
 use Common\Http\HttpService;
 use Demands\Application\Command\AssignDemand;
 use Demands\Application\Command\DeclineDemand;
@@ -12,6 +13,7 @@ use Demands\Application\Command\UpdateDemand;
 use Demands\Application\Service\DemandService;
 use Demands\Domain\Demand;
 use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
+use Demands\Domain\Repository\PlaceRepository;
 use Demands\Domain\Update\DetailsToUpdate;
 use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,16 +49,23 @@ class DemandController
      */
     private $tokenStorage;
 
+    /**
+     * @var PlaceRepository
+     */
+    private $placeRepository;
+
     public function __construct(
         CommandBus $commandBus,
         HttpService $httpService,
         DemandService $demandService,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        PlaceRepository $placeRepository
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
         $this->demandService = $demandService;
         $this->tokenStorage = $tokenStorage;
+        $this->placeRepository = $placeRepository;
     }
 
     /**
@@ -79,14 +88,13 @@ class DemandController
         $demands = $this->demandService->listAllForUser($this->tokenStorage->getToken()->getUser());
 
         return new JsonResponse($demands);
-        //TODO
-//        return $this->httpService->createCollectionResponse($demands);
     }
 
     public function listPlaces()
     {
-        //TODO
-//        return $this->httpService->createCollectionResponse($buildings);
+        return $this->httpService->createCollectionResponse(
+            $this->placeRepository->findAll()
+        );
     }
 
     public function update(Request $request, Demand $demand)
@@ -116,8 +124,7 @@ class DemandController
 
     public function getDetails(Demand $demand)
     {
-        //TODO
-        return $this->httpService->createItemResponse($demand);
+        return $this->httpService->createItemResponse(DemandDetails::fromDemand($demand));
     }
 
     public function exportDemands()
