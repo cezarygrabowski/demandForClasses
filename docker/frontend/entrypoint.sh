@@ -10,5 +10,5 @@ if [ ! "$NG_HOST" ]; then
 fi
 
 cd /var/www/frontend
-ng serve --host=0.0.0.0 --port 4200 --disable-host-check
+ng serve --host=0.0.0.0 --port 4200 --disable-host-check --watch
 # ng serve --host=0.0.0.0 --port 4200 --public-host=$NG_HOST --disable-host-check

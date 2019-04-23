@@ -16,14 +16,16 @@
             Zalokowano za dużo godzin! ({{distributedHours}})
         </mat-error>
         <div *ngFor="let item of weeks;" class="week-wrapper">
-            <p>{{ item.label }}</p>
-            <mat-form-field class="week-input">
-                <mat-label>Godziny</mat-label> <input (change)="onHoursChange($event, item.number)" [value]="getHoursForGivenWeek(item.number)" type="number" min="0" matInput>
-            </mat-form-field>
-            <mat-form-field class="place-input">
-                <mat-label>Miejsce</mat-label>
-                <input type="text" matInput [matAutocomplete]="placesAutoComplete" [value]="getPlaceForGivenWeek(item.number)">
-            </mat-form-field>
+            <ng-container *ngIf="item">
+                <p>{{ item.label }}</p>
+                <mat-form-field class="week-input">
+                    <mat-label>Godziny</mat-label> <input (change)="onHoursChange($event.target.value, item)" [value]="item.allocatedHours" type="number" min="0" matInput>
+                </mat-form-field>
+                <mat-form-field class="place-input">
+                    <mat-label>Miejsce</mat-label>
+                    <input type="text" matInput [matAutocomplete]="placesAutoComplete" [value]="item.building + ' ' + item.room">
+                </mat-form-field>
+            </ng-container>
         </div>
         <div style="float:none; clear: both"></div>
     </div>
@@ -35,13 +37,13 @@
     </mat-form-field>
 </div>
 
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLecturerChange($event)">
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLecturerChange($event.option.value)">
     <mat-option *ngFor="let lecturer of qualifiedLecturers"
                 [value]="lecturer.username">{{lecturer.username}}</mat-option>
 </mat-autocomplete>
 
-<mat-autocomplete (optionSelected)="onPlaceChange($event.option.value)" #placesAutoComplete="matAutocomplete">
+<mat-autocomplete [displayWith]="displayPlace" (optionSelected)="onPlaceChange($event.option.value)" #placesAutoComplete="matAutocomplete">
     <mat-option class="place-input" *ngFor="let place of places"
-                [value]="place.building + ' ' + place.room">{{place.building + ' ' + place.room}}
+                [value]="place">{{place.building + ' ' + place.room}}
     </mat-option>
 </mat-autocomplete>
