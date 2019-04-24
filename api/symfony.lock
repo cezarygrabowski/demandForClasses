@@ -89,6 +89,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "dompdf/dompdf": {
+        "version": "v0.8.3"
+    },
     "exsyst/swagger": {
         "version": "v0.4.1"
     },
@@ -176,6 +179,12 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "phenx/php-font-lib": {
+        "version": "0.5.1"
+    },
+    "phenx/php-svg-lib": {
+        "version": "v0.3.2"
+    },
     "phpcollection/phpcollection": {
         "version": "0.5.0"
     },
@@ -205,6 +214,9 @@
     },
     "ramsey/uuid": {
         "version": "3.8.0"
+    },
+    "sabberworm/php-css-parser": {
+        "version": "8.1.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

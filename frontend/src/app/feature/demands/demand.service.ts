@@ -68,10 +68,25 @@ export class DemandService {
   //   return this.http.post(`${environment.apiUrl}/demands/export`, {}, {responseType: 'blob'});
   // }
   //
-  // cancelDemand(demand: DemandListElement): Subscription {
+  // declineDemand(demand: DemandListElement): Subscription {
   //   return this.http.post(`${environment.apiUrl}/demands/cancel/${demand.uuid}`, {}).subscribe(
   //       response => this.router.navigate(['/lista-zapotrzebowan']),
   //       (err) => console.log(err)
   //   );
   // }
+  updateDemand(demand: Demand): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/update/${demand.uuid}`, { demand });
+  }
+
+  declineDemand(uuid: string): Observable<any>  {
+    return this.http.put(`${environment.apiUrl}/decline/${uuid}`, { });
+  }
+
+  acceptDemand(uuid: string) {
+    return this.http.put(`${environment.apiUrl}/accept/${uuid}`, { });
+  }
+
+  downloadDemand(uuid: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/download-demand/${uuid}`, {responseType: 'blob'});
+  }
 }

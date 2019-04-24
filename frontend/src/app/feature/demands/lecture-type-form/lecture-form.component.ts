@@ -18,7 +18,6 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     @Input('qualifiedLecturers') qualifiedLecturers: Lecturer[];
 
     @Output() lectureEmitter: EventEmitter<LectureSet> = new EventEmitter();
-    private distributedHours: number;
     private weekTranslations = Week.WEEK_TRANSLATION;
     private weeks: {}[] = [];
 
@@ -30,83 +29,92 @@ export class LectureFormComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.weekTranslations.map(weekTranslation => {
-            this.weeks[weekTranslation.number] = {
+            this.weeks.push({
+                number: weekTranslation.number,
                 label: weekTranslation.label,
                 allocatedHours: this.getHoursForGivenWeek(weekTranslation.number),
                 room: this.getRoomForGivenWeek(weekTranslation.number),
                 building: this.getBuildingForGivenWeek(weekTranslation.number)
-            };
+            });
         });
     }
 
     ngOnDestroy(): void {
+
     }
 
-    onLectureEmitted(lectureSet: LectureSet) {
-        this.lectureSet = lectureSet;
+    onLectureEmitted() {
         this.lectureEmitter.emit(this.lectureSet);
     }
 
     getHoursForGivenWeek(number: number) {
-        this.lectureSet.allocatedWeeks.map(item => {
-            if (item['weekNumber'] === number) {
-                return item['allocatedHours'];
-            }
-        });
-
-        return 0;
+        if(this.lectureSet.allocatedWeeks[number]) {
+            return this.lectureSet.allocatedWeeks[number].allocatedHours;
+        } else {
+            return 0
+        }
     }
 
     getRoomForGivenWeek(number: number) {
-        this.lectureSet.allocatedWeeks.map(item => {
-            if (item['weekNumber'] === number) {
-                return item['room'];
-            }
-        });
-
-        return '';
+        if(this.lectureSet.allocatedWeeks[number]) {
+            return this.lectureSet.allocatedWeeks[number].room;
+        } else {
+            return '';
+        }
     }
 
     getBuildingForGivenWeek(number: number) {
-        this.lectureSet.allocatedWeeks.map(item => {
-            if (item['weekNumber'] === number) {
-                return item['building'];
-            }
-        });
-
-        return '';
+        if(this.lectureSet.allocatedWeeks[number]) {
+            return this.lectureSet.allocatedWeeks[number].building;
+        } else {
+            return ''
+        }
     }
 
+    onPlaceChange(place: any, item: any) {
+        if (!this.lectureSet.allocatedWeeks[item.number]) {
+            this.lectureSet.allocatedWeeks[item.number] = { room: place.room, building: place.building };
+        } else {
+            Object.assign(this.lectureSet.allocatedWeeks[item.number], { room: place.room, building: place.building });
+        }
 
-    onPlaceChange(place: string) {
-        console.log(place);
-        // const place = $event.toString().split(' ');
-        // this.lectureSet.allocatedWeeks[number]['room'] = place[0];
+        this.onLectureEmitted();
     }
 
-    onLecturerChange($event) {
+    onLecturerChange(lecturer: Lecturer) {
+        this.lectureSet.lecturer = lecturer;
+        this.onLectureEmitted();
     }
 
-    onNotesChange($event: Event) {
-
+    onNotesChange(notes: string) {
+        this.lectureSet.notes = notes;
+        this.onLectureEmitted();
     }
 
     onHoursChange(hours: number, item: any) {
+        console.log(item);
         if (!this.lectureSet.allocatedWeeks[item.number]) {
             this.lectureSet.allocatedWeeks[item.number] = { allocatedHours: hours };
         } else {
             Object.assign(this.lectureSet.allocatedWeeks[item.number], { allocatedHours: hours });
         }
+        this.onLectureEmitted();
     }
 
     displayPlace(item: any) {
         return item['building'] + ' ' + item['room'];
     }
 
+    displayLecturer(item: any) {
+        return item.username;
+    }
+
     getDistributedHours() {
-        this.distributedHours = 0;
-        this.lectureSet.allocatedWeeks.map(week => {
-            this.distributedHours += week.allocatedHours;
-        });
+        let distributedHours = 0;
+        for (let key in this.lectureSet.allocatedWeeks) {
+            distributedHours += +this.lectureSet.allocatedWeeks[key].allocatedHours;
+        }
+
+        return distributedHours;
     }
 }

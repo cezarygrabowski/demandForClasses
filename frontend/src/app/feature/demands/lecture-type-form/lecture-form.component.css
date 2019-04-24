@@ -25,6 +25,12 @@ h2 {
     /*float:left;*/
 }
 
+.lecturer-input {
+    width:250px;
+    padding-left:1%;
+    /*float:left;*/
+}
+
 .week-wrapper {
     display: inline-block;
 }

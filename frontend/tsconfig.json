@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "charset": "utf8",
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

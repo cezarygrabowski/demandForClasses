@@ -87,4 +87,25 @@ class Week
         $this->place = $place;
         return $this;
     }
+
+    public function setLectureSet(LectureSet $lectureSet): Week
+    {
+        $this->lectureSet = $lectureSet;
+        return $this;
+    }
+
+    public function getLectureSet(): LectureSet
+    {
+        return $this->lectureSet;
+    }
+
+    /**
+     * @param int $allocatedHours
+     * @return Week
+     */
+    public function setAllocatedHours(int $allocatedHours): Week
+    {
+        $this->allocatedHours = $allocatedHours;
+        return $this;
+    }
 }

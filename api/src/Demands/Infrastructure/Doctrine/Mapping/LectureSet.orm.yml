@@ -44,3 +44,4 @@ Demands\Domain\LectureSet:
     allocatedWeeks:
       targetEntity: Week
       mappedBy: lectureSet
+      cascade: ["persist"]

@@ -26,16 +26,17 @@ class DoctrinePlaceRepository implements PlaceRepository
 
     public function findOneByBuildingAndRoom(int $building, int $room): ?Place
     {
-        return $this->entityManager->createQueryBuilder()
+        $query = $this->entityManager->createQueryBuilder()
             ->select('p')
             ->from(Place::class, 'p')
             ->where('p.building = :building')
-            ->where('p.room = :room')
-            ->setParameter('room', $building)
-            ->setParameter('building', $room)
+            ->andWhere('p.room = :room')
+            ->setParameter('room', $room)
+            ->setParameter('building', $building)
             ->getQuery()
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
+            ->setMaxResults(1);
+
+        return $query->getOneOrNullResult();
     }
 
     /**

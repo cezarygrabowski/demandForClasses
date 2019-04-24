@@ -6,6 +6,8 @@ import {Lecture} from "../../../shared/_interfaces/lecture";
 import {Demand} from "../interfaces/form/demand";
 import {Lecturer} from "../interfaces/form/lecturer";
 import {Place} from "../interfaces/form/place";
+import {FlashMessagesService} from "angular2-flash-messages";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'app-demand-form',
@@ -13,8 +15,6 @@ import {Place} from "../interfaces/form/place";
   styleUrls: ['./demand-form.component.css']
 })
 export class DemandFormComponent implements OnInit, OnDestroy {
-  // @ViewChild('demandContent') demandContent: ElementRef;
-  // submitted = false;
   demand: Demand;
   private subscriptions: Subscription;
   private qualifiedLecturers: Lecturer[];
@@ -25,6 +25,7 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private demandService: DemandService,
+    private flashMessageService: FlashMessagesService,
   ) {
   }
 
@@ -45,38 +46,46 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     }));
   }
 
-  onSubmit() {
-    // if (this.lectures.length > 0) {
-    //   this.demand.lectureSets = this.lectures;
-    // }
-    //
-    // this.demandService.updateDemand(this.demand);
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   onEmittedLecture(lecture: Lecture) {
-    // if (this.lectureExists(lecture.lectureType.id)) {
-    //   this.removeLectureFromArray(lecture.lectureType.id);
-    // }
-
     this.lectures.push(lecture);
   }
 
-  // onCancel() {
-  //   this.demandService.cancelDemand(this.demand);
-  // }
   onSend() {
-
+    this.demandService.updateDemand(this.demand).subscribe(() => {
+      this.demandService.acceptDemand(this.demand.uuid).subscribe(() => {
+        this.flashMessageService.show('Zapotrzebowanie zostało zaktualizowane.');
+      }, error1 => {
+        this.flashMessageService.show(error1.error.error.exception[0].message);
+      });
+    },error1 => {
+      this.flashMessageService.show(error1.error.error.exception[0].message);
+    });
   }
 
   onSave() {
-
+    this.demandService.updateDemand(this.demand).subscribe(() => {
+      this.flashMessageService.show('Zapotrzebowanie zostało zaktualizowane.');
+    }, error1 => {
+      this.flashMessageService.show(error1.error.error.exception[0].message);
+    });
   }
 
   onCancel() {
+    this.demandService.declineDemand(this.demand.uuid).subscribe(() => {
+      alert('jest git');
+    }, error1 => {
+      this.flashMessageService.show(error1.error.error.exception[0].message);
+    });
+  }
 
+  downloadPdf() {
+    this.demandService.downloadDemand(this.demand.uuid).subscribe(res => {
+      var file = new Blob(["\ufeff", res], {type: 'application/pdf'});
+      FileSaver.saveAs(file, this.demand.groupName + '/' + this.demand.subjectName + '/' + this.demand.semester, true);
+    });
   }
 }

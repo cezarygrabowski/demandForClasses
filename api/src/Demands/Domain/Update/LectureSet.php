@@ -14,5 +14,10 @@ class LectureSet
     /**
      * @var AllocatedWeek[]
      */
-    public $allocatedWeeks;
+    public $allocatedWeeks = [];
+
+    /**
+     * @var string
+     */
+    public $notes;
 }

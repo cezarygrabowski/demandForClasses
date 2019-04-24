@@ -2,6 +2,7 @@
 
 namespace Demands\Infrastructure\Symfony\Controller;
 
+use Demands\Application\Command\AcceptDemand;
 use Demands\Domain\Query\Details\DemandDetails;
 use Common\Http\HttpService;
 use Demands\Application\Command\AssignDemand;
@@ -15,12 +16,18 @@ use Demands\Domain\Demand;
 use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
 use Demands\Domain\Repository\PlaceRepository;
 use Demands\Domain\Update\DetailsToUpdate;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use League\Tactician\CommandBus;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
 /**
  * Class DemandController
@@ -53,19 +60,25 @@ class DemandController
      * @var PlaceRepository
      */
     private $placeRepository;
+    /**
+     * @var Environment
+     */
+    private $twig;
 
     public function __construct(
         CommandBus $commandBus,
         HttpService $httpService,
         DemandService $demandService,
         TokenStorageInterface $tokenStorage,
-        PlaceRepository $placeRepository
+        PlaceRepository $placeRepository,
+        Environment $twig
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
         $this->demandService = $demandService;
         $this->tokenStorage = $tokenStorage;
         $this->placeRepository = $placeRepository;
+        $this->twig = $twig;
     }
 
     /**
@@ -97,7 +110,7 @@ class DemandController
         );
     }
 
-    public function update(Request $request, Demand $demand)
+    public function updateDemand(Request $request, Demand $demand)
     {
         $data = json_decode($request->getContent(), true);
         $command = new UpdateDemand(
@@ -110,7 +123,7 @@ class DemandController
         return $this->httpService->createSuccessResponse();
     }
 
-    public function decline(Demand $demand)
+    public function declineDemand(Demand $demand)
     {
         $command = new DeclineDemand(
             $demand,
@@ -139,18 +152,51 @@ class DemandController
 
     public function downloadDemand(Demand $demand)
     {
-        $uuids = []; // TODO GET UUIDS
-        $command = new DownloadDemand($demand);
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
 
-        $content = $this->commandBus->handle($command);
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
 
-        return new Response($content);
+        // Retrieve the HTML generated in our twig file
+        $html = $this->twig->render('@demands/demand_pdf.html.twig', [
+            'demand' => $demand
+        ]);
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("mypdf.pdf", [
+            "Attachment" => true
+        ]);
+
+        $response = new Response();
+        $response->setCharset('UTF-8');
+
+        return $response;
     }
 
     public function assignDemand(Request $request, Demand $demand)
     {
         $data = json_decode($request->getContent(), true);
         $command = new AssignDemand(\Demands\Domain\Assign\AssignDemand::create($data));
+
+        $this->commandBus->handle($command);
+
+        return $this->httpService->createSuccessResponse();
+    }
+
+    public function acceptDemand(Request $request, Demand $demand)
+    {
+        $data = json_decode($request->getContent(), true);
+        $command = new AcceptDemand($demand, $this->tokenStorage->getToken()->getUser());
 
         $this->commandBus->handle($command);
 

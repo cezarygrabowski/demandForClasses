@@ -57,13 +57,15 @@ class DemandService
         StatusResolver $statusResolver,
         SubjectRepository $subjectRepository,
         GroupRepository $groupRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PlaceRepository $placeRepository
     ) {
         $this->demandRepository = $demandRepository;
         $this->statusResolver = $statusResolver;
         $this->subjectRepository = $subjectRepository;
         $this->groupRepository = $groupRepository;
         $this->entityManager = $entityManager;
+        $this->placeRepository = $placeRepository;
     }
 
     public function listAllForUser(User $user)
@@ -143,6 +145,9 @@ class DemandService
             $currentLectureSet = $demand->getLectureSet($lectureSet->type);
             $this->updateLectureSet($currentLectureSet, $lectureSet);
         }
+
+        $this->entityManager->persist($demand);
+        $this->entityManager->flush();
     }
 
     /**
@@ -165,9 +170,18 @@ class DemandService
             $currentAllocatedWeek = $currentLectureSet->getAllocatedWeek($allocatedWeek->weekNumber);
             if (!$currentAllocatedWeek) {
                 $currentAllocatedWeek = new Week($allocatedWeek->weekNumber, $allocatedWeek->hours, $place);
+                $currentAllocatedWeek->setLectureSet($currentLectureSet);
                 $currentLectureSet->allocateWeek($currentAllocatedWeek);
+                $currentLectureSet->addNotes($lectureSet->notes);
             } else {
                 $currentAllocatedWeek->setPlace($place);
+                $currentAllocatedWeek->setAllocatedHours($allocatedWeek->hours);
+            }
+
+            if($currentLectureSet->getUndistributedHours() < 0) {
+                throw new DomainException(
+                    "Zaalokowałeś za dużo godzin! " . $currentLectureSet->getDistributedHours() . ' z dostępnych: ' . $currentLectureSet->getHoursToDistribute()
+                );
             }
         }
     }

@@ -1,0 +1,71 @@
+<html lang="pl-PL">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Title of the PDF</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
+            <td>{{ demand.schoolYear }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Wydział:</td>
+            <td>{{ demand.department }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Grupa:</td>
+            <td>{{ demand.group.name }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Rodzaj grupy:</td>
+            <td>{{ demand.group.type }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Semestr:</td>
+            <td>{{ demand.semester }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Przedmiot:</td>
+            <td>{{ demand.subject.name }}</td>
+        </tr>
+        <tr>
+            <td class="item"><i class="icon s7-id"></i> Instytut:</td>
+            <td>{{ demand.institute }}</td>
+        </tr>
+    </table>
+
+    <table>
+        {% for lectureSet in demand.lectureSets %}
+            <tr>
+                <td class="item"><i class="icon s7-id"></i> Zestaw zajęć:</td>
+                <td>{{ lectureSet.translatedLectureType }}</td>
+            </tr>
+            <tr>
+                <td class="item"><i class="icon s7-id"></i> Prowadzący:</td>
+                <td>{{ lectureSet.lecturer ? lectureSet.lecturer.username : ''}}</td>
+            </tr>
+            <tr>
+                <td class="item"><i class="icon s7-id"></i> Notatki:</td>
+                <td>{{ lectureSet.notes }}</td>
+            </tr>
+            <ul>
+                {% for allocatedWeek in lectureSet.allocatedWeeks %}
+                    {{ allocatedWeek.number }} Tydzień
+                    <li>
+                        Zaalokowane godziny: {{ allocatedWeek.allocatedHours }}
+                    </li>
+                    {% if allocatedWeek.place %}
+                        <li>
+                            Budynek: {{ allocatedWeek.place.building }}
+                        </li>
+                        <li>
+                            Sala: {{ allocatedWeek.place.room }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </table>
+</body>
+</html>

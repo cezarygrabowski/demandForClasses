@@ -1,19 +1,23 @@
 <div mat-dialog-content>
     <h2>{{lectureSet.type}} - {{ lectureSet.hoursToDistribute }} godzin </h2>
-    <mat-form-field>
+    <mat-form-field class="lecturer-input">
         <mat-label>Wybierz prowadzącego</mat-label>
         <input type="text" matInput [matAutocomplete]="auto">
+        <mat-autocomplete [displayWith]="displayLecturer" #auto="matAutocomplete" (optionSelected)="onLecturerChange($event.option.value)">
+            <mat-option *ngFor="let lecturer of qualifiedLecturers"
+                        [value]="lecturer">{{lecturer.username}}</mat-option>
+        </mat-autocomplete>
     </mat-form-field>
 
     <div class="semester-weeks-wrapper">
         <p>
             Harmonogram
         </p>
-        <p *ngIf="lectureSet.hoursToDistribute >= distributedHours">
-            Pozostało godzin do rozdysponowania: {{ lectureSet.hoursToDistribute - distributedHours }}
+        <p *ngIf="lectureSet.hoursToDistribute >= getDistributedHours()">
+            Pozostało godzin do rozdysponowania: {{ lectureSet.hoursToDistribute - getDistributedHours() }}
         </p>
-        <mat-error *ngIf="lectureSet.hoursToDistribute < distributedHours">
-            Zalokowano za dużo godzin! ({{distributedHours}})
+        <mat-error *ngIf="lectureSet.hoursToDistribute < getDistributedHours()">
+            Zalokowano za dużo godzin! ({{ getDistributedHours() }})
         </mat-error>
         <div *ngFor="let item of weeks;" class="week-wrapper">
             <ng-container *ngIf="item">
@@ -24,6 +28,11 @@
                 <mat-form-field class="place-input">
                     <mat-label>Miejsce</mat-label>
                     <input type="text" matInput [matAutocomplete]="placesAutoComplete" [value]="item.building + ' ' + item.room">
+                    <mat-autocomplete [displayWith]="displayPlace" (optionSelected)="onPlaceChange($event.option.value, item)" #placesAutoComplete="matAutocomplete">
+                        <mat-option class="place-input" *ngFor="let place of places"
+                                    [value]="place">{{place.building + ' ' + place.room}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </ng-container>
         </div>
@@ -33,17 +42,6 @@
     <div class="style-cleaner"></div>
     <mat-form-field>
         <mat-label>Wpisz swoje uwagi</mat-label>
-        <textarea (change)="onNotesChange($event)" class="input-comments" matInput label="Uwagi"></textarea>
+        <textarea (change)="onNotesChange($event.target.value)" class="input-comments" matInput label="Uwagi"></textarea>
     </mat-form-field>
 </div>
-
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onLecturerChange($event.option.value)">
-    <mat-option *ngFor="let lecturer of qualifiedLecturers"
-                [value]="lecturer.username">{{lecturer.username}}</mat-option>
-</mat-autocomplete>
-
-<mat-autocomplete [displayWith]="displayPlace" (optionSelected)="onPlaceChange($event.option.value)" #placesAutoComplete="matAutocomplete">
-    <mat-option class="place-input" *ngFor="let place of places"
-                [value]="place">{{place.building + ' ' + place.room}}
-    </mat-option>
-</mat-autocomplete>
