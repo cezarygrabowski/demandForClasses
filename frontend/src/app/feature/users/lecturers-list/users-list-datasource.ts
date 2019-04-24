@@ -6,6 +6,7 @@ export interface UsersListItem {
     username: string;
     qualifications: string;
     roles: string;
+    uuid: string;
 }
 
 /**

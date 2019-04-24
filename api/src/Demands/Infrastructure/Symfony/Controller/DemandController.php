@@ -154,6 +154,7 @@ class DemandController
     {
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('charset', 'UTF-8');
 
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
@@ -183,10 +184,10 @@ class DemandController
         return $response;
     }
 
-    public function assignDemand(Request $request, Demand $demand)
+    public function assignDemand(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $command = new AssignDemand(\Demands\Domain\Assign\AssignDemand::create($data));
+        $command = new AssignDemand(\Demands\Domain\Assign\AssignDemand::create($data, $this->tokenStorage->getToken()->getUser()->getUuid()));
 
         $this->commandBus->handle($command);
 

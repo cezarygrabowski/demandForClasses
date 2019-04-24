@@ -48,15 +48,15 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     }
 
     getHoursForGivenWeek(number: number) {
-        if(this.lectureSet.allocatedWeeks[number]) {
+        if (this.lectureSet.allocatedWeeks[number]) {
             return this.lectureSet.allocatedWeeks[number].allocatedHours;
         } else {
-            return 0
+            return 0;
         }
     }
 
     getRoomForGivenWeek(number: number) {
-        if(this.lectureSet.allocatedWeeks[number]) {
+        if (this.lectureSet.allocatedWeeks[number]) {
             return this.lectureSet.allocatedWeeks[number].room;
         } else {
             return '';
@@ -64,18 +64,18 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     }
 
     getBuildingForGivenWeek(number: number) {
-        if(this.lectureSet.allocatedWeeks[number]) {
+        if (this.lectureSet.allocatedWeeks[number]) {
             return this.lectureSet.allocatedWeeks[number].building;
         } else {
-            return ''
+            return '';
         }
     }
 
     onPlaceChange(place: any, item: any) {
         if (!this.lectureSet.allocatedWeeks[item.number]) {
-            this.lectureSet.allocatedWeeks[item.number] = { room: place.room, building: place.building };
+            this.lectureSet.allocatedWeeks[item.number] = {allocatedHours: 0, room: +place.room, building: +place.building};
         } else {
-            Object.assign(this.lectureSet.allocatedWeeks[item.number], { room: place.room, building: place.building });
+            Object.assign(this.lectureSet.allocatedWeeks[item.number], {room: +place.room, building: +place.building});
         }
 
         this.onLectureEmitted();
@@ -94,9 +94,9 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     onHoursChange(hours: number, item: any) {
         console.log(item);
         if (!this.lectureSet.allocatedWeeks[item.number]) {
-            this.lectureSet.allocatedWeeks[item.number] = { allocatedHours: hours };
+            this.lectureSet.allocatedWeeks[item.number] = {allocatedHours: hours, room: null, building: null};
         } else {
-            Object.assign(this.lectureSet.allocatedWeeks[item.number], { allocatedHours: hours });
+            Object.assign(this.lectureSet.allocatedWeeks[item.number], {allocatedHours: hours});
         }
         this.onLectureEmitted();
     }

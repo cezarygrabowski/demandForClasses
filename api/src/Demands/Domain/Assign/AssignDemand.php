@@ -22,11 +22,23 @@ class AssignDemand
      */
     public $lectureSets;
 
-    public static function create($data): self
+    public static function create(array $data, string $assignorUuid): self
     {
         $assignDemand = new self();
+        $assignDemand->assignorUuid = $assignorUuid;
+        $assignDemand->demandUuid = $data['demand']['uuid'];
 
-        //TODO implement me
+        foreach ($data['demand']['lectureSets'] as $lectureSet) {
+            $lecturer = $lectureSet['lecturer'];
+            if (!$lecturer) {
+                continue;
+            }
+
+            $lectureSetDto = new LectureSet();
+            $lectureSetDto->assigneeUuid = $lectureSet['lecturer']['uuid'];
+            $lectureSetDto->type = $lectureSet['type'];
+            $assignDemand->lectureSets[] = $lectureSetDto;
+        }
 
         return $assignDemand;
     }

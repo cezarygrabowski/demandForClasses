@@ -47,7 +47,7 @@ download_demand:
   methods: GET
 
 assign_demand:
-  path: /assign-demand/{uuid}
+  path: /assign-demand
   controller: Demands\Infrastructure\Symfony\Controller\DemandController::assignDemand
   methods: PUT
 

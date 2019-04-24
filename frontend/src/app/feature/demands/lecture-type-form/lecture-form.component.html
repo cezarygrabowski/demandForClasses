@@ -2,7 +2,7 @@
     <h2>{{lectureSet.type}} - {{ lectureSet.hoursToDistribute }} godzin </h2>
     <mat-form-field class="lecturer-input">
         <mat-label>Wybierz prowadzącego</mat-label>
-        <input type="text" matInput [matAutocomplete]="auto">
+        <input type="text" [value]="lectureSet.lecturer?.username" matInput [matAutocomplete]="auto">
         <mat-autocomplete [displayWith]="displayLecturer" #auto="matAutocomplete" (optionSelected)="onLecturerChange($event.option.value)">
             <mat-option *ngFor="let lecturer of qualifiedLecturers"
                         [value]="lecturer">{{lecturer.username}}</mat-option>

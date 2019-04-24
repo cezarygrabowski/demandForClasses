@@ -1,9 +1,11 @@
 <html lang="pl-PL">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Title of the PDF</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+{#    <meta http-equiv="content-type" content="text/html; charset=UTF-8">#}
+    <title>Zapotrzebowanie</title>
 </head>
 <body>
+    <h3>Zapotrzebowanie na zajęcia dydaktyczne</h3>
     <table>
         <tr>
             <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
@@ -35,8 +37,9 @@
         </tr>
     </table>
 
-    <table>
-        {% for lectureSet in demand.lectureSets %}
+    <h3>Zestawy zajęć</h3>
+    {% for lectureSet in demand.lectureSets %}
+        <table>
             <tr>
                 <td class="item"><i class="icon s7-id"></i> Zestaw zajęć:</td>
                 <td>{{ lectureSet.translatedLectureType }}</td>
@@ -49,23 +52,25 @@
                 <td class="item"><i class="icon s7-id"></i> Notatki:</td>
                 <td>{{ lectureSet.notes }}</td>
             </tr>
-            <ul>
-                {% for allocatedWeek in lectureSet.allocatedWeeks %}
-                    {{ allocatedWeek.number }} Tydzień
+        </table>
+
+        <p>Zaproponowany harmonogram</p>
+        <ul>
+            {% for allocatedWeek in lectureSet.allocatedWeeks %}
+                <p>{{ allocatedWeek.number }} Tydzień</p>
+                <li>
+                    Ilość godzin: {{ allocatedWeek.allocatedHours }}
+                </li>
+                {% if allocatedWeek.place %}
                     <li>
-                        Zaalokowane godziny: {{ allocatedWeek.allocatedHours }}
+                        Budynek: {{ allocatedWeek.place.building }}
                     </li>
-                    {% if allocatedWeek.place %}
-                        <li>
-                            Budynek: {{ allocatedWeek.place.building }}
-                        </li>
-                        <li>
-                            Sala: {{ allocatedWeek.place.room }}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endfor %}
-    </table>
+                    <li>
+                        Sala: {{ allocatedWeek.place.room }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endfor %}
 </body>
 </html>

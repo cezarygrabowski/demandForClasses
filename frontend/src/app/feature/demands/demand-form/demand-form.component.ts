@@ -88,4 +88,10 @@ export class DemandFormComponent implements OnInit, OnDestroy {
       FileSaver.saveAs(file, this.demand.groupName + '/' + this.demand.subjectName + '/' + this.demand.semester, true);
     });
   }
+
+  onAssigment() {
+      this.demandService.assignDemand(this.demand).subscribe((res) => {
+        console.log(res);
+      });
+  }
 }

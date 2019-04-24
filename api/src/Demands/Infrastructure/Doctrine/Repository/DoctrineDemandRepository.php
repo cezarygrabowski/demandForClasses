@@ -82,6 +82,6 @@ class DoctrineDemandRepository implements DemandRepository
             ->setParameter('uuid', $demandUuid)
             ->getQuery()
             ->setMaxResults(1)
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }
