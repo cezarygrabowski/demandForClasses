@@ -27,7 +27,7 @@ class UserFixtures extends Fixture
         ['nauczyciel', 'nauczyciel', User::ROLE_LECTURER],
         ['kierownik', 'kierownik', User::ROLE_DISTRICT_MANAGER],
         ['dziekan', 'dziekan', User::ROLE_DEAN],
-        ['planista', 'planista', User::ROLE_LECTURER],
+        ['planista', 'planista', User::ROLE_PLANNER],
         ['admin', 'admin', User::ROLE_ADMIN]
     ];
 

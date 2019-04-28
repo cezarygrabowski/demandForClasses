@@ -11,7 +11,8 @@ import {
     MatSortModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
-import {LecturersListComponent} from "./users/lecturers-list/lecturers-list.component";
+import {LecturersListComponent} from './users/lecturers-list/lecturers-list.component';
+import {PapaParseModule} from 'ngx-papaparse';
 
 @NgModule({
     declarations: [LecturersListComponent],
@@ -25,7 +26,8 @@ import {LecturersListComponent} from "./users/lecturers-list/lecturers-list.comp
         ReactiveFormsModule,
         MatTableModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        PapaParseModule
     ]
 })
 export class FeatureModule {

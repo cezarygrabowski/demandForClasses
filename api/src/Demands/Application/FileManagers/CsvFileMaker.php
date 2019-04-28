@@ -19,14 +19,14 @@ class CsvFileMaker implements FileMaker
         //TODO not needed for now
     }
 
-    private function prepareContent(array $exportDemands): string
+    private function prepareContent(array $exportDemands): array
     {
         $rows = [];
         foreach ($exportDemands as $demand) {
             $rows[] = $this->implode($demand);
         }
 
-        return implode("\n", $rows);
+        return $rows;
     }
 
     private function prepareHeaders()
@@ -111,14 +111,17 @@ class CsvFileMaker implements FileMaker
 
         $row = array_merge($row, $demand->getWeeks());
 
-        return implode(',', $row);
+        return $row;
     }
 
-    public function prepareFileContent(array $exportDemands): string
+    public function prepareFileContent(array $exportDemands): array
     {
         $content = $this->prepareContent($exportDemands);
         $headers = $this->prepareHeaders();
 
-        return $headers . "\n" . $content;
+        return [
+            $headers,
+            $content
+        ];
     }
 }

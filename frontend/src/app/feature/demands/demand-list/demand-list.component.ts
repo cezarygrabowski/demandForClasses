@@ -3,6 +3,9 @@ import {MatPaginator, MatSort} from '@angular/material';
 import {DemandListDataSource} from './demand-list-datasource';
 import {Router} from "@angular/router";
 import {DemandService} from "../demand.service";
+import {Demand} from "../demand";
+import {DemandListElement} from "../demandListElement";
+import {AuthenticationService} from "../../../shared/_services";
 
 @Component({
   selector: 'app-demand-list',
@@ -19,7 +22,8 @@ export class DemandListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private demandService: DemandService
+    private demandService: DemandService,
+    private authenticationService: AuthenticationService
   ) {
   }
 
@@ -36,7 +40,18 @@ export class DemandListComponent implements OnInit {
   }
 
   exportDemands() {
-    // let uuids = [];
-    // this.demandService.exportDemands(uuids).subscribe();
+    const uuids = [];
+    this.dataSource.filteredData.map((demand: DemandListElement) => {
+      uuids.push(demand.uuid);
+    });
+
+    this.demandService.exportDemands(uuids).subscribe(result => {
+      // console.log(result);
+      this.downloadFile(result);
+    });
+  }
+
+  downloadFile(blob: any) {
+    saveAs(blob, 'myFile.csv');
   }
 }

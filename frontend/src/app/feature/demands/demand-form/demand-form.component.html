@@ -1,7 +1,7 @@
 <div *ngIf="this.demand">
   <mat-card>
   <div class="col-xs-12 col-sm-6 info-block">
-    <button mat-button (click)="downloadPdf()">Pobierz jako pdf</button>
+    <button style="float:right" mat-raised-button color="primary" (click)="downloadPdf()">Pobierz jako pdf</button>
     <table>
       <tr>
         <td class="item"><i class="icon s7-id"></i> Rok studiów:</td>
@@ -43,9 +43,9 @@
     ></app-lecture-form>
   </li>
 
-  <button mat-button (click)="onSend()">Prześlij dalej</button>
-  <button mat-button (click)="onSave()">Zapisz zapotrzebowanie</button>
-  <button mat-button (click)="onCancel()">Odrzuć zapotrzebowanie</button>
-  <button mat-button (click)="onAssigment()">Przypisz zapotrzebowanie</button>
+  <button mat-button *ngIf="!authenticationService.isPlanner() && isDemandAcceptedByLecturer()" (click)="onSend()">Prześlij dalej</button>
+  <button mat-button *ngIf="authenticationService.isLecturer()" (click)="onSave()">Zapisz zapotrzebowanie</button>
+  <button mat-button *ngIf="authenticationService.isLecturer()" (click)="onCancel()">Odrzuć zapotrzebowanie</button>
+  <button mat-button *ngIf="authenticationService.isDistrictManager()" (click)="onAssigment()">Przypisz zapotrzebowanie</button>
   </mat-card>
 </div>

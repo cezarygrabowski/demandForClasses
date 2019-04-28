@@ -5,6 +5,7 @@ import {Place} from '../interfaces/form/place';
 import {Lecturer} from '../interfaces/form/lecturer';
 import {Week} from '../../../shared/_models/week';
 import {MatAutocompleteSelectedEvent} from "@angular/material";
+import {AuthenticationService} from "../../../shared/_services";
 
 @Component({
     selector: 'app-lecture-form',
@@ -22,7 +23,8 @@ export class LectureFormComponent implements OnInit, OnDestroy {
     private weeks: {}[] = [];
 
     constructor(
-        private demandService: DemandService
+        private demandService: DemandService,
+        private authenticationService: AuthenticationService
     ) {
 
     }

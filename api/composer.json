@@ -11,6 +11,7 @@
         "league/tactician-bundle": "^1.1",
         "league/tactician-doctrine": "^1.1",
         "lexik/jwt-authentication-bundle": "^2.6",
+        "mikehaertl/phpwkhtmltopdf": "^2.4",
         "nelmio/api-doc-bundle": "^3.3",
         "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.2",

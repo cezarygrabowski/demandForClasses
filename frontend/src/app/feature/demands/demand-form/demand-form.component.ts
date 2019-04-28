@@ -3,11 +3,12 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DemandService} from "../demand.service";
 import {Subscription} from "rxjs";
 import {Lecture} from "../../../shared/_interfaces/lecture";
-import {Demand} from "../interfaces/form/demand";
+import {Demand, DemandStatus} from "../interfaces/form/demand";
 import {Lecturer} from "../interfaces/form/lecturer";
 import {Place} from "../interfaces/form/place";
 import {FlashMessagesService} from "angular2-flash-messages";
 import * as FileSaver from "file-saver";
+import {AuthenticationService} from "../../../shared/_services";
 
 @Component({
   selector: 'app-demand-form',
@@ -26,6 +27,7 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private demandService: DemandService,
     private flashMessageService: FlashMessagesService,
+    private authenticationService: AuthenticationService
   ) {
   }
 
@@ -58,6 +60,7 @@ export class DemandFormComponent implements OnInit, OnDestroy {
     this.demandService.updateDemand(this.demand).subscribe(() => {
       this.demandService.acceptDemand(this.demand.uuid).subscribe(() => {
         this.flashMessageService.show('Zapotrzebowanie zostało zaktualizowane.');
+        this.router.navigate(['/zapotrzebowania']);
       }, error1 => {
         this.flashMessageService.show(error1.error.error.exception[0].message);
       });
@@ -68,7 +71,8 @@ export class DemandFormComponent implements OnInit, OnDestroy {
 
   onSave() {
     this.demandService.updateDemand(this.demand).subscribe(() => {
-      this.flashMessageService.show('Zapotrzebowanie zostało zaktualizowane.');
+      this.flashMessageService.show('Zapotrzebowanie zostało zapisane');
+      this.router.navigate(['/zapotrzebowania']);
     }, error1 => {
       this.flashMessageService.show(error1.error.error.exception[0].message);
     });
@@ -76,7 +80,9 @@ export class DemandFormComponent implements OnInit, OnDestroy {
 
   onCancel() {
     this.demandService.declineDemand(this.demand.uuid).subscribe(() => {
-      alert('jest git');
+      this.flashMessageService.show('Zapotrzebowanie odrzucono');
+      this.router.navigate(['/zapotrzebowania']);
+
     }, error1 => {
       this.flashMessageService.show(error1.error.error.exception[0].message);
     });
@@ -91,7 +97,12 @@ export class DemandFormComponent implements OnInit, OnDestroy {
 
   onAssigment() {
       this.demandService.assignDemand(this.demand).subscribe((res) => {
-        console.log(res);
+        this.flashMessageService.show('Przypisano zapotrzebowanie');
+        this.router.navigate(['/zapotrzebowania']);
       });
+  }
+
+  isDemandAcceptedByLecturer() {
+    return this.demand.status === DemandStatus.STATUS_ACCEPTED_BY_TEACHER;
   }
 }

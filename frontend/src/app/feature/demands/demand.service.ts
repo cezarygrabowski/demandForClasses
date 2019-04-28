@@ -3,9 +3,9 @@ import {environment} from '../../../environments/environment.local';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subscription} from 'rxjs';
 import {DemandListElement} from './demandListElement';
-import {Demand} from "./interfaces/form/demand";
-import {Lecturer} from "./interfaces/form/lecturer";
-import {Place} from "./interfaces/form/place";
+import {Demand} from './interfaces/form/demand';
+import {Lecturer} from './interfaces/form/lecturer';
+import {Place} from './interfaces/form/place';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +51,9 @@ export class DemandService {
 
   assignDemand(demand: Demand): Observable<any> {
     return this.http.put(`${environment.apiUrl}/assign-demand`, { demand });
+  }
+
+  exportDemands(uuids: Array<string>): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/export-demands`, { uuids }, {responseType: 'blob'});
   }
 }

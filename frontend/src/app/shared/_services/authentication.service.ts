@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {User} from '../_models';
 import {environment} from '../../../environments/environment.local';
+import * as jwt_decode from "jwt-decode";
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -45,5 +46,27 @@ export class AuthenticationService {
         }
 
         return false;
+    }
+
+    private getUserRole() {
+        const roles = jwt_decode(JSON.parse(localStorage.getItem('currentUser')).token).roles;
+        return roles[0];
+    }
+
+    getUsername() {
+        const roles = jwt_decode(JSON.parse(localStorage.getItem('currentUser')).token).username;
+        return roles[0];
+    }
+
+    isPlanner() {
+        return this.getUserRole() === 'ROLE_PLANNER';
+    }
+
+    isDistrictManager() {
+        return this.getUserRole() === 'ROLE_DISTRICT_MANAGER';
+    }
+
+    isLecturer() {
+        return this.getUserRole() === 'ROLE_LECTURER';
     }
 }

@@ -51,7 +51,7 @@ class DoctrineDemandRepository implements DemandRepository
         return $this->entityManager->createQueryBuilder()
             ->select('d')
             ->from(Demand::class, 'd')
-            ->where('d.uuid IN :uuids')
+            ->where('d.uuid IN (:uuids)')
             ->setParameter('uuids', $uuids)
             ->getQuery()
             ->getResult();

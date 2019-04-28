@@ -45,3 +45,4 @@ Demands\Domain\LectureSet:
       targetEntity: Week
       mappedBy: lectureSet
       cascade: ["persist"]
+      orderBy: { 'number': 'ASC' }

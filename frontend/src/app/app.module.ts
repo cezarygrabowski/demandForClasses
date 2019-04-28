@@ -36,13 +36,13 @@ import { ScheduleFormComponent } from './feature/demands/schedule-form/schedule-
 import {FlashMessagesModule} from 'angular2-flash-messages';
 import { TeachersImportComponent } from './feature/users/teachers-import/teachers-import.component';
 import {MaterialFileInputModule} from 'ngx-material-file-input';
-import {UserEditProfileComponent} from "./feature/users/user-edit-profile/user-edit-profile.component";
-import {ScheduleImportComponent} from "./feature/demands/schedule-import/schedule-import.component";
-import {FeatureModule} from "./feature/feature.module";
-import {SharedModule} from "./shared/shared.module";
-import {CoreModule} from "./core/core.module";
-import {ScheduleService} from "./shared/schedule.service";
-import {DemandService} from "./feature/demands/demand.service";
+import {UserEditProfileComponent} from './feature/users/user-edit-profile/user-edit-profile.component';
+import {ScheduleImportComponent} from './feature/demands/schedule-import/schedule-import.component';
+import {FeatureModule} from './feature/feature.module';
+import {SharedModule} from './shared/shared.module';
+import {CoreModule} from './core/core.module';
+import {ScheduleService} from './shared/schedule.service';
+import {DemandService} from './feature/demands/demand.service';
 
 @NgModule({
   declarations: [
@@ -59,39 +59,39 @@ import {DemandService} from "./feature/demands/demand.service";
     TeachersImportComponent,
     ScheduleImportComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSortModule,
-    MatTableModule,
-    MatButtonModule,
-    MatAutocompleteModule,
-    MatButtonToggleModule,
-    FlashMessagesModule.forRoot(),
-    MatRadioModule,
-    MaterialFileInputModule,
-    FeatureModule,
-    SharedModule,
-    CoreModule,
-    MatPaginatorModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSortModule,
+        MatTableModule,
+        MatButtonModule,
+        MatAutocompleteModule,
+        MatButtonToggleModule,
+        FlashMessagesModule.forRoot(),
+        MatRadioModule,
+        MaterialFileInputModule,
+        FeatureModule,
+        SharedModule,
+        CoreModule,
+        MatPaginatorModule
+    ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ScheduleService,

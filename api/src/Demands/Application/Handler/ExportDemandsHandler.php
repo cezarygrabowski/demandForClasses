@@ -35,7 +35,7 @@ class ExportDemandsHandler
      * @param ExportDemands $command
      * @return string
      */
-    public function handle(ExportDemands $command): string
+    public function handle(ExportDemands $command): array
     {
         $demands = $this->demandRepository->findByIdentifiers($command->getUuids());
         $this->markDemandsAsExported($demands, $command->getUser());

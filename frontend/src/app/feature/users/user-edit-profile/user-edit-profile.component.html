@@ -11,23 +11,18 @@
                     <div class="card-body">
                         <form>
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput (input)="changeEmail($event)" placeholder="Email" type="email">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
                                     <mat-checkbox
                                             (change)="automaticallySendToPlanners($event)">Automatycznie akceptuj zapotrzebowania
                                     </mat-checkbox>
                                 </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="Email address" type="email">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-md-4">
-                                    <mat-form-field class="example-full-width">
-                                        <input matInput placeholder="Email address" type="email">
-                                    </mat-form-field>
-                                </div>
                             </div>
-                            <button mat-raised-button type="submit" class="btn btn-danger pull-right">Zaktualizuj profil</button>
+                            <button mat-raised-button color="primary" (click)="onSubmit()" class="btn btn-danger pull-right">Zaktualizuj profil</button>
                             <div class="clearfix"></div>
                         </form>
                     </div>

@@ -4,6 +4,7 @@
   </mat-form-field>
 
   <div class="mat-elevation-z8">
+    <button style="float:right" mat-raised-button color="primary" *ngIf="authenticationService.isPlanner()" (click)="exportDemands()">Eksportuj</button>
     <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
 
       <ng-container matColumnDef="groupName">

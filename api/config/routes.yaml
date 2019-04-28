@@ -37,7 +37,7 @@ get_details:
   methods: GET
 
 export_demands:
-  path: /export
+  path: /export-demands
   controller: Demands\Infrastructure\Symfony\Controller\DemandController::exportDemands
   methods: PUT
 

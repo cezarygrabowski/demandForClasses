@@ -146,6 +146,15 @@
             "ref": "509b1542f3180a1cfe248ade8b7bf5092c2d4127"
         }
     },
+    "mikehaertl/php-shellcommand": {
+        "version": "1.4.1"
+    },
+    "mikehaertl/php-tmpfile": {
+        "version": "1.1.1"
+    },
+    "mikehaertl/phpwkhtmltopdf": {
+        "version": "2.4.0"
+    },
     "namshi/jose": {
         "version": "7.2.3"
     },

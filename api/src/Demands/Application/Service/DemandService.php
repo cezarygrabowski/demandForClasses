@@ -73,7 +73,9 @@ class DemandService
         if ($user->isTeacher()) {
             $demands = $this->demandRepository->listAllForUser($user);
         } else {
-            $demands =  $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
+            //TODO DO NOT FORGET ABOUT THAT
+//            $demands =  $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
+            $demands =  $this->demandRepository->listAllWithStatuses([6]);
         }
 
         $demandDtos = [];

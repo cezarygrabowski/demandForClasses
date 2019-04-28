@@ -50,7 +50,11 @@ class ExportDemandDto
             $exportDemandDto = new self();
             $exportDemandDto->lectureType = $lectureSet->getLectureType();
             $exportDemandDto->demandUuid = $demand->getUuid();
-            $exportDemandDto->lecturer = $lectureSet->getLecturer()->getUsername();
+            if($lectureSet->getLecturer()) {
+                $exportDemandDto->lecturer = $lectureSet->getLecturer()->getUsername();
+            } else {
+                $exportDemandDto->lecturer = '';
+            }
             $exportDemandDto->subjectName = $demand->getSubject()->getName();
             $exportDemandDto->schoolYear = $demand->getSchoolYear();
             $exportDemandDto->group = $demand->getGroup()->getName();

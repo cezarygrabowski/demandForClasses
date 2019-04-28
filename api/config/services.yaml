@@ -61,9 +61,12 @@ services:
         tags:
             - { name: tactician.handler, typehints: true }
 
+    #Repositories
+    Demands\Application\FileManagers\CsvFileMaker:
+
     #miscellaneous
     Demands\Domain\StatusResolver:
-    Demands\Domain\FileMaker:
+    Demands\Domain\FileMaker: '@Demands\Application\FileManagers\CsvFileMaker'
     Demands\Application\Service\DemandService:
 
 #USERS

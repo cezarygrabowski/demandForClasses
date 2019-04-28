@@ -31,7 +31,7 @@ class DemandDetails
         $demand->institute = $demandEntity->getInstitute();
         $demand->semester = $demandEntity->getSemester();
         $demand->schoolYear = $demandEntity->getSchoolYear();
-        $demand->statusName = $demandEntity->getTranslatedStatus();
+        $demand->status = $demandEntity->getStatus();
         $demand->uuid = $demandEntity->getUuid();
         $demand->groupType = $demandEntity->getGroup()->getTranslatedType();
         $demand->groupName = $demandEntity->getGroup()->getName();

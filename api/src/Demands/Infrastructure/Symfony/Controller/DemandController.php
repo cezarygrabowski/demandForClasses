@@ -3,11 +3,11 @@
 namespace Demands\Infrastructure\Symfony\Controller;
 
 use Demands\Application\Command\AcceptDemand;
+use Demands\Application\Command\DownloadDemand;
 use Demands\Domain\Query\Details\DemandDetails;
 use Common\Http\HttpService;
 use Demands\Application\Command\AssignDemand;
 use Demands\Application\Command\DeclineDemand;
-use Demands\Application\Command\DownloadDemand;
 use Demands\Application\Command\ExportDemands;
 use Demands\Application\Command\ImportStudyPlans;
 use Demands\Application\Command\UpdateDemand;
@@ -16,19 +16,16 @@ use Demands\Domain\Demand;
 use Demands\Domain\Import\StudyPlan\StudyPlansExtractor;
 use Demands\Domain\Repository\PlaceRepository;
 use Demands\Domain\Update\DetailsToUpdate;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use League\Tactician\CommandBus;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig\Environment;
-
+use Symfony\Component\Serializer\SerializerInterface;
+use Zend\EventManager\Exception\DomainException;
 /**
  * Class DemandController
  * @package App\Controller
@@ -60,10 +57,7 @@ class DemandController
      * @var PlaceRepository
      */
     private $placeRepository;
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private $serializer;
 
     public function __construct(
         CommandBus $commandBus,
@@ -71,14 +65,14 @@ class DemandController
         DemandService $demandService,
         TokenStorageInterface $tokenStorage,
         PlaceRepository $placeRepository,
-        Environment $twig
+        SerializerInterface $serializer
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
         $this->demandService = $demandService;
         $this->tokenStorage = $tokenStorage;
         $this->placeRepository = $placeRepository;
-        $this->twig = $twig;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -140,48 +134,43 @@ class DemandController
         return $this->httpService->createItemResponse(DemandDetails::fromDemand($demand));
     }
 
-    public function exportDemands()
+    public function exportDemands(Request $request)
     {
-        $uuids = []; // TODO GET UUIDS
-        $command = new ExportDemands($uuids, $this->httpService->getCurrentUser());
+        $data = json_decode($request->getContent(), true);
+        $command = new ExportDemands($data['uuids'], $this->httpService->getCurrentUser());
 
         $content = $this->commandBus->handle($command);
 
-        return new Response($content);
+        $response = $this->httpService->downloadCsvFileResponse(
+            new StreamedResponse(
+                function() use ($content) {
+                    $handle = fopen('php://output', 'w+');
+                    fputcsv($handle, explode(',', $content[0]));
+                    foreach ($content[1] as $item) {
+                        fputcsv($handle, $item);
+                    }
+                    fclose($handle);
+                }
+        ), 'test.csv');
+
+//        $disposition = $response->headers->makeDisposition(
+//            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+//            'demands.csv'
+//        );
+//
+//        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+//        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
+
     }
 
     public function downloadDemand(Demand $demand)
     {
-        $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
-        $pdfOptions->set('charset', 'UTF-8');
+        $command = new DownloadDemand($demand);
 
-        // Instantiate Dompdf with our options
-        $dompdf = new Dompdf($pdfOptions);
+        $pdf = $this->commandBus->handle($command);
 
-        // Retrieve the HTML generated in our twig file
-        $html = $this->twig->render('@demands/demand_pdf.html.twig', [
-            'demand' => $demand
-        ]);
-
-        // Load HTML to Dompdf
-        $dompdf->loadHtml($html);
-
-        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Render the HTML as PDF
-        $dompdf->render();
-
-        // Output the generated PDF to Browser (force download)
-        $dompdf->stream("mypdf.pdf", [
-            "Attachment" => true
-        ]);
-
-        $response = new Response();
-        $response->setCharset('UTF-8');
-
-        return $response;
+        return new Response($pdf->toString());
     }
 
     public function assignDemand(Request $request)
