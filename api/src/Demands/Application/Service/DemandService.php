@@ -73,9 +73,7 @@ class DemandService
         if ($user->isTeacher()) {
             $demands = $this->demandRepository->listAllForUser($user);
         } else {
-            //TODO DO NOT FORGET ABOUT THAT
-//            $demands =  $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
-            $demands =  $this->demandRepository->listAllWithStatuses([6]);
+            $demands =  $this->demandRepository->listAllWithStatuses($this->statusResolver->resolveStatusesForDemandListing($user));
         }
 
         $demandDtos = [];
@@ -160,6 +158,9 @@ class DemandService
     private function updateLectureSet(LectureSet $currentLectureSet, \Demands\Domain\Update\LectureSet $lectureSet)
     {
         foreach ($lectureSet->allocatedWeeks as $allocatedWeek) {
+            if($allocatedWeek->hours == 0) {
+                continue;
+            }
             $place = $this->placeRepository->findOneByBuildingAndRoom($allocatedWeek->building, $allocatedWeek->room);
             if(!$place) {
                 throw new DomainException("Nie ma takiego miejsca!");
@@ -174,7 +175,6 @@ class DemandService
                 $currentAllocatedWeek = new Week($allocatedWeek->weekNumber, $allocatedWeek->hours, $place);
                 $currentAllocatedWeek->setLectureSet($currentLectureSet);
                 $currentLectureSet->allocateWeek($currentAllocatedWeek);
-                $currentLectureSet->addNotes($lectureSet->notes);
             } else {
                 $currentAllocatedWeek->setPlace($place);
                 $currentAllocatedWeek->setAllocatedHours($allocatedWeek->hours);
@@ -186,5 +186,7 @@ class DemandService
                 );
             }
         }
+        $currentLectureSet->addNotes($lectureSet->notes);
+
     }
 }

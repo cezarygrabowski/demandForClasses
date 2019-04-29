@@ -57,9 +57,14 @@ login_check:
   path: /login_check
 
 update_profile:
-  path: /profile
+  path: /update-profile
   controller: Users\Infrastructure\Symfony\Controller\UserController::updateProfile
   methods: PUT
+
+profile-details:
+  path: /profile-details
+  controller: Users\Infrastructure\Symfony\Controller\UserController::getProfile
+  methods: GET
 
 get_qualified_lecturers:
   path: /lecturers/{subjectName}

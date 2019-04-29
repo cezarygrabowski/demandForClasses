@@ -25,6 +25,7 @@ class UserFixtures extends Fixture
 
     private $data = [
         ['nauczyciel', 'nauczyciel', User::ROLE_LECTURER],
+        ['dyrektor', 'dyrektor', User::ROLE_INSTITUTE_DIRECTOR],
         ['kierownik', 'kierownik', User::ROLE_DISTRICT_MANAGER],
         ['dziekan', 'dziekan', User::ROLE_DEAN],
         ['planista', 'planista', User::ROLE_PLANNER],

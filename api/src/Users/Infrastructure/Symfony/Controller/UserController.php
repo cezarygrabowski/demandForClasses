@@ -10,7 +10,9 @@ use Demands\Domain\Subject;
 use League\Tactician\CommandBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Users\Application\Command\ImportUsers;
+use Users\Application\Command\UpdateProfile;
 use Users\Application\Service\UserService;
 use Users\Domain\Import\CsvExtractor;
 
@@ -31,15 +33,21 @@ class UserController
      * @var UserService
      */
     private $userService;
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     public function __construct(
         CommandBus $commandBus,
         HttpService $httpService,
-        UserService $userService
+        UserService $userService,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->commandBus = $commandBus;
         $this->httpService = $httpService;
         $this->userService = $userService;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function api()
@@ -50,9 +58,16 @@ class UserController
     public function updateProfile(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $this->userService->updateAutomaticalSendToPlanners($this->getUser(), $data);
+        $command = new UpdateProfile($this->tokenStorage->getToken()->getUser(), $data);
+        $this->commandBus->handle($command);
 
         return $this->httpService->createSuccessResponse();
+    }
+
+    public function getProfile()
+    {
+        $details = $this->userService->getUserDetails($this->tokenStorage->getToken()->getUser());
+        return $this->httpService->createItemResponse($details);
     }
 
     public function getQualifiedLecturers(string $subjectName)
@@ -60,11 +75,6 @@ class UserController
         $users = $this->userService->getQualifiedLecturers($subjectName);
 
         return $this->httpService->createCollectionResponse($users);
-    }
-
-    public function roles()
-    {
-        return $this->httpService->createCollectionResponse($this->httpService->getCurrentUser()->getRoles());
     }
 
     public function importLecturers(Request $request): Response

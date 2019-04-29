@@ -54,8 +54,8 @@ export class AuthenticationService {
     }
 
     getUsername() {
-        const roles = jwt_decode(JSON.parse(localStorage.getItem('currentUser')).token).username;
-        return roles[0];
+        const username = jwt_decode(JSON.parse(localStorage.getItem('currentUser')).token).username;
+        return username;
     }
 
     isPlanner() {

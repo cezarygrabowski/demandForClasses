@@ -153,15 +153,7 @@ class DemandController
                 }
         ), 'test.csv');
 
-//        $disposition = $response->headers->makeDisposition(
-//            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-//            'demands.csv'
-//        );
-//
-//        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-//        $response->headers->set('Content-Disposition', $disposition);
         return $response;
-
     }
 
     public function downloadDemand(Demand $demand)

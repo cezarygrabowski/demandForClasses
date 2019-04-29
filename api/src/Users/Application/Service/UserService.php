@@ -7,6 +7,7 @@ namespace Users\Application\Service;
 use Demands\Domain\Repository\DemandRepository;
 use Demands\Domain\Subject;
 use Demands\Domain\Week;
+use Users\Domain\Query\UserDetails;
 use Users\Domain\Repository\UserRepository;
 use Users\Domain\User;
 
@@ -15,11 +16,11 @@ class UserService
     /**
      * @var DemandRepository
      */
-    private $demandRepository;
+    public $demandRepository;
     /**
      * @var UserRepository
      */
-    private $userRepository;
+    public $userRepository;
 
     /**
      * UserService constructor.
@@ -84,5 +85,11 @@ class UserService
         $lecturers = $this->userRepository->findAllByQualificationSubjectName($subjectName);
 
         return \Users\Domain\Query\User::fromUsersCollection($lecturers);
+    }
+
+    public function getUserDetails(User $user): UserDetails
+    {
+        $userProfileDetails = UserDetails::getUsersDetails($user);
+        return $userProfileDetails;
     }
 }

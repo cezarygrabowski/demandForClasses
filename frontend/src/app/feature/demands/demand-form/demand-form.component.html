@@ -43,7 +43,7 @@
     ></app-lecture-form>
   </li>
 
-  <button mat-button *ngIf="!authenticationService.isPlanner() && isDemandAcceptedByLecturer()" (click)="onSend()">Prześlij dalej</button>
+  <button mat-button *ngIf="!authenticationService.isPlanner()" (click)="onSend()">Prześlij dalej</button>
   <button mat-button *ngIf="authenticationService.isLecturer()" (click)="onSave()">Zapisz zapotrzebowanie</button>
   <button mat-button *ngIf="authenticationService.isLecturer()" (click)="onCancel()">Odrzuć zapotrzebowanie</button>
   <button mat-button *ngIf="authenticationService.isDistrictManager()" (click)="onAssigment()">Przypisz zapotrzebowanie</button>

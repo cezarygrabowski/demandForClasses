@@ -8,7 +8,7 @@ import {
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule, MatCheckboxModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {LecturersListComponent} from './users/lecturers-list/lecturers-list.component';
@@ -27,7 +27,8 @@ import {PapaParseModule} from 'ngx-papaparse';
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        PapaParseModule
+        PapaParseModule,
+        MatCheckboxModule
     ]
 })
 export class FeatureModule {

@@ -17,4 +17,12 @@ export class UserService {
     upload(fd: FormData) {
         return this.http.post(`${environment.apiUrl}/import-lecturers`, fd);
     }
+
+    updateProfile(data: any): Observable<any> {
+        return this.http.put(`${environment.apiUrl}/update-profile`, data);
+    }
+
+    getProfile(): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/profile-details`);
+    }
 }

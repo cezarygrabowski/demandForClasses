@@ -39,7 +39,7 @@ class User implements UserInterface
      * !IMPORTANT!
      * This should not be used during users import. Target behaviour is this:
      * Import user, generate random string, encode this string and set user's password, send random string to user's email so he can log in
-     * Things we need: EmailSender
+     * Things we need: EmailSender, and more time
      */
     const DEFAULT_PASSWORD = 'doZmiany123';
 
@@ -84,11 +84,22 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * @var bool
+     */
+    private $automaticallySendDemands;
+
     public function __construct(string $username)
     {
         $this->username = $username;
         $this->uuid = Uuid::uuid4();
         $this->qualifications = new ArrayCollection();
+        $this->automaticallySendDemands = false;
     }
 
     public function getUuid(): string
@@ -281,5 +292,34 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): User
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutomaticallySendDemands(): bool
+    {
+        return $this->automaticallySendDemands;
+    }
+
+    /**
+     * @param bool $automaticallySendDemands
+     * @return User
+     */
+    public function setAutomaticallySendDemands(bool $automaticallySendDemands): User
+    {
+        $this->automaticallySendDemands = $automaticallySendDemands;
+        return $this;
     }
 }

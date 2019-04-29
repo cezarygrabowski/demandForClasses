@@ -44,7 +44,7 @@
         <div class="style-cleaner"></div>
         <mat-form-field>
             <mat-label>Wpisz swoje uwagi</mat-label>
-            <textarea (change)="onNotesChange($event.target.value)" class="input-comments" matInput label="Uwagi"></textarea>
+            <textarea (change)="onNotesChange($event.target.value)" [value]="lectureSet.notes" class="input-comments" matInput label="Uwagi"></textarea>
         </mat-form-field>
 
     </ng-container>

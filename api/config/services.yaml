@@ -89,6 +89,9 @@ services:
         tags:
             - { name: tactician.handler, typehints: true }
 
+    Users\Application\Handler\UpdateProfileHandler:
+        tags:
+            - { name: tactician.handler, typehints: true }
 
     #Common
     Common\Http\:

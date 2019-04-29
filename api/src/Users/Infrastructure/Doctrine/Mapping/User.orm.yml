@@ -21,7 +21,14 @@ Users\Domain\User:
     password:
       type: string
       nullable: false
-
+    email:
+      type: string
+      nullable: true
+    automaticallySendDemands:
+      type: boolean
+      nullable: false
+      options:
+        default: false
   oneToMany:
     qualifications:
       targetEntity: Qualification
